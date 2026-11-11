@@ -888,6 +888,65 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 .fc-grid .fc-item .ai-ico{width:32px;height:32px}
 .fc-grid .ai-name{white-space:nowrap;letter-spacing:-.02em}
 .fc-item.done::after{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:#2E9B6E}
+
+/* ───── 심화 탐구 배경: 파란 설계도 실험실 ───── */
+html.adv-mode{--page:#E5EBF4}
+@media (prefers-color-scheme:dark){:root.adv-mode:not([data-theme="light"]){--page:#0A1222;--panel:#121E36;--well:#0E182C;--line:#25395B}}
+:root.adv-mode[data-theme="dark"]{--page:#0A1222;--panel:#121E36;--well:#0E182C;--line:#25395B}
+.mat.adv-on{background:
+  radial-gradient(ellipse 58% 46% at 50% 45%,rgba(96,160,255,.22),rgba(96,160,255,0) 72%),
+  linear-gradient(rgba(150,190,255,.13) 1px,transparent 1px) 0 0/140px 140px,
+  linear-gradient(90deg,rgba(150,190,255,.13) 1px,transparent 1px) 0 0/140px 140px,
+  linear-gradient(rgba(150,190,255,.055) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(90deg,rgba(150,190,255,.055) 1px,transparent 1px) 0 0/28px 28px,
+  linear-gradient(165deg,#18325E 0%,#0F2244 52%,#0A162E 100%)}
+.mat.adv-on::before{content:"";position:absolute;left:24%;right:24%;bottom:7%;height:9%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(120,180,255,.34),rgba(120,180,255,0))}
+.mat.adv-on::after{inset:12px;border:0;--c:rgba(160,205,255,.62);background:
+  linear-gradient(var(--c),var(--c)) left top/26px 2px no-repeat,linear-gradient(var(--c),var(--c)) left top/2px 26px no-repeat,
+  linear-gradient(var(--c),var(--c)) right top/26px 2px no-repeat,linear-gradient(var(--c),var(--c)) right top/2px 26px no-repeat,
+  linear-gradient(var(--c),var(--c)) left bottom/26px 2px no-repeat,linear-gradient(var(--c),var(--c)) left bottom/2px 26px no-repeat,
+  linear-gradient(var(--c),var(--c)) right bottom/26px 2px no-repeat,linear-gradient(var(--c),var(--c)) right bottom/2px 26px no-repeat}
+.mat.adv-on .adv-face{stroke:rgba(8,16,38,.6)}
+.mat.adv-on .adv-glass{stroke:#E4EEFF}
+.mat.adv-on .adv-tag{background:rgba(10,22,50,.58);border-color:rgba(150,200,255,.42)}
+.mat.adv-on .at-name{color:#EEF4FF}
+.mat.adv-on .big-note{background:linear-gradient(160deg,rgba(10,24,54,.93),rgba(10,24,54,.8));border-top-color:rgba(160,205,255,.75);border-bottom-color:rgba(160,205,255,.75)}
+.mat.adv-on .big-note::before,.mat.adv-on .big-note::after{color:#A9CCFF}
+
+.adv-tab.on{background:linear-gradient(160deg,#22457F,#132B54)}
+.law{background:linear-gradient(160deg,#22457F,#132B54);border-color:rgba(160,205,255,.5)}
+/* ───── 심화 탐구: 뒤쪽 모서리 점선 ───── */
+.adv-dash{position:absolute;z-index:4;right:16px;top:16px;display:flex;align-items:center;gap:8px;min-height:42px;padding:0 12px 0 10px;cursor:pointer;
+  font:inherit;font-size:13px;font-weight:800;color:#E6F0FF;background:rgba(10,22,50,.58);border:1px solid rgba(150,200,255,.42);border-radius:0;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.adv-dash[hidden]{display:none}
+.adv-dash svg{width:20px;height:20px;flex:none}
+.adv-dash .sw{position:relative;width:34px;height:20px;flex:none;border-radius:10px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);transition:background .2s,border-color .2s}
+.adv-dash .sw::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform .2s}
+.adv-dash[aria-checked="true"]{color:#FFE9A8;border-color:#E9C66C}
+.adv-dash[aria-checked="true"] .sw{background:#E9B135;border-color:#E9B135}
+.adv-dash[aria-checked="true"] .sw::after{transform:translateX(14px)}
+.adv-dl{fill:none;stroke:rgba(232,242,255,.92);stroke-width:1.8;stroke-dasharray:6 5;stroke-linecap:round}
+.adv-dl.gold{stroke:#FFE08A}
+.mat.dash-on .adv-face{fill-opacity:.8}
+@media (max-width:699.98px){.adv-dash{right:10px;top:10px;min-height:38px;padding:0 8px}.adv-dash .ad-label{display:none}.adv-tag{max-width:calc(100% - 112px)}}
+
+/* ───── 도전 모드: 가운데 입체 문제 ───── */
+.mat.quiz-on{touch-action:none;cursor:grab}
+.mat.quiz-on.dragging{cursor:grabbing}
+.qz-face{stroke:rgba(16,28,24,.55);stroke-width:1.6;stroke-linejoin:round}
+.quiz-bar{position:absolute;z-index:5;left:16px;right:16px;bottom:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.quiz-bar[hidden]{display:none}
+.qz-btn{position:relative;min-height:62px;padding:10px 8px;cursor:pointer;font:inherit;font-size:20px;font-weight:800;line-height:1.2;color:#FFF7E4;word-break:keep-all;
+  background:linear-gradient(160deg,rgba(255,255,255,.2),rgba(255,255,255,.07));border:1px solid rgba(255,255,255,.38);border-radius:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.32),0 8px 18px rgba(0,0,0,.28);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.qz-btn i{position:absolute;left:7px;top:5px;font-style:normal;font-size:11px;font-weight:800;opacity:.55}
+@media (hover:hover){.qz-btn:hover{border-color:#F2C14E;background:linear-gradient(160deg,rgba(255,236,170,.3),rgba(255,236,170,.1))}}
+.qz-btn.ok{background:linear-gradient(160deg,#3DB57F,#1E7A52);border-color:#A6EBC8;color:#fff}
+.qz-btn.no{opacity:.35;text-decoration:line-through;animation:shake .4s ease}
+.drawer.quiz .picker,.drawer.quiz .facts,.drawer.quiz .acts{opacity:.38;pointer-events:none;filter:saturate(.5)}
+@media (max-width:699.98px){.quiz-bar{grid-template-columns:1fr 1fr;left:10px;right:10px;bottom:10px;gap:8px}.qz-btn{min-height:50px;font-size:17px}}
 </style>
 </head>
 <body>
@@ -940,7 +999,9 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
     <section class="stage" aria-label="작업 매트">
       <div class="mat">
         <div class="timebar" id="timebar" hidden><i id="timeFill"></i></div>
+        <button class="adv-dash" id="advDashBtn" role="switch" aria-checked="false" aria-label="보이지 않는 뒤쪽 모서리를 점선으로 보기" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5 12 4l8 4.5v8L12 21l-8-4.5z"/><path d="M12 12.6V21M12 12.6l8-4.1M12 12.6 4 8.5" stroke-dasharray="2.2 2"/></svg><span class="ad-label">뒤쪽 모서리 점선</span><i class="sw" aria-hidden="true"></i></button>
         <div class="adv-tag" id="advTag" hidden><p class="at-name" id="atName"></p><p class="at-kind" id="atKind" hidden></p></div>
+        <div class="quiz-bar" id="quizBar" hidden></div>
         <div class="big-note" id="bigNote" hidden aria-live="polite"><p class="bn-kicker" id="bnKicker"></p><p class="bn-main" id="bnMain"></p><p class="bn-sub" id="bnSub"></p></div>
         <div class="study" id="study" hidden>
           <p class="st-name" id="stName"></p>
@@ -2075,15 +2136,16 @@ function buildOrder(type){
       return {id:'r'+o[0],text:o[0],targets:o[1]};
     }
     case 'eqfv':return {id:'eqfv',text:'면의 수와 꼭짓점의 수가 같은 선물을 만들어 주세요',targets:['3-3']};
+    case 'see':{const z=quizBuild(sk);return {id:'z'+sk+z.q,text:z.text,targets:[sk],quiz:z,why:z.why};}
     default:{const t=pick(TRAPS);return {id:'x'+t[0],text:t[0],targets:[],why:t[1]};}      // 못 만드는 주문
   }
 }
 function makeOrder(){
   const c=M.correct;let types;
   if(c<2)types=['config'];                          // 처음 두 주문은 조작을 익히도록 만들 수 있는 선물만
-  else if(c<5)types=['name','die','shape','degree','mixed'];
-  else if(c<9)types=['name','die','faces','verts','shape','degree','combo','most','mixed'];
-  else types=['die','faces','verts','edges','angle','combo','ef','ev','most','dual','range','eqfv','mixed','trap','trap'];
+  else if(c<5)types=['name','die','shape','degree','mixed','see','see'];
+  else if(c<9)types=['name','die','faces','verts','shape','degree','combo','most','mixed','see','see'];
+  else types=['die','faces','verts','edges','angle','combo','ef','ev','most','dual','range','eqfv','mixed','trap','trap','see','see','see'];
   const prev=M.order,prevT=prev?prev.targets:[];
   for(let i=0;i<60;i++){
     const tp=pick(types);
@@ -2099,7 +2161,9 @@ function makeOrder(){
 }
 function nextOrder(){
   M.order=makeOrder();M.t0=performance.now();M.miss=0;
-  guide('V11',M.order.text,M.lastMsg||'조각을 골라 접어 주세요.');M.lastMsg='';
+  const qz=!!M.order.quiz,how=qz?'가운데 선물을 끌어서 돌려 보며 답을 골라 주세요.':'조각을 골라 접어 주세요.';
+  if(qz)quizShow(M.order);else quizHide();
+  guide('V11',M.order.text,M.lastMsg||how,qz&&M.lastMsg?how:'');M.lastMsg='';
 }
 function clearBench(){resetView();S.k=0;disp.kf=0;drawBench();}
 function correct(key,fromEl){
@@ -2117,11 +2181,11 @@ function miss(msg){
   M.combo=0;M.wrong++;M.miss++;M.end-=2000;hudPop('#popTime','−2초',true);                                                        // 오답은 콤보가 끊기고 2초 줄어듦
   sfx.over();vib(50);
   let hint='';
-  if(M.miss>=2)hint=M.order.targets.length?' 힌트: '+POLY[+M.order.targets[0].split('-')[0]].name+'을 써 보세요.':' 힌트: 못 만드는 주문도 있어요.';
+  if(M.miss>=2)hint=M.order.quiz?' 힌트: 선물을 천천히 돌려 보세요.':M.order.targets.length?' 힌트: '+POLY[+M.order.targets[0].split('-')[0]].name+'을 써 보세요.':' 힌트: 못 만드는 주문도 있어요.';
   guide('E10',M.order.text,msg+hint);
 }
 async function foldChallenge(){
-  if(S.busy||!M.run)return;
+  if(S.busy||!M.run||QZ.on)return;
   const n=S.n,k=S.k;
   if(k<3){sfx.over();guide('E07',M.order.text,'조각이 3개 이상 모여야 접을 수 있어요.');return;}
   benchTok++;disp.kf=k;drawBench();
@@ -2142,7 +2206,7 @@ async function foldChallenge(){
   }
 }
 function sayNo(){
-  if(S.busy||!M.run)return;
+  if(S.busy||!M.run||QZ.on)return;
   if(M.order.targets.length===0)correct(null,noBtn);
   else{miss('만들 수 있는 주문이에요. 다시 생각해 보세요.');refresh();}
 }
@@ -2152,7 +2216,7 @@ function setMode(mode){
   M.mode=mode;const ch=mode==='challenge',ad=mode==='adv';
   $('.title').hidden=ch;$('#hud').hidden=!ch;$('#collBlock').hidden=ch||ad;$('#hofBlock').hidden=!ch;
   $('#timebar').hidden=!ch;noBtn.hidden=!ch;$('#acts').classList.toggle('duo',ch);
-  $('#advNote').hidden=!ad;$('#advPanel').hidden=!ad;$('.drawer').classList.toggle('adv',ad);$('.shelf').classList.toggle('adv',ad);
+  $('#advNote').hidden=!ad;$('#advPanel').hidden=!ad;$('.drawer').classList.toggle('adv',ad);$('.shelf').classList.toggle('adv',ad);document.documentElement.classList.toggle('adv-mode',ad);
 }
 function bumpEl(el){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');}
 function hudPop(id,text,bad){const e=$(id);e.textContent=text;e.classList.toggle('bad',!!bad);e.classList.remove('go');void e.offsetWidth;e.classList.add('go');}
@@ -2181,7 +2245,7 @@ function tick(){
   M.raf=requestAnimationFrame(tick);
 }
 function stopChallenge(){
-  M.run=false;M.runId++;M.counting=false;cancelAnimationFrame(M.raf);
+  M.run=false;M.runId++;M.counting=false;cancelAnimationFrame(M.raf);quizHide();
   $('#gCount').style.display='none';
 }
 async function startChallenge(){
@@ -2208,7 +2272,7 @@ function endChallenge(){
   const cnt={},none=PILE.items.filter(x=>!x.key).length;PILE.items.forEach(x=>{if(x.key)cnt[x.key]=(cnt[x.key]||0)+1;});
   $('#resGifts').innerHTML=SLOT_ORDER.filter(k=>cnt[k]).map(k=>'<span class="rg">'+solidIcon(SOLIDS[k])+'<b>×'+cnt[k]+'</b></span>').join('')+(none?'<span class="rg">'+NOGIFT+'<b>×'+none+'</b></span>':'');
   $('#resGifts').hidden=!PILE.items.length;
-  M.run=false;cancelAnimationFrame(M.raf);
+  M.run=false;cancelAnimationFrame(M.raf);quizHide();
   clearBench();refresh();
   const g=M.correct;let ti=0;
   for(let i=0;i<TITLES.length;i++)if(g>=TITLES[i][0])ti=i;
@@ -2671,8 +2735,8 @@ function mkShape(V,faces){                           // 꼭짓점 목록 + 면(�
   const F=faces.map(idx0=>{const idx=idx0.slice();let n=newell(V,idx);const c=[0,0,0];
     idx.forEach(i=>{c[0]+=V[i][0];c[1]+=V[i][1];c[2]+=V[i][2];});c[0]/=idx.length;c[1]/=idx.length;c[2]/=idx.length;
     if(dot(n,c)<0){idx.reverse();n=n.map(x=>-x);}return {idx:idx,n:n,c:c,k:idx.length};});
-  const es=new Set();F.forEach(f=>f.idx.forEach((v,j)=>{const w=f.idx[(j+1)%f.idx.length];es.add(v<w?v+'-'+w:w+'-'+v);}));
-  return {V:V,F:F,E:es.size,rad:Math.max(...V.map(p=>len(p)))};
+  const em=new Map();F.forEach((f,fi)=>f.idx.forEach((v,j)=>{const w=f.idx[(j+1)%f.idx.length],key=v<w?v+'-'+w:w+'-'+v;let e=em.get(key);if(!e){e=[Math.min(v,w),Math.max(v,w)];em.set(key,e);}e.push(fi);}));
+  return {V:V,F:F,E:em.size,ed:[...em.values()],rad:Math.max(...V.map(p=>len(p)))};
 }
 function shapeOf(id){const m=MODEL[id];return mkShape(m.V.map(p=>p.slice()),m.F.map(f=>f.idx.slice()));}
 function tangentSort(sh,v,items,posOf){              // 꼭짓점 둘레를 따라 한 바퀴 순서로
@@ -2725,7 +2789,8 @@ function elShape(id){if(id==='prism3')return prismShape(3);if(id==='pyr4')return
 const B0=()=>mulMM(rotX(.42),rotY(.55));
 const AD={tab:'count',spinOff:false,shape:null,dual:null,B:B0(),phi:0,raf:0,last:0,ramp:0,drag:null,fam:'cube',t:0,snap:null,cache:{},noted:new Map(),seen:new Set(),
   eulerShown:false,dualShown:false,archShown:false,pair:-1,swap:false,dualT0:0,dotK:0,dualK:1,dualTok:0,play:0,hold:0,fit:152,outCol:'#4E9FD1',sel:'',lastNew:''};
-const gAdv=svgEl('g',{id:'gAdv'},bench),gAdvTop=svgEl('g',{id:'gAdvTop'},bench),advEls=[],advDots=[],advLines=[];
+const gAdv=svgEl('g',{id:'gAdv'},bench),gAdvDash=svgEl('g',{id:'gAdvDash'},bench),gAdvTop=svgEl('g',{id:'gAdvTop'},bench),advEls=[],advDots=[],advLines=[],advDashEls=[];
+gAdvDash.style.display='none';
 gAdv.style.display=gAdvTop.style.display='none';
 function cached(k,fn){return AD.cache[k]||(AD.cache[k]=fn());}
 
@@ -2747,6 +2812,17 @@ function advDraw(){
     draw(sh,sc,()=>AD.outCol,'adv-glass',null);
   }else draw(sh,sc,f=>KCOL[f.k]||'#4E9FD1','adv-face',null);
   for(;i<advEls.length;i++)advEls[i].style.display='none';
+  let dl=0;                                          // 뒤쪽(보이지 않는) 모서리를 점선으로
+  const dash=(s,scale,cls)=>{if(!s.ed)return;s.ed.forEach(e=>{if(e.length<4)return;
+    if(mulMV(R,s.F[e[2]].n)[2]>1e-4||mulMV(R,s.F[e[3]].n)[2]>1e-4)return;
+    const p=mulMV(R,s.V[e[0]]),q=mulMV(R,s.V[e[1]]);let el=advDashEls[dl];if(!el){el=svgEl('line',null,gAdvDash);advDashEls.push(el);}dl++;
+    el.setAttribute('class',cls);el.setAttribute('x1',(p[0]*scale).toFixed(1));el.setAttribute('y1',(-p[1]*scale).toFixed(1));el.setAttribute('x2',(q[0]*scale).toFixed(1));el.setAttribute('y2',(-q[1]*scale).toFixed(1));el.style.display='';});};
+  if(AD.dash){
+    if(AD.tab==='count'){if(FC.d<.02)dash(sh,sc,'adv-dl');}
+    else if(AD.tab==='dual'&&AD.dual){if(AD.dualK>.6)dash(AD.dual,sc*(0.55+0.45*AD.dualK),'adv-dl gold');dash(sh,sc,'adv-dl');}
+    else dash(sh,sc,'adv-dl');
+  }
+  for(;dl<advDashEls.length;dl++)advDashEls[dl].style.display='none';
   let j=0;
   if(AD.tab==='dual'&&AD.dotK>0.001&&AD.dualK<0.999){
     sh.F.forEach(f=>{const n=mulMV(R,f.n);if(n[2]<=0.05)return;const c=mulMV(R,f.c);let e=advDots[j];if(!e){e=svgEl('circle',{class:'adv-dot'},gAdvTop);advDots.push(e);}j++;
@@ -2779,13 +2855,13 @@ function setTag(name,kind){$('#atName').textContent=name;const k=$('#atKind');k.
 function advStart(){
   setMode('adv');resetView();studyHide();
   gPieces.style.display='none';gauge.style.display='none';dotEl.style.display='none';gHint.style.display='none';
-  gAdv.style.display=gAdvTop.style.display='';matEl.classList.add('adv-on');$('#advTag').hidden=false;
+  gAdv.style.display=gAdvTop.style.display=gAdvDash.style.display='';matEl.classList.add('adv-on');matEl.classList.toggle('dash-on',!!AD.dash);$('#advTag').hidden=false;$('#advDashBtn').hidden=false;
   advTab(AD.tab||'euler');
   if(!AD.raf){AD.last=0;AD.ramp=performance.now();AD.raf=requestAnimationFrame(advLoop);}
 }
 function advStop(){
   if(AD.raf)cancelAnimationFrame(AD.raf);AD.raf=0;AD.drag=null;AD.play=0;AD.dualTok++;
-  gAdv.style.display=gAdvTop.style.display='none';matEl.classList.remove('adv-on','dragging');
+  gAdv.style.display=gAdvTop.style.display=gAdvDash.style.display='none';matEl.classList.remove('adv-on','dragging','dash-on');$('#advDashBtn').hidden=true;
   gPieces.style.display='';gauge.style.display='';dotEl.style.display='';gHint.style.display='';
   $('#advTag').hidden=true;bigNoteHide();
 }
@@ -3029,6 +3105,71 @@ function fcTop(R,sc,dot,line){
   if(FC.vtx>=0){const v=sh.V[FC.vtx];sh.F.forEach(f=>{if(f.idx.indexOf(FC.vtx)<0)return;const p=pr(v,f);dot(p[0],p[1],7.5);});}
 }
 
+/* ═══ 도전 모드: 가운데 입체를 보고 답하는 문제 ═══ */
+const QZ={on:false,key:'',shape:null,B:null,phi:0,drag:null,ramp:0,raf:0,last:0,cy:0,rpx:120,q:null,lock:false,col:'#D9463C'};
+const gQuiz=svgEl('g',{id:'gQuiz'},bench),qzEls=[];gQuiz.style.display='none';
+const QCOL=['#D9463C','#4E9FD1','#E9B135','#2FA38A','#C94A7C','#E8793A'];
+function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+function quizBuild(sk){
+  const info=SOLIDS[sk],a=sk.split('-'),n=+a[0],k=+a[1],lv=M.correct<5?0:M.correct<9?1:2;
+  const qs=['name','F','shape','deg'];if(lv>=1)qs.push('V');if(lv>=2)qs.push('E','dual');
+  const q=pick(qs),four=(c,pool)=>{const o=[c];shuf(pool.filter(x=>x!==c)).forEach(x=>{if(o.length<4)o.push(x);});return shuf(o);};
+  const names=SLOT_ORDER.map(x=>SOLIDS[x].name),dualOf={'3-3':'3-3','4-3':'3-4','3-4':'4-3','5-3':'3-5','3-5':'5-3'};
+  let text,ans,opts,why;
+  if(q==='name'){text='가운데 선물의 이름은 무엇일까요?';ans=info.name;opts=four(ans,names);why='면이 모두 '+POLY[n].name+'이고 꼭짓점마다 '+k+'개씩 모였어요.';}
+  else if(q==='F'){text='가운데 선물의 면은 몇 개일까요?';ans=info.F+'개';opts=four(ans,['4개','6개','8개','12개','20개']);why=info.name+'는 면이 '+info.F+'개예요.';}
+  else if(q==='V'){text='가운데 선물의 꼭짓점은 몇 개일까요?';ans=info.V+'개';opts=four(ans,['4개','6개','8개','12개','20개']);why=info.name+'는 꼭짓점이 '+info.V+'개예요.';}
+  else if(q==='E'){text='가운데 선물의 모서리는 몇 개일까요?';ans=info.E+'개';opts=four(ans,['6개','8개','12개','20개','24개','30개']);why=info.name+'는 모서리가 '+info.E+'개예요.';}
+  else if(q==='deg'){text='가운데 선물의 한 꼭짓점에는 면이 몇 개 모였을까요?';ans=k+'개';opts=['3개','4개','5개','6개'];why=info.name+'는 꼭짓점마다 '+POLY[n].name+'이 '+k+'개씩 모여요.';}
+  else if(q==='shape'){text='가운데 선물의 면은 어떤 모양일까요?';ans=POLY[n].name;opts=['정삼각형','정사각형','정오각형','정육각형'];why=info.name+'의 면은 모두 '+POLY[n].name+'이에요.';}
+  else{text='가운데 선물과 모서리 수가 같고, 면과 꼭짓점의 수가 서로 바뀐 짝꿍은?';ans=SOLIDS[dualOf[sk]].name;opts=four(ans,names);why=sk==='3-3'?'정사면체의 짝꿍은 자기 자신이에요.':info.name+'와 '+ans+'는 면과 꼭짓점의 수가 서로 바뀌어요.';}
+  return {key:sk,q:q,text:text,choices:opts,ans:opts.indexOf(ans),why:why};
+}
+function quizShow(o){
+  const z=o.quiz,id=SOLIDS[z.key].id;
+  QZ.on=true;QZ.q=z;QZ.key=z.key;QZ.shape=cached(id,()=>elShape(id));QZ.B=mulMM(rotX(.42),rotY(.55));QZ.phi=Math.random()*TAU;QZ.ramp=performance.now();QZ.lock=false;
+  QZ.col=pick(QCOL.filter(c=>c!==QZ.col));
+  gPieces.style.display='none';gauge.style.display='none';dotEl.style.display='none';gHint.style.display='none';gQuiz.style.display='';
+  matEl.classList.add('quiz-on');$('.drawer').classList.add('quiz');
+  const bar=$('#quizBar');
+  bar.innerHTML=z.choices.map((c,i)=>'<button class="qz-btn" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+c+'</span></button>').join('');bar.hidden=false;
+  bar.querySelectorAll('.qz-btn').forEach(b=>b.addEventListener('click',()=>quizAnswer(+b.dataset.i,b)));
+  quizLayout();
+  if(!QZ.raf){QZ.last=0;QZ.raf=requestAnimationFrame(quizLoop);}
+}
+function quizHide(){
+  if(!QZ.on)return;QZ.on=false;QZ.drag=null;if(QZ.raf)cancelAnimationFrame(QZ.raf);QZ.raf=0;
+  gQuiz.style.display='none';gPieces.style.display='';gauge.style.display='';dotEl.style.display='';gHint.style.display='';
+  matEl.classList.remove('quiz-on','dragging');$('.drawer').classList.remove('quiz');
+  const bar=$('#quizBar');bar.hidden=true;bar.innerHTML='';drawBench();
+}
+function quizLayout(){
+  const r=matEl.getBoundingClientRect(),b=$('#quizBar').getBoundingClientRect();if(!r.width||!r.height)return;
+  const upp=440/Math.min(r.width,r.height),top=r.top+34,bot=(b.height?b.top:r.bottom)-12;
+  QZ.cy=((top+bot)/2-(r.top+r.height/2))*upp;QZ.rpx=Math.max(60,Math.min(r.width*.34,(bot-top)*.46));QZ.upp=upp;
+}
+function quizLoop(now){
+  if(!QZ.on){QZ.raf=0;return;}
+  const dt=Math.min(.05,(now-(QZ.last||now))/1000);QZ.last=now;
+  if(!QZ.drag&&!calm)QZ.phi+=dt*.5*Math.min(1,(now-QZ.ramp)/900);
+  quizDraw();QZ.raf=requestAnimationFrame(quizLoop);
+}
+function quizDraw(){
+  const sh=QZ.shape;if(!sh)return;const R=mulMM(rotY(QZ.phi),QZ.B),sc=QZ.rpx*QZ.upp/sh.rad;let i=0;
+  const P=sh.V.map(v=>{const p=mulMV(R,v);return [p[0]*sc,-p[1]*sc+QZ.cy,p[2]];}),it=[];
+  sh.F.forEach(f=>{const n=mulMV(R,f.n);if(n[2]<=1e-4)return;let z=0;f.idx.forEach(v=>{z+=P[v][2];});it.push({f:f,n:n,z:z});});
+  it.sort((a,b)=>a.z-b.z).forEach(o=>{let e=qzEls[i];if(!e){e=svgEl('polygon',{class:'qz-face'},gQuiz);qzEls.push(e);}i++;
+    e.setAttribute('points',o.f.idx.map(v=>P[v][0].toFixed(1)+','+P[v][1].toFixed(1)).join(' '));e.setAttribute('fill',lit(QZ.col,o.n));e.style.display='';});
+  for(;i<qzEls.length;i++)qzEls[i].style.display='none';
+}
+function quizAnswer(i,btn){
+  if(!QZ.on||!M.run||QZ.lock)return;const z=QZ.q;
+  if(i===z.ans){QZ.lock=true;btn.classList.add('ok');sfx.tap();
+    const run=M.runId;setTimeout(()=>{if(!M.run||run!==M.runId||!QZ.on||QZ.q!==z)return;QZ.lock=false;correct(z.key,bench);},ms(360));}
+  else{btn.classList.add('no');btn.disabled=true;miss('아니에요. 가운데 선물을 끌어서 돌려 보며 다시 세어 보세요.');}
+}
+window.addEventListener('resize',()=>{if(QZ.on)quizLayout();});
+
 /* 큰 글씨로 잠깐 겹쳐 보이는 핵심 문장 */
 let bnTimer=0;
 function bigNote(kicker,main,sub,plain,dur){
@@ -3040,19 +3181,21 @@ function bigNote(kicker,main,sub,plain,dur){
 function bigNoteHide(){clearTimeout(bnTimer);const el=$('#bigNote');if(el){el.hidden=true;el.classList.remove('show');}}
 
 /* 심화 탐구: 끌어서 돌리기 */
+const viewSt=()=>M.mode==='adv'?AD:(QZ.on?QZ:null);       // 지금 손가락으로 돌릴 입체(심화 탐구 / 도전 문제)
 matEl.addEventListener('pointerdown',e=>{
-  if(M.mode!=='adv'||!AD.shape||e.target.closest('button,input,.adv-tag'))return;
-  AD.drag={id:e.pointerId,x:e.clientX,y:e.clientY};try{matEl.setPointerCapture(e.pointerId);}catch(_){}
-  AD.B=mulMM(rotY(AD.phi),AD.B);AD.phi=0;matEl.classList.add('dragging');e.preventDefault();
+  const v=viewSt();if(!v||!v.shape||e.target.closest('button,input,.adv-tag,.quiz-bar'))return;
+  v.drag={id:e.pointerId,x:e.clientX,y:e.clientY};try{matEl.setPointerCapture(e.pointerId);}catch(_){}
+  v.B=mulMM(rotY(v.phi),v.B);v.phi=0;matEl.classList.add('dragging');e.preventDefault();
 });
 matEl.addEventListener('pointermove',e=>{
-  if(!AD.drag||e.pointerId!==AD.drag.id)return;
-  const dx=e.clientX-AD.drag.x,dy=e.clientY-AD.drag.y,sp=Math.PI/Math.max(240,matEl.clientWidth*0.9);
-  AD.drag.x=e.clientX;AD.drag.y=e.clientY;AD.B=mulMM(rotY(dx*sp),mulMM(rotX(dy*sp),AD.B));
+  const v=viewSt();if(!v||!v.drag||e.pointerId!==v.drag.id)return;
+  const dx=e.clientX-v.drag.x,dy=e.clientY-v.drag.y,sp=Math.PI/Math.max(240,matEl.clientWidth*0.9);
+  v.drag.x=e.clientX;v.drag.y=e.clientY;v.B=mulMM(rotY(dx*sp),mulMM(rotX(dy*sp),v.B));
 });
-const advDragEnd=e=>{if(AD.drag&&(!e||e.pointerId===AD.drag.id)){AD.drag=null;AD.ramp=performance.now();matEl.classList.remove('dragging');}};
+const advDragEnd=e=>{const v=viewSt();if(v&&v.drag&&(!e||e.pointerId===v.drag.id)){v.drag=null;v.ramp=performance.now();matEl.classList.remove('dragging');}};
 matEl.addEventListener('pointerup',advDragEnd);matEl.addEventListener('pointercancel',advDragEnd);
 document.querySelectorAll('.adv-tab').forEach(b=>b.addEventListener('click',()=>{if(AD.tab===b.dataset.tab)return;sfx.tap();advTab(b.dataset.tab);}));
+$('#advDashBtn').addEventListener('click',()=>{AD.dash=!AD.dash;sfx.tap();$('#advDashBtn').setAttribute('aria-checked',AD.dash?'true':'false');matEl.classList.toggle('dash-on',AD.dash);});
 
 /* ───────── 연결 ───────── */
 renderPicker();renderShelf();renderHof();drawBench();refresh();idleGuide();sceneStart();
@@ -3090,6 +3233,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){if(!$('#noSix').hidden)closeNoSix();else if(!$('#reveal').hidden)closeReveal();return;}
   const t=e.target&&e.target.tagName;
   if(M.mode==='adv')return;
+  if(QZ.on){if(M.run&&/^[1-4]$/.test(e.key)&&$('#result').hidden){const qb=document.querySelector('.qz-btn[data-i="'+(+e.key-1)+'"]');if(qb&&!qb.disabled){qb.click();e.preventDefault();}}return;}
   if(t==='BUTTON'||t==='INPUT'||!$('#start').hidden||!$('#five').hidden||!$('#reveal').hidden||!$('#result').hidden||!$('#noSix').hidden)return;
   if(e.key==='+'||e.key==='='||e.key==='ArrowUp'){changeCount(1);e.preventDefault();}
   else if(e.key==='-'||e.key==='ArrowDown'){changeCount(-1);e.preventDefault();}
@@ -3100,7 +3244,7 @@ document.addEventListener('keydown',e=>{
 });
 window.addEventListener('resize',()=>{if(S.view==='bench')drawBench();});
 
-if(params.has('debug'))window.SG={AD:AD,FAMS:FAMS,famShape:famShape,elShape:elShape,dualShape:dualShape,shapeOf:shapeOf,truncShape:truncShape,advTab:advTab,advTrunc:advTrunc,advEuler:advEuler,advDual:advDual,advFam:advFam,bigNote:bigNote,pileAdd:pileAdd,renderHof:renderHof,netPose:netPose,openNoSix:openNoSix,curR:curR,frontOf:()=>{const R=curR();return ST.m.F.map(f=>mulMV(R,f.n)[2]>1e-4);},ST:ST,M:M,HOF:HOF,nextOrder:nextOrder,buildOrder:buildOrder,makeOrder:makeOrder,endChallenge:endChallenge,S:S,disp:disp,drawBench:drawBench,fold:fold,unfold:unfold,choosePoly:choosePoly,changeCount:changeCount,openFive:openFive,openReveal:openReveal,MODEL:MODEL,SOLIDS:SOLIDS,refresh:refresh,renderShelf:renderShelf,
+if(params.has('debug'))window.SG={QZ:QZ,quizShow:quizShow,quizHide:quizHide,PILE:PILE,quizAnswer:quizAnswer,quizBuild:quizBuild,AD:AD,FAMS:FAMS,famShape:famShape,elShape:elShape,dualShape:dualShape,shapeOf:shapeOf,truncShape:truncShape,advTab:advTab,advTrunc:advTrunc,advEuler:advEuler,advDual:advDual,advFam:advFam,bigNote:bigNote,pileAdd:pileAdd,renderHof:renderHof,netPose:netPose,openNoSix:openNoSix,curR:curR,frontOf:()=>{const R=curR();return ST.m.F.map(f=>mulMV(R,f.n)[2]>1e-4);},ST:ST,M:M,HOF:HOF,nextOrder:nextOrder,buildOrder:buildOrder,makeOrder:makeOrder,endChallenge:endChallenge,S:S,disp:disp,drawBench:drawBench,fold:fold,unfold:unfold,choosePoly:choosePoly,changeCount:changeCount,openFive:openFive,openReveal:openReveal,MODEL:MODEL,SOLIDS:SOLIDS,refresh:refresh,renderShelf:renderShelf,
   capCompare:function(n,k){          // 접힌 조각과 입체의 첫 모습이 겹치는지 확인용
     const info=SOLIDS[n+'-'+k],solid=MODEL[info.id],cEnd=Math.tan(interior(n)*DEG/2)/Math.tan(Math.PI/k);
     S.n=n;S.k=k;disp.kf=k;drawBench({c:cEnd});
