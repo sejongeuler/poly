@@ -1000,6 +1000,26 @@ html.adv-mode{--page:#E5EBF4}
 .fl-eq b{font-size:15px;font-weight:900;color:var(--ink);font-variant-numeric:tabular-nums}
 .fl-eq small{font-size:10.5px;font-weight:700;color:var(--ink-2)}
 .fl-eq.new{animation:rowIn 1.6s ease}
+
+/* ───── 쌍대: 짝 목록(양쪽 그림) ───── */
+.adv-pairs .adv-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:4px;min-height:84px;padding:8px 6px;text-align:center}
+.adv-pairs .ap-side{display:grid;justify-items:center;gap:4px;min-width:0}
+.adv-pairs .ap-ico{width:42px;height:42px}
+.adv-pairs .ap-name{font-size:13px;font-weight:800;white-space:nowrap;letter-spacing:-.02em}
+.adv-pairs .ap-name.dim{color:var(--ink-2)}
+.adv-pairs .ap-arrow{font-size:18px;font-weight:900;color:#B8861F}
+.adv-pairs .ap-unk{display:grid;place-items:center;border:1.5px dashed var(--line);font-size:20px;font-weight:900;color:var(--ink-2);background:var(--well)}
+
+/* ───── 면으로 세기 노트: 접기·펼치기 ───── */
+.fc-list .fl-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:6px;row-gap:2px;width:100%;padding:0;margin:0;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.fc-list .fl-head .fl-name{grid-column:1;grid-row:1}
+.fc-list .fl-chev{grid-column:2;grid-row:1}
+.fc-list .fl-sum{grid-column:1/-1;grid-row:2;font-size:11.5px;font-weight:700;color:var(--ink-2)}
+.fc-list .fl-sum:empty{display:none}
+.fc-list .fl-chev{width:9px;height:9px;flex:none;border-right:2px solid var(--ink-2);border-bottom:2px solid var(--ink-2);transform:rotate(-45deg);margin:0 2px 0 4px;transition:transform .2s}
+.fc-list li.open .fl-chev{transform:rotate(45deg);margin-top:-4px}
+.fc-list li.open .fl-sum{display:none}
+.fc-law{margin-bottom:2px}
 </style>
 </head>
 <body>
@@ -2982,7 +3002,7 @@ function famShape(f,t){const F=FAMS[f];if(!F.base){F.base=shapeOf(F.P);F.dual=du
 function elShape(id){if(id==='prism3')return prismShape(3);if(id==='pyr4')return pyrShape(4);if(id==='ball')return truncShape(shapeOf('icosa'),S3);return shapeOf(id);}
 
 const B0=()=>mulMM(rotX(.42),rotY(.55));
-const AD={tab:'count',spinOff:false,shape:null,dual:null,B:B0(),phi:0,raf:0,last:0,ramp:0,drag:null,fam:'cube',t:0,snap:null,cache:{},noted:new Map(),seen:new Set(),
+const AD={tab:'count',spinOff:false,revealed:new Set(),shape:null,dual:null,B:B0(),phi:0,raf:0,last:0,ramp:0,drag:null,fam:'cube',t:0,snap:null,cache:{},noted:new Map(),seen:new Set(),
   eulerShown:false,dualShown:false,archShown:false,pair:-1,swap:false,dualT0:0,dotK:0,dualK:1,dualTok:0,play:0,hold:0,fit:152,outCol:'#4E9FD1',sel:'',lastNew:''};
 const gAdv=svgEl('g',{id:'gAdv'},bench),gAdvDash=svgEl('g',{id:'gAdvDash'},bench),gAdvTop=svgEl('g',{id:'gAdvTop'},bench),advEls=[],advDots=[],advLines=[],advDashEls=[];
 gAdvDash.style.display='none';
@@ -3038,8 +3058,8 @@ function advLoop(now){
   if(AD.tab==='dual'&&AD.dualT0){const e=(now-AD.dualT0)/1000;
     AD.dotK=calm?1:Math.min(1,e/.45);AD.dualK=calm?(e>.6?1:0):easeInOut(Math.min(1,Math.max(0,(e-.9)/1.1)));if(AD.dualK>=1)AD.dualT0=0;}
   if(AD.play&&AD.tab==='trunc'){
-    if(now>=AD.hold){const F=FAMS[AD.fam],nt=Math.min(1,AD.t+dt/9),hit=F.snaps.find(s=>s[0]>AD.t+1e-6&&s[0]<=nt+1e-9);
-      if(hit){advTrunc(hit[0],false);AD.hold=now+1300;}else advTrunc(nt,false);
+    if(now>=AD.hold){const F=FAMS[AD.fam],nt=Math.min(1,AD.t+dt/9),hit=F.snaps.find(s=>s[0]>AD.t+1e-6&&s[0]<=nt+.0016);
+      if(hit){advTrunc(hit[0],false);AD.hold=Math.max(now+(calm?1600:1300),(AD.noteEnd||0)+300);}else advTrunc(nt,false);   // 이름 알림이 사라질 때까지 잠시 멈춤
       if(AD.t>=1){AD.play=0;playBtnText();}}
   }
   advDraw();AD.raf=requestAnimationFrame(advLoop);
@@ -3077,10 +3097,9 @@ function advTab(tab){
       guide('E03','입체를 하나 골라 보세요','꼭짓점, 모서리, 면의 수를 탐구 노트에 적어 줄게요. 무엇이 늘 같을까요?');}
     markItems();
   }else if(tab==='dual'){
-    body.innerHTML='<p class="adv-lead">면의 한가운데에 점을 찍고 이웃한 점끼리 이으면 어떤 입체가 될까요?</p><div class="adv-pairs">'+
-      PAIRS.map((p,i)=>'<button class="adv-pair" data-i="'+i+'"><span class="ap-ico">'+shapeIcon(cached(p[0],()=>elShape(p[0])))+'</span><span class="ap-name">'+p[2]+'</span><span class="ap-q">?</span></button>').join('')+
-      '</div><div class="adv-acts"><button class="ghost" id="dualSwap">안팎 바꾸기</button><button class="ghost" id="dualAgain">다시 잇기</button></div>';
-    body.querySelectorAll('.adv-pair').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advDual(+b.dataset.i,false);}));
+    body.innerHTML='<p class="adv-lead">면의 한가운데에 점을 찍고 이웃한 점끼리 이으면 어떤 입체가 될까요?</p><div class="adv-pairs" id="advPairs"></div>'+
+      '<div class="adv-acts"><button class="ghost" id="dualSwap">안팎 바꾸기</button><button class="ghost" id="dualAgain">다시 잇기</button></div>';
+    renderPairs();
     $('#dualSwap').addEventListener('click',()=>{if(AD.pair<0)return;sfx.tap();advDual(AD.pair,!AD.swap);});
     $('#dualAgain').addEventListener('click',()=>{if(AD.pair<0)return;sfx.tap();advDual(AD.pair,AD.swap);});
     advDual(AD.pair<0?0:AD.pair,AD.swap);
@@ -3111,19 +3130,26 @@ function advEuler(id,quiet){
     setTimeout(()=>{if(M.mode!=='adv'||AD.tab!=='euler'||AD.dualTok!==tok)return;bigNote('오일러 공식','꼭짓점 − 모서리 + 면 = 2','볼록한 다면체라면 언제나 이렇게 돼요',true,3600);sfx.five();renderNote();
       guide('E06','언제나 2가 나와요!','이것을 오일러 공식이라고 해요. 축구공처럼 복잡한 입체도 마찬가지예요.');},ms(900));}
 }
+function renderPairs(){                             // 짝 목록: 왼쪽 = 바깥 입체, 오른쪽 = 안에 생기는 짝꿍(열어 본 뒤 그림이 나타남)
+  const box=$('#advPairs');if(!box)return;
+  box.innerHTML=PAIRS.map((p,i)=>{const L=AD.swap?p[1]:p[0],R=AD.swap?p[0]:p[1],Ln=AD.swap?p[3]:p[2],Rn=AD.swap?p[2]:p[3],rev=AD.revealed.has(i);
+    return '<button class="adv-pair'+(i===AD.pair?' on':'')+'" data-i="'+i+'" aria-label="'+Ln+' 짝꿍 찾기">'+
+      '<span class="ap-side"><span class="ap-ico">'+shapeIcon(cached(L,()=>elShape(L)))+'</span><span class="ap-name">'+Ln+'</span></span>'+
+      '<span class="ap-arrow" aria-hidden="true">⇄</span>'+
+      '<span class="ap-side">'+(rev?'<span class="ap-ico">'+shapeIcon(cached(R,()=>elShape(R)))+'</span><span class="ap-name">'+Rn+'</span>':'<span class="ap-ico ap-unk">?</span><span class="ap-name dim">짝꿍은?</span>')+'</span></button>';}).join('');
+  box.querySelectorAll('.adv-pair').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advDual(+b.dataset.i,AD.swap);}));
+}
 function advDual(i,swap){
   AD.pair=i;AD.swap=!!swap;const p=PAIRS[i],outId=swap?p[1]:p[0],outName=swap?p[3]:p[2],inName=swap?p[2]:p[3];
   const out=cached(outId,()=>elShape(outId));AD.dual=cached('in-'+outId,()=>dualShape(out,true));AD.outCol=SCOL[outId];
   advShow(out);AD.dualT0=performance.now();AD.dotK=0;AD.dualK=0;AD.pend=true;
   setTag(outName,'면의 한가운데를 이으면…');
   guide('E03','면의 한가운데에 점을 찍어요','이웃한 점끼리 이으면 어떤 입체가 생길까요?');
-  document.querySelectorAll('.adv-pair').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
-  renderNote();
+  renderPairs();renderNote();
   const tok=++AD.dualTok;
   setTimeout(()=>{if(M.mode!=='adv'||AD.tab!=='dual'||AD.dualTok!==tok)return;
     AD.pend=false;setTag(outName,'안에 숨은 짝꿍: '+inName);sfx.gift();
-    const pb=document.querySelector('.adv-pair[data-i="'+i+'"] .ap-q');if(pb)pb.textContent='↔ '+inName;
-    renderNote();
+    AD.revealed.add(i);renderPairs();renderNote();
     guide('E06',outName+' 안에 '+inName+'가 숨어 있어요',outName===inName?'정사면체의 짝꿍은 바로 자기 자신이에요.':'꼭짓점 수와 면 수가 서로 바뀌어요. 탐구 노트를 보세요.');
     if(!AD.dualShown){AD.dualShown=true;bigNote('쌍대 다면체','면의 한가운데를 이으면 짝꿍 정다면체!','꼭짓점 수와 면 수가 서로 바뀌고, 모서리 수는 같아요',true,3400);}
   },ms(2100));
@@ -3144,13 +3170,16 @@ function advTrunc(t,snapNow,fresh){
   const snap=F.snaps.find(s=>Math.abs(s[0]-AD.t)<.0015)||null,was=AD.snap;AD.snap=snap;
   if(snap){
     setTag(snap[1],snap[2]);
-    if(snap!==was){
-      if(snap[3]&&!AD.seen.has(snap[3])){AD.seen.add(snap[3]);sfx.gift();
-        if(!AD.archShown){AD.archShown=true;bigNote('준정다면체 발견!',snap[1],'두 가지 이상의 정다각형으로 둘러싸이고, 어느 꼭짓점이든 모습이 같아요',true,3400);}
-        guide('E06',snap[1]+'을 찾았어요!',faceText(sh,true)+'로 둘러싸인 준정다면체예요.');}
-      else if(snap[3]){sfx.again();guide('E05',snap[1],faceText(sh,true)+'로 둘러싸여 있어요.');}
-      else if(AD.t>0&&AD.t<1){sfx.gift();guide('E06','어? '+snap[1]+'가 되었어요!','정사면체를 반만큼 깎으면 정팔면체가 돼요.');}
-      else if(AD.t>=1){sfx.gift();guide('E06','끝까지 깎았더니 '+snap[1]+'!',AD.fam==='tetra'?'정사면체를 끝까지 깎으면 다시 정사면체(거꾸로 놓인)가 돼요.':'처음 입체의 짝꿍(쌍대) 정다면체가 나왔어요.');}
+    if(snap!==was&&AD.t>0){                       // 이름이 있는 모양에 닿을 때마다 큰 글씨로 알림
+      const ft=faceText(sh,true);
+      if(snap[3]){
+        const isNew=!AD.seen.has(snap[3]);if(isNew)AD.seen.add(snap[3]);(isNew?sfx.gift:sfx.again)();
+        const first=!AD.archShown;AD.archShown=true;
+        AD.noteDur=first?3400:2500;AD.noteEnd=performance.now()+AD.noteDur;bigNote(isNew?'준정다면체 발견!':'준정다면체',snap[1],first?'두 가지 이상의 정다각형으로 둘러싸이고, 어느 꼭짓점이든 모습이 같아요':ft+'로 둘러싸여 있어요',true,AD.noteDur);
+        guide(isNew?'E06':'E05',isNew?snap[1]+'를 찾았어요!':snap[1],ft+'로 둘러싸인 준정다면체예요.');}
+      else if(AD.t<1){sfx.gift();AD.noteDur=2500;AD.noteEnd=performance.now()+2500;bigNote('정다면체',snap[1],'정사면체를 반만큼 깎으면 정팔면체가 돼요',true,2500);guide('E06','어? '+snap[1]+'가 되었어요!','정사면체를 반만큼 깎으면 정팔면체가 돼요.');}
+      else{sfx.gift();const why=AD.fam==='tetra'?'정사면체를 끝까지 깎으면 다시 정사면체(거꾸로 놓인)가 돼요':'처음 입체의 짝꿍(쌍대) 정다면체가 나왔어요';
+        AD.noteDur=2500;AD.noteEnd=performance.now()+2500;bigNote('끝까지 깎았더니',snap[1],why,true,2500);guide('E06','끝까지 깎았더니 '+snap[1]+'!',why+'.');}
     }
   }else setTag('깎는 중…',faceText(sh,false));
   renderNote();
@@ -3166,12 +3195,14 @@ function renderNote(){
       if(lv>=3)L.push(num(t,'조각의 변의 수')+' ÷ '+num(2,'모서리 하나에 맞닿은 변의 수')+' = '+num(I.E,'모서리의 수'));
       if(lv>=4)L.push(num(t,'조각의 꼭짓점 수')+' ÷ '+num(I.k,'꼭짓점 하나에 모인 조각의 수')+' = '+num(I.V,'꼭짓점의 수'));
       return L;};
-    const rows=FC_LIST.filter(id=>FC.prog[id]).map(id=>{const I=fcInfo(id),L=lines(I,FC.prog[id]);
-      return '<li class="'+(id===FC.id?'cur':'')+'"><b class="fl-name">'+I.name+(FC.done.has(id)?'<i>완료</i>':'')+'</b>'+
-        L.map((x,i)=>'<p class="fl-eq'+(FC.newLine===id+':'+(i+1)?' new':'')+'">'+x+'</p>').join('')+'</li>';}).join('');
+    const rows=FC_LIST.filter(id=>FC.prog[id]).map(id=>{const I=fcInfo(id),lv=FC.prog[id],L=lines(I,lv),open=FC.open.has(id);
+      const sum=lv>=4?'모서리 '+I.E+' · 꼭짓점 '+I.V:'식 '+lv+'개';
+      return '<li class="'+(id===FC.id?'cur':'')+(open?' open':'')+'"><button class="fl-head" data-fl="'+id+'" aria-expanded="'+(open?'true':'false')+'">'+
+        '<b class="fl-name">'+I.name+(FC.done.has(id)?'<i>완료</i>':'')+'</b><span class="fl-sum">'+(open?'':sum)+'</span><span class="fl-chev" aria-hidden="true"></span></button>'+
+        (open?L.map((x,i)=>'<p class="fl-eq'+(FC.newLine===id+':'+(i+1)?' new':'')+'">'+x+'</p>').join(''):'')+'</li>';}).join('');
     FC.newLine='';
-    body.innerHTML=(rows?'<ul class="fc-list">'+rows+'</ul>':'<p class="note-tip">계산한 식이 숫자의 뜻과 함께 여기에 적혀요.</p>')+
-      (FC.law?'<div class="law fc-law"><span>면으로 세기</span><b>면 × 한 면의 모서리</b><b>= 모서리 × 2</b><b>= 꼭짓점 × 한 꼭짓점의 면</b></div>':'');
+    body.innerHTML=(FC.law?'<div class="law fc-law"><span>결론</span><b>면의 수 × 한 면의 모서리 수</b><b>= 모서리의 수 × 2</b><b>= 꼭짓점의 수 × 한 꼭짓점에 모인 면의 수</b></div>':'')+
+      (rows?'<ul class="fc-list">'+rows+'</ul>':'<p class="note-tip">계산한 식이 숫자의 뜻과 함께 여기에 적혀요.</p>');
     meta.textContent=FC.done.size+'/5';
   }else if(AD.tab==='euler'){
     let rows='';AD.noted.forEach((r,id)=>{rows+='<tr class="'+(id===AD.lastNew?'new':'')+'"><th>'+r.name+'</th><td>'+r.V+'</td><td>'+r.E+'</td><td>'+r.F+'</td><td class="two">'+(r.V-r.E+r.F)+'</td></tr>';});
@@ -3211,12 +3242,13 @@ function wireShape(sh){
 }
 
 /* ═══ 심화 탐구: 면으로 세기(면 수 × 한 면의 모서리 수 = 모서리 수 × 2 = 꼭짓점 수 × 한 꼭짓점의 면 수) ═══ */
-const FC={id:'',step:0,ok:false,okS:false,okC:false,d:0,dT:0,edge:null,vtx:-1,done:new Map(),law:false,prog:{},newLine:''};
+const FC={id:'',step:0,ok:false,okS:false,okC:false,d:0,dT:0,edge:null,vtx:-1,done:new Map(),law:false,prog:{},newLine:'',open:new Set()};
 const FC_LIST=['tetra','cube','octa','dodeca','icosa'];
 function fcInfo(id){const key=keyOf(id),p=key.split('-'),s=SOLIDS[key];return {id:id,name:s.name,F:s.F,E:s.E,V:s.V,n:+p[0],k:+p[1]};}
 function fcPick(id,keep){
   const same=FC.id===id;
   if(!same||!keep){FC.id=id;FC.step=0;FC.ok=false;FC.okS=false;FC.okC=false;FC.dT=0;FC.edge=null;FC.vtx=-1;}
+  if(!same)FC.open=new Set([id]);                    // 다른 입체로 넘어가면 이전 기록은 접어 둠
   const sh=cached(id,()=>elShape(id));advShow(sh,keep&&same);if(!(keep&&same))FC.d=0;
   AD.spinOff=FC.step===2||FC.step===3;
   const I=fcInfo(id);setTag(I.name,'면 '+I.F+'개 · 한 면의 모서리 '+I.n+'개');
@@ -3247,7 +3279,7 @@ function fcStep(s){
     document.querySelectorAll('[data-fc]').forEach(b=>b.classList.toggle('done',FC.done.has(b.dataset.fc)));
     if(FC.done.size>=3&&!FC.law){FC.law=true;const tok=++AD.dualTok;
       setTimeout(()=>{if(M.mode!=='adv'||AD.tab!=='count'||AD.dualTok!==tok)return;sfx.five();renderNote();
-        bigNote('면으로 세기','면 수 × 한 면의 모서리 수 = 모서리 수 × 2','모서리 하나에 면이 2개씩 붙어 있어서 두 번씩 세어져요',true,3800);},ms(700));}
+        bigNote('면으로 세기 · 결론','면의 수 × 한 면의 모서리 수 = 모서리의 수 × 2','이 수는 꼭짓점의 수 × 한 꼭짓점에 모인 면의 수와도 같아요',true,4200);},ms(700));}
   }
   sfx.tap();fcRender();renderNote();fcGuide();
 }
@@ -3282,9 +3314,9 @@ function fcRender(){
     h+='<p class="fc-q">조각의 꼭짓점은 모두 '+t+'개였어요.<br>입체의 꼭짓점 하나에 조각의 꼭짓점이 몇 개 모여 있나요?</p>';
     h+=FC.ok?'<p class="fc-eq">'+t+' ÷ '+I.k+' = <b class="got">'+I.V+'</b></p><p class="fc-note">꼭짓점은 '+I.V+'개예요.</p><button class="primary" id="fcNext">정리하기</button>':fcChoices([I.k-1,I.k,I.k+1]);
   }else{
-    h+='<ol class="fc-chain"><li><i></i><b>'+I.F+' × '+I.n+'</b><span>면 수 × 한 면의 모서리 수</span></li>'+
-      '<li><i>=</i><b>'+I.E+' × 2</b><span>모서리 수 × 2</span></li>'+
-      '<li><i>=</i><b>'+I.V+' × '+I.k+'</b><span>꼭짓점 수 × 한 꼭짓점에 모인 면 수</span></li>'+
+    h+='<ol class="fc-chain"><li><i></i><b>'+I.F+' × '+I.n+'</b><span>면의 수 × 한 면의 모서리 수</span></li>'+
+      '<li><i>=</i><b>'+I.E+' × 2</b><span>모서리의 수 × 2</span></li>'+
+      '<li><i>=</i><b>'+I.V+' × '+I.k+'</b><span>꼭짓점의 수 × 한 꼭짓점에 모인 면의 수</span></li>'+
       '<li class="tot"><i>=</i><b>'+t+'</b><span></span></li></ol>'+
       '<p class="fc-q">다른 정다면체에서도 이렇게 될까요? 위에서 다른 입체를 골라 보세요.</p><button class="ghost" id="fcAgain">처음부터 다시</button>';
   }
@@ -3449,6 +3481,8 @@ matEl.addEventListener('pointermove',e=>{
 const advDragEnd=e=>{const v=viewSt();if(v&&v.drag&&(!e||e.pointerId===v.drag.id)){v.drag=null;v.ramp=performance.now();matEl.classList.remove('dragging');}};
 matEl.addEventListener('pointerup',advDragEnd);matEl.addEventListener('pointercancel',advDragEnd);
 document.querySelectorAll('.adv-tab').forEach(b=>b.addEventListener('click',()=>{if(AD.tab===b.dataset.tab)return;sfx.tap();advTab(b.dataset.tab);}));
+$('#advNoteBody').addEventListener('click',e=>{const h=e.target.closest('[data-fl]');if(!h||AD.tab!=='count')return;   // 탐구 노트 접기·펼치기
+  const id=h.dataset.fl;if(FC.open.has(id))FC.open.delete(id);else FC.open.add(id);sfx.tap();renderNote();});
 function learnDashOK(){return M.mode==='learn'&&S.view==='solid'&&!studyEl.hidden&&ST.phase!=='net'&&!ST.netBusy;}
 function syncDash(){                                 // 점선 스위치: 심화 탐구, 학습 모드에서 입체를 볼 때
   const b=$('#advDashBtn'),lrn=learnDashOK(),on=M.mode==='adv'||lrn;
