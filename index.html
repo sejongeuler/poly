@@ -90,7 +90,7 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 .chip-btn{height:44px;padding:0 16px;border-radius:22px;border:1.5px solid var(--line);background:var(--panel);font-weight:700;font-size:15px;white-space:nowrap}
 .chip-btn.armed{border-color:var(--red);color:var(--red)}
 
-.layout{min-height:0;display:grid;grid-template-columns:minmax(190px,232px) minmax(0,1fr) minmax(244px,292px);gap:14px;padding:6px 18px 16px}
+.layout{min-height:0;display:grid;grid-template-columns:clamp(180px,18vw,232px) minmax(0,1fr) clamp(244px,23vw,292px);gap:14px;padding:6px 18px 16px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:20px}
 
 /* ───── 선물 상자(모은 것) ───── */
@@ -1236,6 +1236,22 @@ html.adv-mode{--page:#E5EBF4}
 .fc-vcore{fill:#FFF8DC;stroke:#E9A900;stroke-width:1.2;filter:drop-shadow(0 0 3px rgba(255,214,90,.95))}
 @keyframes fcPulse{0%,100%{transform:scale(.6);opacity:.45}50%{transform:scale(1.25);opacity:.95}}
 @media (prefers-reduced-motion:reduce){.fc-eglow,.fc-espark,.fc-vhalo,.tr-ticks .tk.new i{animation:none}}
+
+/* 좁은 작업판·안내 상자(어떤 창 크기에서도 겹치지 않게) */
+.mat.mat-narrow .adv-dash{padding:0 8px;min-height:38px}
+.mat.mat-narrow .adv-dash .ad-label{display:none}
+.mat.mat-narrow .adv-tag{max-width:calc(100% - 118px);padding:8px 12px 10px}
+.mat.mat-narrow .at-name{font-size:28px}
+.mat.mat-narrow .at-kind{font-size:12.5px}
+.mat.mat-tiny .adv-tag{left:10px;top:10px}
+.mat.mat-tiny .adv-dash{right:10px;top:10px}
+.mat.mat-tiny .at-name{font-size:24px}
+.mat.mat-narrow.learn-dash .adv-dash,.mat.mat-tiny.learn-dash .adv-dash{top:auto}
+.guide.g-narrow{gap:10px;padding:8px 14px 8px 10px;min-height:0}
+.guide.g-narrow .avatar{width:64px;height:64px;margin:-4px 0 -4px -4px}
+.guide.g-narrow h2{font-size:16.5px}
+.guide.g-narrow p{font-size:14px}
+.guide.g-narrow .extra{font-size:12.5px}
 </style>
 </head>
 <body>
@@ -2340,6 +2356,11 @@ function turntable(ramp){                           // 천천히 돌기(손을 �
 
 /* ───────── 완성된 입체를 손으로 돌려 보기 ───────── */
 const matEl=$('.mat'),dragHint=$('#dragHint'),DRAG={on:false,id:0,x:0,y:0};
+(function fitWatch(){                                // 작업판·안내 상자가 좁으면(창 크기·기기와 상관없이) 겹치지 않는 모양으로
+  const guideEl=$('.guide'),apply=(el,w)=>{if(el===matEl){el.classList.toggle('mat-narrow',w<640);el.classList.toggle('mat-tiny',w<420);}else el.classList.toggle('g-narrow',w<500);};
+  if(window.ResizeObserver){const ro=new ResizeObserver(es=>es.forEach(e=>apply(e.target,e.contentRect.width)));ro.observe(matEl);ro.observe(guideEl);}
+  else{const f=()=>{apply(matEl,matEl.clientWidth);apply(guideEl,guideEl.clientWidth);};window.addEventListener('resize',f);f();}
+})();
 const canDrag=()=>M.mode==='learn'&&S.view==='solid'&&ST.phase==='final'&&!S.busy&&!ST.running;
 function dragOn(){matEl.classList.add('grab');dragHint.hidden=false;dragHint.classList.remove('gone');}
 function dragOff(){DRAG.on=false;matEl.classList.remove('grab','dragging');dragHint.hidden=true;}
