@@ -947,6 +947,10 @@ html.adv-mode{--page:#E5EBF4}
 .qz-btn.no{opacity:.35;text-decoration:line-through;animation:shake .4s ease}
 .drawer.quiz .picker,.drawer.quiz .facts,.drawer.quiz .acts{opacity:.38;pointer-events:none;filter:saturate(.5)}
 @media (max-width:699.98px){.quiz-bar{grid-template-columns:1fr 1fr;left:10px;right:10px;bottom:10px;gap:8px}.qz-btn{min-height:50px;font-size:17px}}
+
+/* 심화 탐구·가운데 입체 문제 중에는 조립판(조각·각도 고리·꼭짓점·안내 문구)을 항상 숨김 */
+.mat.adv-on #gHint,.mat.adv-on #gauge,.mat.adv-on #dot,.mat.adv-on #gPieces,.mat.adv-on #gOverlap,.mat.adv-on #gTiles,.mat.adv-on #dragHint,
+.mat.quiz-on #gHint,.mat.quiz-on #gauge,.mat.quiz-on #dot,.mat.quiz-on #gPieces,.mat.quiz-on #gOverlap{display:none!important}
 </style>
 </head>
 <body>
@@ -1496,7 +1500,7 @@ function drawBench(o){
   if(c===1&&o.fly==null&&count>=2&&total>360+1e-6){clipA.setAttribute('points',first);clipB.setAttribute('points',last);gOverlap.style.display='';}
   else gOverlap.style.display='none';
   drawGauge(total,S.k*interior(n));
-  gHint.style.display=(S.k===0&&kf<0.02&&!M.counting)?'':'none';
+  gHint.style.display=(S.k===0&&kf<0.02&&!M.counting&&M.mode!=='adv'&&!QZ.on)?'':'none';
 }
 function animateCount(){
   const tok=++benchTok,from=disp.kf,to=S.k,span=Math.abs(to-from);
@@ -2853,7 +2857,7 @@ function advShow(sh,keep){AD.shape=sh;if(!keep){AD.B=B0();AD.phi=0;}}
 function setTag(name,kind){$('#atName').textContent=name;const k=$('#atKind');k.textContent=kind||'';k.hidden=!kind;}
 
 function advStart(){
-  setMode('adv');resetView();studyHide();
+  setMode('adv');resetView();studyHide();dragOff();
   gPieces.style.display='none';gauge.style.display='none';dotEl.style.display='none';gHint.style.display='none';
   gAdv.style.display=gAdvTop.style.display=gAdvDash.style.display='';matEl.classList.add('adv-on');matEl.classList.toggle('dash-on',!!AD.dash);$('#advTag').hidden=false;$('#advDashBtn').hidden=false;
   advTab(AD.tab||'euler');
@@ -3242,7 +3246,7 @@ document.addEventListener('keydown',e=>{
     if(j!==i)choosePoly(POLYS[j].n);e.preventDefault();
   }else if(e.key==='Enter'||e.key===' '){fold();e.preventDefault();}
 });
-window.addEventListener('resize',()=>{if(S.view==='bench')drawBench();});
+window.addEventListener('resize',()=>{if(S.view==='bench'&&M.mode!=='adv')drawBench();});
 
 if(params.has('debug'))window.SG={QZ:QZ,quizShow:quizShow,quizHide:quizHide,PILE:PILE,quizAnswer:quizAnswer,quizBuild:quizBuild,AD:AD,FAMS:FAMS,famShape:famShape,elShape:elShape,dualShape:dualShape,shapeOf:shapeOf,truncShape:truncShape,advTab:advTab,advTrunc:advTrunc,advEuler:advEuler,advDual:advDual,advFam:advFam,bigNote:bigNote,pileAdd:pileAdd,renderHof:renderHof,netPose:netPose,openNoSix:openNoSix,curR:curR,frontOf:()=>{const R=curR();return ST.m.F.map(f=>mulMV(R,f.n)[2]>1e-4);},ST:ST,M:M,HOF:HOF,nextOrder:nextOrder,buildOrder:buildOrder,makeOrder:makeOrder,endChallenge:endChallenge,S:S,disp:disp,drawBench:drawBench,fold:fold,unfold:unfold,choosePoly:choosePoly,changeCount:changeCount,openFive:openFive,openReveal:openReveal,MODEL:MODEL,SOLIDS:SOLIDS,refresh:refresh,renderShelf:renderShelf,
   capCompare:function(n,k){          // 접힌 조각과 입체의 첫 모습이 겹치는지 확인용
