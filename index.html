@@ -1612,8 +1612,8 @@ const REACH=150;            // 조각이 꼭짓점에서 뻗는 가장 먼 거�
 const CENTER=-Math.PI/2;    // 조각 부채는 아래쪽을 중심으로 펼치고, 빈틈은 위쪽에 생김
 const RG=172;               // 각도 고리 반지름
 const params=new URLSearchParams(location.search);
-const calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
-const ms=t=>calm?1:t;
+const calm=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;   // 기기의 '동작 줄이기' 설정: 계속 도는 장식 회전·반짝임만 멈춤
+const ms=t=>t;              // 안내 속도(세기·돌리기·기다리기)는 기기 설정과 상관없이 늘 같게 — 줄이면 '동작 줄이기' 기기에서 안내가 순식간에 지나감
 const easeOut=u=>1-Math.pow(1-u,3);
 const easeIn=u=>u*u*u;
 const easeInOut=u=>u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;
