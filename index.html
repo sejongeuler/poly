@@ -745,42 +745,42 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){.big-note.show{animation:none;opacity:1}}
 
 /* ───── 심화 탐구: 매트 ───── */
-.mat.adv-on{touch-action:none;cursor:grab}
-.mat.adv-on.dragging{cursor:grabbing}
-.adv-face{stroke:rgba(16,40,33,.6);stroke-width:1.3;stroke-linejoin:round}
-.adv-glass{fill-opacity:.22;stroke:#FFF0C8;stroke-width:1.8;stroke-linejoin:round}
-.adv-dot{fill:#FFE38E;stroke:#8C5E0C;stroke-width:1.2}
-.adv-tag{position:absolute;z-index:3;left:16px;top:16px;max-width:min(72%,380px);padding:10px 16px 12px;pointer-events:none;
+.mat.lab-on{touch-action:none;cursor:grab}
+.mat.lab-on.dragging{cursor:grabbing}
+.lab-face{stroke:rgba(16,40,33,.6);stroke-width:1.3;stroke-linejoin:round}
+.lab-glass{fill-opacity:.22;stroke:#FFF0C8;stroke-width:1.8;stroke-linejoin:round}
+.lab-dot{fill:#FFE38E;stroke:#8C5E0C;stroke-width:1.2}
+.lab-tag{position:absolute;z-index:3;left:16px;top:16px;max-width:min(72%,380px);padding:10px 16px 12px;pointer-events:none;
   background:rgba(8,32,26,.5);border:1px solid rgba(242,205,120,.45);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.adv-tag[hidden]{display:none}
+.lab-tag[hidden]{display:none}
 .at-name{margin:0;font-family:var(--brush);font-size:36px;line-height:1.05;color:#FFF3D0;word-break:keep-all}
 .at-kind{margin:5px 0 0;font-size:13px;font-weight:800;color:#E9C66C;word-break:keep-all}
-@media (max-width:699.98px){.adv-tag{left:10px;top:10px;padding:7px 11px 9px}.at-name{font-size:26px}.at-kind{font-size:11.5px}}
+@media (max-width:699.98px){.lab-tag{left:10px;top:10px;padding:7px 11px 9px}.at-name{font-size:26px}.at-kind{font-size:11.5px}}
 
 /* ───── 심화 탐구: 오른쪽 패널 ───── */
-.drawer.adv>:not(#advPanel){display:none!important}
-.adv-panel{display:grid;gap:12px;align-content:start}
-.adv-panel[hidden]{display:none}
-.adv-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line)}
-.adv-tab{min-height:46px;padding:6px 4px;font:inherit;font-size:13.5px;font-weight:800;line-height:1.2;color:var(--ink-2);background:var(--g-bg);border:0;border-right:1px solid var(--line);border-radius:0;cursor:pointer;word-break:keep-all}
-.adv-tab:last-child{border-right:0}
-.adv-tab.on{background:linear-gradient(160deg,#25624D,#143F33);color:#FFE9A8;box-shadow:inset 0 -3px 0 #E9B135}
-.adv-body{display:grid;gap:10px}
-.adv-lead{margin:0;font-size:13.5px;line-height:1.5;font-weight:600;color:var(--ink-2);word-break:keep-all}
-.adv-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.adv-item,.adv-pair,.adv-fam{position:relative;display:flex;align-items:center;gap:8px;font:inherit;font-weight:800;color:var(--ink);text-align:left;cursor:pointer;
+.drawer.lab>:not(#labPanel){display:none!important}
+.lab-panel{display:grid;gap:12px;align-content:start}
+.lab-panel[hidden]{display:none}
+.lab-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line)}
+.lab-tab{min-height:46px;padding:6px 4px;font:inherit;font-size:13.5px;font-weight:800;line-height:1.2;color:var(--ink-2);background:var(--g-bg);border:0;border-right:1px solid var(--line);border-radius:0;cursor:pointer;word-break:keep-all}
+.lab-tab:last-child{border-right:0}
+.lab-tab.on{background:linear-gradient(160deg,#25624D,#143F33);color:#FFE9A8;box-shadow:inset 0 -3px 0 #E9B135}
+.lab-body{display:grid;gap:10px}
+.lab-lead{margin:0;font-size:13.5px;line-height:1.5;font-weight:600;color:var(--ink-2);word-break:keep-all}
+.lab-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.lab-item,.lab-pair,.lab-fam{position:relative;display:flex;align-items:center;gap:8px;font:inherit;font-weight:800;color:var(--ink);text-align:left;cursor:pointer;
   background:var(--g-bg);border:1px solid var(--g-line);border-radius:0;box-shadow:inset 0 1px 0 var(--g-hi),var(--g-sh)}
-.adv-item{min-height:54px;padding:6px 8px 6px 6px;font-size:14px}
-.adv-item .ai-ico,.adv-pair .ap-ico{flex:none;width:40px;height:40px}
-.adv-item svg,.adv-pair svg{display:block;width:100%;height:100%}
-.adv-item.done::after{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:#2E9B6E}
-.adv-item.on,.adv-pair.on,.adv-fam.on{border-color:#C9962A;box-shadow:inset 0 0 0 2px #E9B135,0 4px 12px rgba(201,150,42,.22)}
-.adv-pairs,.adv-fams{display:grid;gap:8px}
-.adv-pair{min-height:56px;padding:6px 12px 6px 6px;font-size:15px}
+.lab-item{min-height:54px;padding:6px 8px 6px 6px;font-size:14px}
+.lab-item .ai-ico,.lab-pair .ap-ico{flex:none;width:40px;height:40px}
+.lab-item svg,.lab-pair svg{display:block;width:100%;height:100%}
+.lab-item.done::after{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:#2E9B6E}
+.lab-item.on,.lab-pair.on,.lab-fam.on{border-color:#C9962A;box-shadow:inset 0 0 0 2px #E9B135,0 4px 12px rgba(201,150,42,.22)}
+.lab-pairs,.lab-fams{display:grid;gap:8px}
+.lab-pair{min-height:56px;padding:6px 12px 6px 6px;font-size:15px}
 .ap-q{margin-left:auto;font-size:13.5px;font-weight:800;color:#B8861F;white-space:nowrap}
-.adv-fam{min-height:46px;padding:0 14px;font-size:14px}
-.adv-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.adv-acts button{min-height:46px;font-size:14.5px}
+.lab-fam{min-height:46px;padding:0 14px;font-size:14px}
+.lab-acts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.lab-acts button{min-height:46px;font-size:14.5px}
 .tr-box{padding:12px 12px 10px;background:var(--well);border:1px solid var(--line)}
 .tr-ends{display:flex;justify-content:space-between;gap:8px;margin-bottom:4px;font-size:12.5px;font-weight:800;color:var(--ink-2)}
 .tr-slider{position:relative;padding-bottom:12px}
@@ -795,9 +795,9 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 .tr-ticks i.arch{background:#E9B135;opacity:1;box-shadow:0 0 0 1px #9C6E12}
 
 /* ───── 심화 탐구: 탐구 노트(왼쪽) ───── */
-.shelf.adv .adv-note{display:grid;gap:10px;align-content:start}
-.adv-note[hidden]{display:none!important}
-.adv-note-body{display:grid;gap:10px}
+.shelf.lab .lab-note{display:grid;gap:10px;align-content:start}
+.lab-note[hidden]{display:none!important}
+.lab-note-body{display:grid;gap:10px}
 .vef{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
 .vef th,.vef td{padding:7px 2px;text-align:center;border-bottom:1px solid var(--line)}
 .vef thead th{font-size:10.5px;font-weight:800;color:var(--ink-2);white-space:nowrap;letter-spacing:-.03em}
@@ -854,13 +854,13 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 .sum-eq.gt .se-state,.sum-eq.gt .se-sum{color:#D9463C}
 
 /* ───── 심화 탐구: 탭 4개(2줄) ───── */
-.adv-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
-.adv-tab{border-bottom:1px solid var(--line)}
-.adv-tab:nth-child(2n){border-right:0}
-.adv-tab:nth-last-child(-n+2){border-bottom:0}
+.lab-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+.lab-tab{border-bottom:1px solid var(--line)}
+.lab-tab:nth-child(2n){border-right:0}
+.lab-tab:nth-last-child(-n+2){border-bottom:0}
 
 /* ───── 면으로 세기 ───── */
-.adv-hl{stroke:#FFD34D;stroke-width:6;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(255,200,60,.9))}
+.lab-hl{stroke:#FFD34D;stroke-width:6;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(255,200,60,.9))}
 .fc-box{display:grid;gap:10px;padding:12px;background:var(--well);border:1px solid var(--line)}
 .fc-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0;padding:0;list-style:none}
 .fc-steps li{padding:4px 1px 5px;text-align:center;font-size:11px;font-weight:800;color:var(--ink-2);border-bottom:3px solid var(--line);white-space:nowrap}
@@ -896,47 +896,47 @@ button:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
 .fc-item.done::after{content:"";position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;background:#2E9B6E}
 
 /* ───── 심화 탐구 배경: 파란 설계도 실험실 ───── */
-html.adv-mode{--page:#E5EBF4}
-@media (prefers-color-scheme:dark){:root.adv-mode:not([data-theme="light"]){--page:#0A1222;--panel:#121E36;--well:#0E182C;--line:#25395B}}
-:root.adv-mode[data-theme="dark"]{--page:#0A1222;--panel:#121E36;--well:#0E182C;--line:#25395B}
-.mat.adv-on{background:
+html.lab-mode{--page:#E5EBF4}
+@media (prefers-color-scheme:dark){:root.lab-mode:not([data-theme="light"]){--page:#0A1222;--panel:#121E36;--well:#0E182C;--line:#25395B}}
+:root.lab-mode[data-theme="dark"]{--page:#0A1222;--panel:#121E36;--well:#0E182C;--line:#25395B}
+.mat.lab-on{background:
   radial-gradient(ellipse 58% 46% at 50% 45%,rgba(96,160,255,.22),rgba(96,160,255,0) 72%),
   linear-gradient(rgba(150,190,255,.13) 1px,transparent 1px) 0 0/140px 140px,
   linear-gradient(90deg,rgba(150,190,255,.13) 1px,transparent 1px) 0 0/140px 140px,
   linear-gradient(rgba(150,190,255,.055) 1px,transparent 1px) 0 0/28px 28px,
   linear-gradient(90deg,rgba(150,190,255,.055) 1px,transparent 1px) 0 0/28px 28px,
   linear-gradient(165deg,#18325E 0%,#0F2244 52%,#0A162E 100%)}
-.mat.adv-on::before{content:"";position:absolute;left:24%;right:24%;bottom:7%;height:9%;border-radius:50%;pointer-events:none;
+.mat.lab-on::before{content:"";position:absolute;left:24%;right:24%;bottom:7%;height:9%;border-radius:50%;pointer-events:none;
   background:radial-gradient(closest-side,rgba(120,180,255,.34),rgba(120,180,255,0))}
-.mat.adv-on::after{inset:12px;border:0;--c:rgba(160,205,255,.62);background:
+.mat.lab-on::after{inset:12px;border:0;--c:rgba(160,205,255,.62);background:
   linear-gradient(var(--c),var(--c)) left top/26px 2px no-repeat,linear-gradient(var(--c),var(--c)) left top/2px 26px no-repeat,
   linear-gradient(var(--c),var(--c)) right top/26px 2px no-repeat,linear-gradient(var(--c),var(--c)) right top/2px 26px no-repeat,
   linear-gradient(var(--c),var(--c)) left bottom/26px 2px no-repeat,linear-gradient(var(--c),var(--c)) left bottom/2px 26px no-repeat,
   linear-gradient(var(--c),var(--c)) right bottom/26px 2px no-repeat,linear-gradient(var(--c),var(--c)) right bottom/2px 26px no-repeat}
-.mat.adv-on .adv-face{stroke:rgba(8,16,38,.6)}
-.mat.adv-on .adv-glass{stroke:#E4EEFF}
-.mat.adv-on .adv-tag{background:rgba(10,22,50,.58);border-color:rgba(150,200,255,.42)}
-.mat.adv-on .at-name{color:#EEF4FF}
-.mat.adv-on .big-note{background:linear-gradient(160deg,rgba(10,24,54,.93),rgba(10,24,54,.8));border-top-color:rgba(160,205,255,.75);border-bottom-color:rgba(160,205,255,.75)}
-.mat.adv-on .big-note::before,.mat.adv-on .big-note::after{color:#A9CCFF}
+.mat.lab-on .lab-face{stroke:rgba(8,16,38,.6)}
+.mat.lab-on .lab-glass{stroke:#E4EEFF}
+.mat.lab-on .lab-tag{background:rgba(10,22,50,.58);border-color:rgba(150,200,255,.42)}
+.mat.lab-on .at-name{color:#EEF4FF}
+.mat.lab-on .big-note{background:linear-gradient(160deg,rgba(10,24,54,.93),rgba(10,24,54,.8));border-top-color:rgba(160,205,255,.75);border-bottom-color:rgba(160,205,255,.75)}
+.mat.lab-on .big-note::before,.mat.lab-on .big-note::after{color:#A9CCFF}
 
-.adv-tab.on{background:linear-gradient(160deg,#22457F,#132B54)}
+.lab-tab.on{background:linear-gradient(160deg,#22457F,#132B54)}
 .law{background:linear-gradient(160deg,#22457F,#132B54);border-color:rgba(160,205,255,.5)}
 /* ───── 심화 탐구: 뒤쪽 모서리 점선 ───── */
-.adv-dash{position:absolute;z-index:4;right:16px;top:16px;display:flex;align-items:center;gap:8px;min-height:42px;padding:0 12px 0 10px;cursor:pointer;
+.lab-dash{position:absolute;z-index:4;right:16px;top:16px;display:flex;align-items:center;gap:8px;min-height:42px;padding:0 12px 0 10px;cursor:pointer;
   font:inherit;font-size:13px;font-weight:800;color:#E6F0FF;background:rgba(10,22,50,.58);border:1px solid rgba(150,200,255,.42);border-radius:0;
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-.adv-dash[hidden]{display:none}
-.adv-dash svg{width:20px;height:20px;flex:none}
-.adv-dash .sw{position:relative;width:34px;height:20px;flex:none;border-radius:10px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);transition:background .2s,border-color .2s}
-.adv-dash .sw::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform .2s}
-.adv-dash[aria-checked="true"]{color:#FFE9A8;border-color:#E9C66C}
-.adv-dash[aria-checked="true"] .sw{background:#E9B135;border-color:#E9B135}
-.adv-dash[aria-checked="true"] .sw::after{transform:translateX(14px)}
-.adv-dl{fill:none;stroke:rgba(232,242,255,.92);stroke-width:1.8;stroke-dasharray:6 5;stroke-linecap:round}
-.adv-dl.gold{stroke:#FFE08A}
-.mat.dash-on .adv-face{fill-opacity:.8}
-@media (max-width:699.98px){.adv-dash{right:10px;top:10px;min-height:38px;padding:0 8px}.adv-dash .ad-label{display:none}.adv-tag{max-width:calc(100% - 112px)}}
+.lab-dash[hidden]{display:none}
+.lab-dash svg{width:20px;height:20px;flex:none}
+.lab-dash .sw{position:relative;width:34px;height:20px;flex:none;border-radius:10px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);transition:background .2s,border-color .2s}
+.lab-dash .sw::after{content:"";position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:#fff;transition:transform .2s}
+.lab-dash[aria-checked="true"]{color:#FFE9A8;border-color:#E9C66C}
+.lab-dash[aria-checked="true"] .sw{background:#E9B135;border-color:#E9B135}
+.lab-dash[aria-checked="true"] .sw::after{transform:translateX(14px)}
+.lab-dl{fill:none;stroke:rgba(232,242,255,.92);stroke-width:1.8;stroke-dasharray:6 5;stroke-linecap:round}
+.lab-dl.gold{stroke:#FFE08A}
+.mat.dash-on .lab-face{fill-opacity:.8}
+@media (max-width:699.98px){.lab-dash{right:10px;top:10px;min-height:38px;padding:0 8px}.lab-dash .dash-label{display:none}.lab-tag{max-width:calc(100% - 112px)}}
 
 /* ───── 도전 모드: 가운데 입체 문제 ───── */
 .mat.quiz-on{touch-action:none;cursor:grab}
@@ -955,14 +955,14 @@ html.adv-mode{--page:#E5EBF4}
 @media (max-width:699.98px){.quiz-bar{grid-template-columns:1fr 1fr;left:10px;right:10px;bottom:10px;gap:8px}.qz-btn{min-height:50px;font-size:17px}}
 
 /* 심화 탐구·가운데 입체 문제 중에는 조립판(조각·각도 고리·꼭짓점·안내 문구)을 항상 숨김 */
-.mat.adv-on #gHint,.mat.adv-on #gauge,.mat.adv-on #dot,.mat.adv-on #gPieces,.mat.adv-on #gOverlap,.mat.adv-on #gTiles,.mat.adv-on #dragHint,
+.mat.lab-on #gHint,.mat.lab-on #gauge,.mat.lab-on #dot,.mat.lab-on #gPieces,.mat.lab-on #gOverlap,.mat.lab-on #gTiles,.mat.lab-on #dragHint,
 .mat.quiz-on #gHint,.mat.quiz-on #gauge,.mat.quiz-on #dot,.mat.quiz-on #gPieces,.mat.quiz-on #gOverlap{display:none!important}
 
 /* ───── 학습 모드 점선 스위치(작업판 오른쪽 아래) ───── */
-.mat.learn-dash .adv-dash{top:auto;bottom:16px;background:rgba(9,36,29,.62);border-color:rgba(242,205,120,.45)}
+.mat.learn-dash .lab-dash{top:auto;bottom:16px;background:rgba(9,36,29,.62);border-color:rgba(242,205,120,.45)}
 .mat.dash-on .sface{fill-opacity:.8}
 .st-dl{fill:none;stroke:rgba(255,250,235,.92);stroke-width:1.7;stroke-dasharray:6 5;stroke-linecap:round}
-@media (max-width:699.98px){.mat.learn-dash .adv-dash{top:10px;left:10px;right:auto;bottom:auto}.drag-hint{bottom:80px}}
+@media (max-width:699.98px){.mat.learn-dash .lab-dash{top:10px;left:10px;right:auto;bottom:auto}.drag-hint{bottom:80px}}
 
 /* ───── 전개도 고르기 ───── */
 .st-acts{flex-wrap:wrap;justify-content:flex-end}
@@ -1008,13 +1008,13 @@ html.adv-mode{--page:#E5EBF4}
 .fl-eq.new{animation:rowIn 1.6s ease}
 
 /* ───── 쌍대: 짝 목록(양쪽 그림) ───── */
-.adv-pairs .adv-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:4px;min-height:84px;padding:8px 6px;text-align:center}
-.adv-pairs .ap-side{display:grid;justify-items:center;gap:4px;min-width:0}
-.adv-pairs .ap-ico{width:42px;height:42px}
-.adv-pairs .ap-name{font-size:13px;font-weight:800;white-space:nowrap;letter-spacing:-.02em}
-.adv-pairs .ap-name.dim{color:var(--ink-2)}
-.adv-pairs .ap-arrow{font-size:18px;font-weight:900;color:#B8861F}
-.adv-pairs .ap-unk{display:grid;place-items:center;border:1.5px dashed var(--line);font-size:20px;font-weight:900;color:var(--ink-2);background:var(--well)}
+.lab-pairs .lab-pair{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:4px;min-height:84px;padding:8px 6px;text-align:center}
+.lab-pairs .ap-side{display:grid;justify-items:center;gap:4px;min-width:0}
+.lab-pairs .ap-ico{width:42px;height:42px}
+.lab-pairs .ap-name{font-size:13px;font-weight:800;white-space:nowrap;letter-spacing:-.02em}
+.lab-pairs .ap-name.dim{color:var(--ink-2)}
+.lab-pairs .ap-arrow{font-size:18px;font-weight:900;color:#B8861F}
+.lab-pairs .ap-unk{display:grid;place-items:center;border:1.5px dashed var(--line);font-size:20px;font-weight:900;color:var(--ink-2);background:var(--well)}
 
 /* ───── 면으로 세기 노트: 접기·펼치기 ───── */
 .fc-list .fl-head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;column-gap:6px;row-gap:2px;width:100%;padding:0;margin:0;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
@@ -1141,7 +1141,7 @@ html.adv-mode{--page:#E5EBF4}
 .net-open svg{width:20px;height:20px}
 .net-open:disabled{cursor:default;color:var(--ink-2);background:var(--well);border-color:var(--line);box-shadow:none;opacity:.7}
 .tr-net-tip{margin:0;font-size:12.5px;font-weight:600;color:var(--ink-2);text-align:center;word-break:keep-all}
-.adv-body.netting .adv-fams,.adv-body.netting .tr-box,.adv-body.netting #trPlay,.adv-body.netting #trBack{opacity:.4;pointer-events:none}
+.lab-body.netting .lab-fams,.lab-body.netting .tr-box,.lab-body.netting #trPlay,.lab-body.netting #trBack{opacity:.4;pointer-events:none}
 .an-wedge{fill:rgba(217,70,60,.28);stroke:#FF8A7A;stroke-width:1.6;stroke-dasharray:5 4}
 .an-ring{fill:none;stroke:#FFE08A;stroke-width:2.4;filter:drop-shadow(0 0 4px rgba(255,210,90,.9))}
 .an-dot{fill:#FFF3C9;stroke:#8C5E0C;stroke-width:1.2}
@@ -1195,7 +1195,7 @@ html.adv-mode{--page:#E5EBF4}
 .start .modes .mc-foot{margin-top:16px!important;padding-top:0!important;border-top:0!important;flex-wrap:nowrap!important;color:#6E6E73!important}
 .start .modes .mc-foot>span:first-child{flex:1 1 auto!important;font-size:12.5px!important}
 .start .modes .mc-go{gap:2px;font-size:15px!important;font-weight:700!important;color:#0066CC!important}
-#learnBtn .mc-ico{color:#C8102E!important}#challengeBtn .mc-ico{color:#E07B00!important}#advBtn .mc-ico{color:#1B7F5A!important}
+#learnBtn .mc-ico{color:#C8102E!important}#challengeBtn .mc-ico{color:#E07B00!important}#labBtn .mc-ico{color:#1B7F5A!important}
 @media (max-width:699.98px){.start-in{padding:56px 18px 32px!important}.start h1{font-size:36px!important}.start .kicker{font-size:19px!important}.start-q{font-size:18px!important}.start .modes{grid-template-columns:1fr!important;gap:12px!important}}
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]) .start{background:linear-gradient(180deg,#000000 0%,#0B0B0D 100%)!important;color:#F5F5F7!important}
@@ -1216,7 +1216,7 @@ html.adv-mode{--page:#E5EBF4}
 .hud .hc-score{flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:10px!important}
 .hud .hc-score .hl{font-size:12px!important}
 /* 심화 탐구 버튼 높이 맞추기 */
-.adv-body .adv-acts>button{height:48px!important;min-height:48px!important;padding-top:0!important;padding-bottom:0!important;line-height:1.2}
+.lab-body .lab-acts>button{height:48px!important;min-height:48px!important;padding-top:0!important;padding-bottom:0!important;line-height:1.2}
 /* 깎기 실험실 눈금: 찾은 준정다면체만 금색, 누르면 이동 */
 .tr-slider{padding-bottom:18px}
 .tr-ticks{height:16px}
@@ -1238,20 +1238,69 @@ html.adv-mode{--page:#E5EBF4}
 @media (prefers-reduced-motion:reduce){.fc-eglow,.fc-espark,.fc-vhalo,.tr-ticks .tk.new i{animation:none}}
 
 /* 좁은 작업판·안내 상자(어떤 창 크기에서도 겹치지 않게) */
-.mat.mat-narrow .adv-dash{padding:0 8px;min-height:38px}
-.mat.mat-narrow .adv-dash .ad-label{display:none}
-.mat.mat-narrow .adv-tag{max-width:calc(100% - 118px);padding:8px 12px 10px}
+.mat.mat-narrow .lab-dash{padding:0 8px;min-height:38px}
+.mat.mat-narrow .lab-dash .dash-label{display:none}
+.mat.mat-narrow .lab-tag{max-width:calc(100% - 118px);padding:8px 12px 10px}
 .mat.mat-narrow .at-name{font-size:28px}
 .mat.mat-narrow .at-kind{font-size:12.5px}
-.mat.mat-tiny .adv-tag{left:10px;top:10px}
-.mat.mat-tiny .adv-dash{right:10px;top:10px}
+.mat.mat-tiny .lab-tag{left:10px;top:10px}
+.mat.mat-tiny .lab-dash{right:10px;top:10px}
 .mat.mat-tiny .at-name{font-size:24px}
-.mat.mat-narrow.learn-dash .adv-dash,.mat.mat-tiny.learn-dash .adv-dash{top:auto}
+/* 학습 모드: 넓은 작업판은 오른쪽 아래, 좁은 작업판(휴대폰 등)은 왼쪽 위에 작게 */
+.mat.learn-dash .lab-dash{left:auto;right:16px;top:auto;bottom:16px}
+.mat.learn-dash.mat-narrow .lab-dash,.mat.learn-dash.mat-tiny .lab-dash{left:10px;right:auto;top:10px;bottom:auto}
 .guide.g-narrow{gap:10px;padding:8px 14px 8px 10px;min-height:0}
 .guide.g-narrow .avatar{width:64px;height:64px;margin:-4px 0 -4px -4px}
 .guide.g-narrow h2{font-size:16.5px}
 .guide.g-narrow p{font-size:14px}
 .guide.g-narrow .extra{font-size:12.5px}
+
+/* ───── 스마트폰 최적화 ───── */
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+@media (pointer:coarse),(hover:none),(max-width:699.98px){
+  .tr-slider{padding-bottom:24px}
+  .tr-ticks .tk{width:36px;height:36px;margin-left:-18px;bottom:-12px}
+}
+/* 세로 휴대폰: 작업판을 조금 낮추고, 접기 버튼은 화면 아래에 늘 보이게 */
+@media (max-width:699.98px){
+  .mat{height:min(calc(100vw - 24px),40vh)!important}
+  .drawer{overflow:visible!important}
+  .drawer .acts{position:sticky;bottom:0;z-index:6;margin:0 -12px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+    background:var(--panel);box-shadow:0 -12px 18px -14px rgba(0,0,0,.35)}
+  .drawer.lab .acts{position:static;box-shadow:none;margin:0;padding:0;background:none}
+}
+/* 가로 휴대폰(화면 높이가 낮을 때): 왼쪽은 작업판, 오른쪽은 조각 서랍 */
+@media (orientation:landscape) and (max-height:520px) and (min-width:600px) and (max-width:1100px){
+  body{height:auto!important;min-height:100%}
+  .app{height:auto!important;min-height:100vh;display:block!important}
+  .drawer{padding:12px!important}
+  .drawer .acts{position:sticky;bottom:0;z-index:6;margin:0 -12px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:var(--panel);box-shadow:0 -12px 18px -14px rgba(0,0,0,.35)}
+  .drawer.lab .acts{position:static;box-shadow:none;margin:0;padding:0;background:none}
+  .top{padding:6px 14px 2px!important}
+  .title{font-size:20px!important}
+  .layout{display:grid!important;grid-template-columns:minmax(0,1.12fr) minmax(0,1fr)!important;grid-template-rows:auto auto!important;align-items:start!important;gap:10px!important;padding:4px 12px 14px!important}
+  .stage{grid-column:1!important;grid-row:1/span 2!important;order:0!important;position:sticky;top:6px;display:flex!important;flex-direction:column;gap:8px}
+  .mat{height:calc(100vh - 150px)!important;min-height:170px}
+  .drawer{grid-column:2!important;grid-row:1!important;order:0!important;overflow:visible!important}
+  .shelf{grid-column:2!important;grid-row:2!important;order:0!important;overflow:visible!important}
+  .guide{min-height:0!important;padding:6px 12px 6px 8px!important;gap:8px!important}
+  .guide .avatar{width:50px!important;height:50px!important;margin:-2px 0 -2px -2px!important}
+  .guide h2{font-size:15px!important}.guide p{font-size:13px!important}.guide .extra{font-size:12px!important}
+}
+/* 높이가 낮은 화면의 시작 화면 */
+@media (max-height:520px){
+  .start-in{padding:18px 16px 18px!important}
+  .start .kicker{font-size:16px!important;margin-bottom:2px!important}
+  .start h1{font-size:32px!important}
+  .start-q{font-size:16px!important;margin-top:6px!important}
+  .hero-cycle{margin-top:6px}
+  .hero-cycle svg{width:108px!important;height:108px!important}
+  .hc-shadow{width:86px!important;height:10px}
+  .hc-name{font-size:14px;margin-top:2px}
+  .start .modes{margin-top:12px!important}
+  .start .modes .mode-card{padding:14px 16px 12px!important}
+  .start .modes .mc-desc{font-size:13.5px!important}
+}
 </style>
 </head>
 <body>
@@ -1287,9 +1336,9 @@ html.adv-mode{--page:#E5EBF4}
           <ul class="cand-list" id="candList"></ul>
         </div>
       </div>
-      <div class="coll adv-note" id="advNote" hidden>
-        <div class="shelf-head"><h2 id="advNoteTitle">탐구 노트</h2><span id="advNoteMeta"></span></div>
-        <div class="adv-note-body" id="advNoteBody"></div>
+      <div class="coll lab-note" id="labNote" hidden>
+        <div class="shelf-head"><h2 id="labNoteTitle">탐구 노트</h2><span id="labNoteMeta"></span></div>
+        <div class="lab-note-body" id="labNoteBody"></div>
       </div>
       <div class="coll pile-block" id="pileBlock" hidden>
         <div class="shelf-head"><h2>모은 선물</h2><span id="pileCount">0개</span></div>
@@ -1304,8 +1353,8 @@ html.adv-mode{--page:#E5EBF4}
     <section class="stage" aria-label="작업 매트">
       <div class="mat">
         <div class="timebar" id="timebar" hidden><i id="timeFill"></i></div>
-        <button class="adv-dash" id="advDashBtn" role="switch" aria-checked="false" aria-label="보이지 않는 뒤쪽 모서리를 점선으로 보기" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5 12 4l8 4.5v8L12 21l-8-4.5z"/><path d="M12 12.6V21M12 12.6l8-4.1M12 12.6 4 8.5" stroke-dasharray="2.2 2"/></svg><span class="ad-label">뒤쪽 모서리 점선</span><i class="sw" aria-hidden="true"></i></button>
-        <div class="adv-tag" id="advTag" hidden><p class="at-name" id="atName"></p><p class="at-kind" id="atKind" hidden></p></div>
+        <button class="lab-dash" id="labDashBtn" role="switch" aria-checked="false" aria-label="보이지 않는 뒤쪽 모서리를 점선으로 보기" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M4 8.5 12 4l8 4.5v8L12 21l-8-4.5z"/><path d="M12 12.6V21M12 12.6l8-4.1M12 12.6 4 8.5" stroke-dasharray="2.2 2"/></svg><span class="dash-label">뒤쪽 모서리 점선</span><i class="sw" aria-hidden="true"></i></button>
+        <div class="lab-tag" id="labTag" hidden><p class="at-name" id="atName"></p><p class="at-kind" id="atKind" hidden></p></div>
         <div class="quiz-bar" id="quizBar" hidden></div>
         <div class="big-note" id="bigNote" hidden aria-live="polite"><p class="bn-kicker" id="bnKicker"></p><p class="bn-main" id="bnMain"></p><p class="bn-sub" id="bnSub"></p></div>
         <div class="study" id="study" hidden>
@@ -1364,15 +1413,15 @@ html.adv-mode{--page:#E5EBF4}
     </section>
 
     <aside class="drawer card" aria-label="조각 서랍">
-      <div class="adv-panel" id="advPanel" hidden>
+      <div class="lab-panel" id="labPanel" hidden>
         <h2>심화 탐구</h2>
-        <div class="adv-tabs" role="tablist" aria-label="탐구 고르기">
-          <button class="adv-tab" data-tab="count" role="tab">면으로 세기</button>
-          <button class="adv-tab" data-tab="euler" role="tab">오일러 공식</button>
-          <button class="adv-tab" data-tab="dual" role="tab">쌍대 다면체</button>
-          <button class="adv-tab" data-tab="trunc" role="tab">깎기 실험실</button>
+        <div class="lab-tabs" role="tablist" aria-label="탐구 고르기">
+          <button class="lab-tab" data-tab="count" role="tab">면으로 세기</button>
+          <button class="lab-tab" data-tab="euler" role="tab">오일러 공식</button>
+          <button class="lab-tab" data-tab="dual" role="tab">쌍대 다면체</button>
+          <button class="lab-tab" data-tab="trunc" role="tab">깎기 실험실</button>
         </div>
-        <div class="adv-body" id="advBody"></div>
+        <div class="lab-body" id="labBody"></div>
       </div>
       <h2>조각 고르기</h2>
       <div class="picker" id="picker"></div>
@@ -1425,7 +1474,7 @@ html.adv-mode{--page:#E5EBF4}
           <span class="mc-desc">산타의 주문을<br>60초 안에 최대한 많이</span>
           <span class="mc-foot"><span id="chalMeta">점수 · 콤보 · 기록</span><span class="mc-go">시작<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5"/></svg></span></span>
         </button>
-        <button class="mode-card deep" id="advBtn">
+        <button class="mode-card deep" id="labBtn">
           <span class="mc-head"><span class="mc-no">03</span><span class="mc-ico" id="icoAdv" aria-hidden="true"></span></span>
           <span class="mc-title">심화 탐구</span>
           <span class="mc-desc">오일러 공식 · 쌍대<br>· 준정다면체</span>
@@ -2547,7 +2596,7 @@ function setMode(mode){
   M.mode=mode;const ch=mode==='challenge',ad=mode==='adv';
   $('.title').hidden=ch;$('#hud').hidden=!ch;$('#collBlock').hidden=ch||ad;$('#hofBlock').hidden=!ch;
   $('#timebar').hidden=!ch;noBtn.hidden=!ch;$('#acts').classList.toggle('duo',ch);
-  $('#advNote').hidden=!ad;$('#advPanel').hidden=!ad;$('.drawer').classList.toggle('adv',ad);$('.shelf').classList.toggle('adv',ad);document.documentElement.classList.toggle('adv-mode',ad);
+  $('#labNote').hidden=!ad;$('#labPanel').hidden=!ad;$('.drawer').classList.toggle('lab',ad);$('.shelf').classList.toggle('lab',ad);document.documentElement.classList.toggle('lab-mode',ad);
 }
 function bumpEl(el){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');}
 function hudPop(id,text,bad){const e=$(id);e.textContent=text;e.classList.toggle('bad',!!bad);e.classList.remove('go');void e.offsetWidth;e.classList.add('go');}
@@ -3210,17 +3259,17 @@ function elShape(id){if(id==='prism3')return prismShape(3);if(id==='prism5')retu
 const B0=()=>mulMM(rotX(.42),rotY(.55));
 const AD={tab:'count',spinOff:false,revealed:new Set(),netV:null,netBusy:false,netTok:0,gaps:new Map(),gapShown:false,shape:null,dual:null,B:B0(),phi:0,raf:0,last:0,ramp:0,drag:null,fam:'cube',t:0,snap:null,cache:{},noted:new Map(),seen:new Set(),
   eulerShown:false,dualShown:false,archShown:false,pair:-1,swap:false,dualT0:0,dotK:0,dualK:1,dualTok:0,play:0,hold:0,fit:152,outCol:'#4E9FD1',sel:'',lastNew:''};
-const gAdv=svgEl('g',{id:'gAdv'},bench),gAdvDash=svgEl('g',{id:'gAdvDash'},bench),gAdvTop=svgEl('g',{id:'gAdvTop'},bench),gFC=svgEl('g',{id:'gFC'},bench),advEls=[],advDots=[],advLines=[],advDashEls=[],FCP={ln:[],dt:[]};
-gAdvDash.style.display='none';gFC.style.display='none';
-gAdv.style.display=gAdvTop.style.display='none';
+const gLab=svgEl('g',{id:'gLab'},bench),gLabDash=svgEl('g',{id:'gLabDash'},bench),gLabTop=svgEl('g',{id:'gLabTop'},bench),gFC=svgEl('g',{id:'gFC'},bench),advEls=[],advDots=[],advLines=[],advDashEls=[],FCP={ln:[],dt:[]};
+gLabDash.style.display='none';gFC.style.display='none';
+gLab.style.display=gLabTop.style.display='none';
 function cached(k,fn){return AD.cache[k]||(AD.cache[k]=fn());}
 
 function advDraw(){
   const sh=AD.shape;if(!sh)return;
   if(AD.tab==='trunc'&&AD.netV){FCP.ln.forEach(e=>{e.style.display='none';});FCP.dt.forEach(e=>{e.style.display='none';});drawArchNet();return;}
-  gAdvNet.style.display='none';
+  gLabNet.style.display='none';
   const R=mulMM(rotY(AD.phi),AD.B);let i=0;
-  const put=(pts,fill,cls,op)=>{let e=advEls[i];if(!e){e=svgEl('polygon',null,gAdv);advEls.push(e);}i++;
+  const put=(pts,fill,cls,op)=>{let e=advEls[i];if(!e){e=svgEl('polygon',null,gLab);advEls.push(e);}i++;
     e.setAttribute('points',pts);e.setAttribute('fill',fill);e.setAttribute('class',cls);e.style.opacity=op==null?'':op;e.style.display='';};
   const draw=(s,scale,colorOf,cls,op)=>{
     const P=s.V.map(v=>{const p=mulMV(R,v);return [p[0]*scale,-p[1]*scale,p[2]];}),it=[];
@@ -3231,24 +3280,24 @@ function advDraw(){
   const sc=AD.fit/(AD.tab==='trunc'?FAMS[AD.fam].rad:sh.rad)/(AD.tab==='count'?1+FC.d*.95:1);
   if(AD.tab==='count')fcFaces(R,sc,put);
   else if(AD.tab==='dual'&&AD.dual){
-    if(AD.dualK>0.001)draw(AD.dual,sc*(0.55+0.45*AD.dualK),()=>'#F2C14E','adv-face',Math.min(1,AD.dualK*1.6));
-    draw(sh,sc,()=>AD.outCol,'adv-glass',null);
-  }else draw(sh,sc,f=>KCOL[f.k]||'#4E9FD1','adv-face',null);
+    if(AD.dualK>0.001)draw(AD.dual,sc*(0.55+0.45*AD.dualK),()=>'#F2C14E','lab-face',Math.min(1,AD.dualK*1.6));
+    draw(sh,sc,()=>AD.outCol,'lab-glass',null);
+  }else draw(sh,sc,f=>KCOL[f.k]||'#4E9FD1','lab-face',null);
   for(;i<advEls.length;i++)advEls[i].style.display='none';
   let dl=0;                                          // 뒤쪽(보이지 않는) 모서리를 점선으로
   const dash=(s,scale,cls)=>{if(!s.ed)return;s.ed.forEach(e=>{if(e.length<4)return;
     if(mulMV(R,s.F[e[2]].n)[2]>1e-4||mulMV(R,s.F[e[3]].n)[2]>1e-4)return;
-    const p=mulMV(R,s.V[e[0]]),q=mulMV(R,s.V[e[1]]);let el=advDashEls[dl];if(!el){el=svgEl('line',null,gAdvDash);advDashEls.push(el);}dl++;
+    const p=mulMV(R,s.V[e[0]]),q=mulMV(R,s.V[e[1]]);let el=advDashEls[dl];if(!el){el=svgEl('line',null,gLabDash);advDashEls.push(el);}dl++;
     el.setAttribute('class',cls);el.setAttribute('x1',(p[0]*scale).toFixed(1));el.setAttribute('y1',(-p[1]*scale).toFixed(1));el.setAttribute('x2',(q[0]*scale).toFixed(1));el.setAttribute('y2',(-q[1]*scale).toFixed(1));el.style.display='';});};
   if(AD.dash){
-    if(AD.tab==='count'){if(FC.d<.02)dash(sh,sc,'adv-dl');}
-    else if(AD.tab==='dual'&&AD.dual){if(AD.dualK>.6)dash(AD.dual,sc*(0.55+0.45*AD.dualK),'adv-dl gold');dash(sh,sc,'adv-dl');}
-    else dash(sh,sc,'adv-dl');
+    if(AD.tab==='count'){if(FC.d<.02)dash(sh,sc,'lab-dl');}
+    else if(AD.tab==='dual'&&AD.dual){if(AD.dualK>.6)dash(AD.dual,sc*(0.55+0.45*AD.dualK),'lab-dl gold');dash(sh,sc,'lab-dl');}
+    else dash(sh,sc,'lab-dl');
   }
   for(;dl<advDashEls.length;dl++)advDashEls[dl].style.display='none';
   let j=0;
   if(AD.tab==='dual'&&AD.dotK>0.001&&AD.dualK<0.999){
-    sh.F.forEach(f=>{const n=mulMV(R,f.n);if(n[2]<=0.05)return;const c=mulMV(R,f.c);let e=advDots[j];if(!e){e=svgEl('circle',{class:'adv-dot'},gAdvTop);advDots.push(e);}j++;
+    sh.F.forEach(f=>{const n=mulMV(R,f.n);if(n[2]<=0.05)return;const c=mulMV(R,f.c);let e=advDots[j];if(!e){e=svgEl('circle',{class:'lab-dot'},gLabTop);advDots.push(e);}j++;
       e.setAttribute('cx',(c[0]*sc).toFixed(1));e.setAttribute('cy',(-c[1]*sc).toFixed(1));e.setAttribute('r',(6.5*AD.dotK*(1-AD.dualK)).toFixed(2));e.style.display='';});
   }
   let li=0,di=0;
@@ -3283,46 +3332,46 @@ function setTag(name,kind){$('#atName').textContent=name;const k=$('#atKind');k.
 function advStart(){
   setMode('adv');resetView();studyHide();dragOff();
   gPieces.style.display='none';gauge.style.display='none';dotEl.style.display='none';gHint.style.display='none';
-  gAdv.style.display=gAdvTop.style.display=gAdvDash.style.display=gFC.style.display='';matEl.classList.add('adv-on');$('#advTag').hidden=false;syncDash();
+  gLab.style.display=gLabTop.style.display=gLabDash.style.display=gFC.style.display='';matEl.classList.add('lab-on');$('#labTag').hidden=false;syncDash();
   advTab(AD.tab||'euler');
   if(!AD.raf){AD.last=0;AD.ramp=performance.now();AD.raf=requestAnimationFrame(advLoop);}
 }
 function advStop(){
-  if(AD.raf)cancelAnimationFrame(AD.raf);AD.raf=0;AD.drag=null;AD.play=0;AD.dualTok++;if(AD.netV)archNetClear();gAdvNet.style.display='none';
-  gAdv.style.display=gAdvTop.style.display=gAdvDash.style.display=gFC.style.display='none';matEl.classList.remove('adv-on','dragging','dash-on');Promise.resolve().then(syncDash);
+  if(AD.raf)cancelAnimationFrame(AD.raf);AD.raf=0;AD.drag=null;AD.play=0;AD.dualTok++;if(AD.netV)archNetClear();gLabNet.style.display='none';
+  gLab.style.display=gLabTop.style.display=gLabDash.style.display=gFC.style.display='none';matEl.classList.remove('lab-on','dragging','dash-on');Promise.resolve().then(syncDash);
   gPieces.style.display='';gauge.style.display='';dotEl.style.display='';gHint.style.display='';
-  $('#advTag').hidden=true;bigNoteHide();
+  $('#labTag').hidden=true;bigNoteHide();
 }
 function advTab(tab){
   if(AD.netV)archNetClear();
   AD.tab=tab;AD.play=0;AD.dualTok++;AD.spinOff=false;bigNoteHide();
-  document.querySelectorAll('.adv-tab').forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');});
-  const body=$('#advBody');
+  document.querySelectorAll('.lab-tab').forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false');});
+  const body=$('#labBody');
   if(tab==='count'){
-    body.innerHTML='<p class="adv-lead">면을 떼어 놓고 세면 모서리와 꼭짓점의 수를 계산할 수 있어요.</p><div class="adv-grid fc-grid">'+
-      FC_LIST.map(id=>'<button class="adv-item fc-item" data-fc="'+id+'"><span class="ai-ico">'+shapeIcon(cached(id,()=>elShape(id)))+'</span><span class="ai-name">'+SOLIDS[keyOf(id)].name+'</span></button>').join('')+'</div><div class="fc-box" id="fcBox"></div>';
+    body.innerHTML='<p class="lab-lead">면을 떼어 놓고 세면 모서리와 꼭짓점의 수를 계산할 수 있어요.</p><div class="lab-grid fc-grid">'+
+      FC_LIST.map(id=>'<button class="lab-item fc-item" data-fc="'+id+'"><span class="ai-ico">'+shapeIcon(cached(id,()=>elShape(id)))+'</span><span class="ai-name">'+SOLIDS[keyOf(id)].name+'</span></button>').join('')+'</div><div class="fc-box" id="fcBox"></div>';
     body.querySelectorAll('[data-fc]').forEach(b=>b.addEventListener('click',()=>{sfx.tap();fcPick(b.dataset.fc,false);}));
     fcPick(FC.id||'cube',true);
   }else if(tab==='euler'){
-    body.innerHTML='<p class="adv-lead">입체를 골라 꼭짓점, 모서리, 면의 수를 세어 보세요.</p><div class="adv-grid">'+
-      ELIST.map(e=>'<button class="adv-item" data-id="'+e[0]+'"><span class="ai-ico">'+shapeIcon(cached(e[0],()=>elShape(e[0])))+'</span><span class="ai-name">'+e[1]+'</span></button>').join('')+'</div>';
-    body.querySelectorAll('.adv-item').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advEuler(b.dataset.id);}));
+    body.innerHTML='<p class="lab-lead">입체를 골라 꼭짓점, 모서리, 면의 수를 세어 보세요.</p><div class="lab-grid">'+
+      ELIST.map(e=>'<button class="lab-item" data-id="'+e[0]+'"><span class="ai-ico">'+shapeIcon(cached(e[0],()=>elShape(e[0])))+'</span><span class="ai-name">'+e[1]+'</span></button>').join('')+'</div>';
+    body.querySelectorAll('.lab-item').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advEuler(b.dataset.id);}));
     if(AD.sel){advEuler(AD.sel,true);}else{advShow(cached('cube',()=>elShape('cube')));setTag('정육면체','');
       guide('E03','입체를 하나 골라 보세요','꼭짓점, 모서리, 면의 수를 탐구 노트에 적어 줄게요. 무엇이 늘 같을까요?');}
     markItems();
   }else if(tab==='dual'){
-    body.innerHTML='<p class="adv-lead">면의 한가운데에 점을 찍고 이웃한 점끼리 이으면 어떤 입체가 될까요?</p><div class="adv-pairs" id="advPairs"></div>'+
-      '<div class="adv-acts"><button class="ghost" id="dualSwap">안팎 바꾸기</button><button class="ghost" id="dualAgain">다시 잇기</button></div>';
+    body.innerHTML='<p class="lab-lead">면의 한가운데에 점을 찍고 이웃한 점끼리 이으면 어떤 입체가 될까요?</p><div class="lab-pairs" id="labPairs"></div>'+
+      '<div class="lab-acts"><button class="ghost" id="dualSwap">안팎 바꾸기</button><button class="ghost" id="dualAgain">다시 잇기</button></div>';
     renderPairs();
     $('#dualSwap').addEventListener('click',()=>{if(AD.pair<0)return;sfx.tap();advDual(AD.pair,!AD.swap);});
     $('#dualAgain').addEventListener('click',()=>{if(AD.pair<0)return;sfx.tap();advDual(AD.pair,AD.swap);});
     advDual(AD.pair<0?0:AD.pair,AD.swap);
   }else{
-    body.innerHTML='<p class="adv-lead">꼭짓점을 조금씩 깎아 보세요. 깎은 면이 정다각형이 되는 순간이 있어요.</p><div class="adv-fams">'+
-      Object.keys(FAMS).map(f=>'<button class="adv-fam" data-f="'+f+'">'+FAMS[f].label+'</button>').join('')+
+    body.innerHTML='<p class="lab-lead">꼭짓점을 조금씩 깎아 보세요. 깎은 면이 정다각형이 되는 순간이 있어요.</p><div class="lab-fams">'+
+      Object.keys(FAMS).map(f=>'<button class="lab-fam" data-f="'+f+'">'+FAMS[f].label+'</button>').join('')+
       '</div><div class="tr-box"><div class="tr-ends"><span id="trA"></span><span id="trB"></span></div><div class="tr-slider"><input type="range" id="trRange" min="0" max="1000" step="1" value="0" aria-label="깎는 정도"><div class="tr-ticks" id="trTicks"></div></div></div>'+
-      '<div class="adv-acts"><button class="primary" id="trPlay">자동으로 깎기</button><button class="ghost" id="trBack">처음으로</button></div><div class="tr-net" id="trNet"></div>';
-    body.querySelectorAll('.adv-fam').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advFam(b.dataset.f);}));
+      '<div class="lab-acts"><button class="primary" id="trPlay">자동으로 깎기</button><button class="ghost" id="trBack">처음으로</button></div><div class="tr-net" id="trNet"></div>';
+    body.querySelectorAll('.lab-fam').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advFam(b.dataset.f);}));
     const r=$('#trRange');
     r.addEventListener('input',()=>{AD.play=0;playBtnText();advTrunc(r.value/1000,false);});
     r.addEventListener('change',()=>{advTrunc(r.value/1000,true);});
@@ -3333,7 +3382,7 @@ function advTab(tab){
   }
   renderNote();
 }
-function markItems(){document.querySelectorAll('.adv-item').forEach(b=>{b.classList.toggle('done',AD.noted.has(b.dataset.id));b.classList.toggle('on',b.dataset.id===AD.sel);});}
+function markItems(){document.querySelectorAll('.lab-item').forEach(b=>{b.classList.toggle('done',AD.noted.has(b.dataset.id));b.classList.toggle('on',b.dataset.id===AD.sel);});}
 function advEuler(id,quiet){
   const it=ELIST.find(e=>e[0]===id),sh=cached(id,()=>elShape(id)),V=sh.V.length,E=sh.E,F=sh.F.length;
   AD.sel=id;advShow(sh);setTag(it[1],EKIND[id]||'정다면체');
@@ -3345,13 +3394,13 @@ function advEuler(id,quiet){
       guide('E06','언제나 2가 나와요!','이것을 오일러 공식이라고 해요. 축구공처럼 복잡한 입체도 마찬가지예요.');},ms(900));}
 }
 function renderPairs(){                             // 짝 목록: 왼쪽 = 바깥 입체, 오른쪽 = 안에 생기는 짝꿍(열어 본 뒤 그림이 나타남)
-  const box=$('#advPairs');if(!box)return;
+  const box=$('#labPairs');if(!box)return;
   box.innerHTML=PAIRS.map((p,i)=>{const L=AD.swap?p[1]:p[0],R=AD.swap?p[0]:p[1],Ln=AD.swap?p[3]:p[2],Rn=AD.swap?p[2]:p[3],rev=AD.revealed.has(i);
-    return '<button class="adv-pair'+(i===AD.pair?' on':'')+'" data-i="'+i+'" aria-label="'+Ln+' 짝꿍 찾기">'+
+    return '<button class="lab-pair'+(i===AD.pair?' on':'')+'" data-i="'+i+'" aria-label="'+Ln+' 짝꿍 찾기">'+
       '<span class="ap-side"><span class="ap-ico">'+shapeIcon(cached(L,()=>elShape(L)))+'</span><span class="ap-name">'+Ln+'</span></span>'+
       '<span class="ap-arrow" aria-hidden="true">⇄</span>'+
       '<span class="ap-side">'+(rev?'<span class="ap-ico">'+shapeIcon(cached(R,()=>elShape(R)))+'</span><span class="ap-name">'+Rn+'</span>':'<span class="ap-ico ap-unk">?</span><span class="ap-name dim">짝꿍은?</span>')+'</span></button>';}).join('');
-  box.querySelectorAll('.adv-pair').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advDual(+b.dataset.i,AD.swap);}));
+  box.querySelectorAll('.lab-pair').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advDual(+b.dataset.i,AD.swap);}));
 }
 function advDual(i,swap){
   AD.pair=i;AD.swap=!!swap;const p=PAIRS[i],outId=swap?p[1]:p[0],outName=swap?p[3]:p[2],inName=swap?p[2]:p[3];
@@ -3369,7 +3418,7 @@ function advDual(i,swap){
   },ms(2100));
 }
 function advFam(f,keep){
-  AD.fam=f;document.querySelectorAll('.adv-fam').forEach(b=>b.classList.toggle('on',b.dataset.f===f));
+  AD.fam=f;document.querySelectorAll('.lab-fam').forEach(b=>b.classList.toggle('on',b.dataset.f===f));
   const F=FAMS[f];famShape(f,0);
   $('#trA').textContent=F.snaps[0][1];$('#trB').textContent=F.snaps[4][1];
   trTicks();
@@ -3406,7 +3455,7 @@ function advTrunc(t,snapNow,fresh){
 }
 function faceText(sh,reg){const c={};sh.F.forEach(f=>{c[f.k]=(c[f.k]||0)+1;});return Object.keys(c).sort((a,b)=>a-b).map(k=>(reg?'정':'')+KNAME[k]+' '+c[k]+'개').join(', ');}
 function renderNote(){
-  const body=$('#advNoteBody'),meta=$('#advNoteMeta'),dualPending=AD.tab==='dual'&&AD.pend;if(!body)return;
+  const body=$('#labNoteBody'),meta=$('#labNoteMeta'),dualPending=AD.tab==='dual'&&AD.pend;if(!body)return;
   if(AD.tab==='count'){
     const num=(x,lab)=>'<span class="fn"><b>'+x+'</b><small>('+lab+')</small></span>';
     const lines=(I,lv)=>{const t=I.F*I.n,L=[];
@@ -3446,7 +3495,7 @@ function renderNote(){
       '<div class="shelf-head"><h2>준정다면체 도감</h2><span>'+AD.seen.size+'/7</span></div><ul class="archi">'+ARCHI.map(x=>'<li class="'+(AD.seen.has(x[0])?'got':'')+'">'+(AD.seen.has(x[0])?x[1]:'?')+'</li>').join('')+'</ul>';
     meta.textContent='';
   }
-  $('#advNoteTitle').textContent=AD.tab==='trunc'&&AD.netV&&AD.netV.ready?'각의 결손':AD.tab==='euler'||AD.tab==='count'?'탐구 노트':AD.tab==='dual'?'짝꿍 비교':'지금 모양';
+  $('#labNoteTitle').textContent=AD.tab==='trunc'&&AD.netV&&AD.netV.ready?'각의 결손':AD.tab==='euler'||AD.tab==='count'?'탐구 노트':AD.tab==='dual'?'짝꿍 비교':'지금 모양';
 }
 function keyOf(id){return Object.keys(SOLIDS).find(k=>SOLIDS[k].id===id);}
 function shapeIcon(sh){
@@ -3565,7 +3614,7 @@ function fcFaces(R,sc,put){
   items.sort((a,b)=>a.z-b.z);
   items.forEach(o=>{const hl=(FC.edge&&(o.fi===FC.edge[2]||o.fi===FC.edge[3]))||(FC.vtx>=0&&o.f.idx.indexOf(FC.vtx)>=0);
     const c=hl?mixHex(col,'#FFFFFF',.4):col,back=o.n[2]<=1e-4;
-    put(o.P.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '),back?lit(mixHex(c,'#000000',.45),o.n.map(x=>-x)):lit(c,o.n),'adv-face',null);});
+    put(o.P.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '),back?lit(mixHex(c,'#000000',.45),o.n.map(x=>-x)):lit(c,o.n),'lab-face',null);});
 }
 function fcTop(R,sc,dot,line){
   const sh=AD.shape,D=FC.d*sh.rad,pr=(q,f)=>{const p=mulMV(R,[q[0]+f.n[0]*D,q[1]+f.n[1]*D,q[2]+f.n[2]*D]);return [p[0]*sc,-p[1]*sc];};
@@ -3680,8 +3729,8 @@ window.addEventListener('scroll',hintPlace,{passive:true});window.addEventListen
 /* ═══ 깎기 실험실: 이름이 나온 모양의 전개도 + 꼭짓점의 각의 결손(데카르트의 법칙) ═══ */
 const ANG={3:60,4:90,5:108,6:120,8:135,10:144};
 const PNAME={3:'정삼각형',4:'정사각형',5:'정오각형',6:'정육각형',8:'정팔각형',10:'정십각형'};
-const gAdvNet=svgEl('g',{id:'gAdvNet'},bench);gAdvNet.style.display='none';
-const NHL={wedge:svgEl('path',{class:'an-wedge'},gAdvNet),ring:svgEl('circle',{class:'an-ring'},gAdvNet),dot:svgEl('circle',{class:'an-dot'},gAdvNet),gap:svgEl('text',{class:'an-gap'},gAdvNet),labels:[]};
+const gLabNet=svgEl('g',{id:'gLabNet'},bench);gLabNet.style.display='none';
+const NHL={wedge:svgEl('path',{class:'an-wedge'},gLabNet),ring:svgEl('circle',{class:'an-ring'},gLabNet),dot:svgEl('circle',{class:'an-dot'},gLabNet),gap:svgEl('text',{class:'an-gap'},gLabNet),labels:[]};
 const T3=M=>[[M[0][0],M[1][0],M[2][0]],[M[0][1],M[1][1],M[2][1]],[M[0][2],M[1][2],M[2][2]]];
 const sc3=(v,k)=>[v[0]*k,v[1]*k,v[2]*k];
 function netWrap(sh){return {V:sh.V,F:sh.F,E:sh.ed.map(e=>({a:e[0],b:e[1],f:[e[2],e[3]]}))};}
@@ -3775,14 +3824,14 @@ function drawArchNet(){
   const items=[];
   m.F.forEach((f,fi)=>{const T=X[fi],P=f.idx.map(v=>prj(add3(mulMV(T.M,m.V[v]),T.t))),n=mulMV(R,mulMV(T.M,f.n));let z=0;P.forEach(p=>{z+=p[2];});items.push({f:f,P:P,n:n,z:z/P.length});});
   items.sort((a,b)=>a.z-b.z);let i=0;
-  items.forEach(o=>{let e=advEls[i];if(!e){e=svgEl('polygon',null,gAdv);advEls.push(e);}i++;const col=KCOL[o.f.k]||'#4E9FD1',back=o.n[2]<0;
+  items.forEach(o=>{let e=advEls[i];if(!e){e=svgEl('polygon',null,gLab);advEls.push(e);}i++;const col=KCOL[o.f.k]||'#4E9FD1',back=o.n[2]<0;
     e.setAttribute('points',o.P.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '));
-    e.setAttribute('fill',back?lit(mixHex(col,'#000000',.4),o.n.map(x=>-x)):lit(col,o.n));e.setAttribute('class','adv-face');e.style.opacity='';e.style.display='';});
+    e.setAttribute('fill',back?lit(mixHex(col,'#000000',.4),o.n.map(x=>-x)):lit(col,o.n));e.setAttribute('class','lab-face');e.style.opacity='';e.style.display='';});
   for(;i<advEls.length;i++)advEls[i].style.display='none';
   advDots.forEach(e=>{e.style.display='none';});advLines.forEach(e=>{e.style.display='none';});advDashEls.forEach(e=>{e.style.display='none';});
   const f=V.fan;
-  if(!(V.ready&&f)){gAdvNet.style.display='none';return;}
-  gAdvNet.style.display='';
+  if(!(V.ready&&f)){gLabNet.style.display='none';return;}
+  gLabNet.style.display='';
   const pos=(fi,v)=>prj(add3(mulMV(X[fi].M,m.V[v]),X[fi].t)),P=pos(f.order[0],f.v),Lp=V.edge*sc;
   const w1=pos(f.e.f[0],f.w),w2=pos(f.e.f[1],f.w),u1=unit([w1[0]-P[0],w1[1]-P[1],0]),u2=unit([w2[0]-P[0],w2[1]-P[1],0]),r=Math.max(18,Lp*.62),cr=u1[0]*u2[1]-u1[1]*u2[0];
   NHL.wedge.setAttribute('d','M'+P[0].toFixed(1)+' '+P[1].toFixed(1)+'L'+(P[0]+u1[0]*r).toFixed(1)+' '+(P[1]+u1[1]*r).toFixed(1)+'A'+r.toFixed(1)+' '+r.toFixed(1)+' 0 0 '+(cr>0?1:0)+' '+(P[0]+u2[0]*r).toFixed(1)+' '+(P[1]+u2[1]*r).toFixed(1)+'Z');
@@ -3791,7 +3840,7 @@ function drawArchNet(){
   const gb=unit([u1[0]+u2[0],u1[1]+u2[1],0]),fs=Math.max(9,Math.min(14,Lp*.26));
   NHL.gap.setAttribute('x',(P[0]+gb[0]*(r+fs*1.6)).toFixed(1));NHL.gap.setAttribute('y',(P[1]+gb[1]*(r+fs*1.6)+fs*.35).toFixed(1));NHL.gap.setAttribute('font-size',(fs+1).toFixed(1));NHL.gap.textContent='각의 결손 '+f.gap+'°';
   const showLab=Lp>=26;                             // 조각이 작으면 각도 숫자는 탐구 노트의 확대 그림에서
-  f.order.forEach((fi,k)=>{let t=NHL.labels[k];if(!t){t=svgEl('text',{class:'an-lab'},gAdvNet);NHL.labels.push(t);}if(!showLab){t.style.display='none';return;}
+  f.order.forEach((fi,k)=>{let t=NHL.labels[k];if(!t){t=svgEl('text',{class:'an-lab'},gLabNet);NHL.labels.push(t);}if(!showLab){t.style.display='none';return;}
     const c=prj(add3(mulMV(X[fi].M,sh.F[fi].c),X[fi].t)),u=unit([c[0]-P[0],c[1]-P[1],0]),d=Math.max(16,Lp*.5);
     t.setAttribute('x',(P[0]+u[0]*d).toFixed(1));t.setAttribute('y',(P[1]+u[1]*d+fs*.35).toFixed(1));t.setAttribute('font-size',fs.toFixed(1));t.textContent=f.angles[k]+'°';t.style.display='';});
   for(let k=f.order.length;k<NHL.labels.length;k++)NHL.labels[k].style.display='none';
@@ -3831,15 +3880,15 @@ async function archNetFold(){
   if(AD.snap)setTag(AD.snap[1],AD.snap[2]);trNetUI(true);renderNote();
   guide('E05','다시 접었어요','다른 모양에서도 전개도를 펼쳐 각의 결손을 확인해 보세요.');
 }
-function archNetClear(){AD.netV=null;AD.netBusy=false;AD.netTok++;AD.spinOff=false;gAdvNet.style.display='none';const b=document.querySelector('.adv-body');if(b)b.classList.remove('netting');}
+function archNetClear(){AD.netV=null;AD.netBusy=false;AD.netTok++;AD.spinOff=false;gLabNet.style.display='none';const b=document.querySelector('.lab-body');if(b)b.classList.remove('netting');}
 function trNetUI(force){
   const box=$('#trNet');if(!box)return;const V=AD.netV,can=!!AD.snap,state=(V?'n':'s')+(AD.netBusy?'b':'')+(can?AD.snap[1]:'');
   if(!force&&box.dataset.state===state)return;box.dataset.state=state;
-  if(V)box.innerHTML='<div class="adv-acts"><button class="primary" id="netFold"'+(AD.netBusy?' disabled':'')+'>다시 접기</button><button class="ghost" id="netAgain"'+(AD.netBusy?' disabled':'')+'>다른 모양으로 펼치기</button></div>';
+  if(V)box.innerHTML='<div class="lab-acts"><button class="primary" id="netFold"'+(AD.netBusy?' disabled':'')+'>다시 접기</button><button class="ghost" id="netAgain"'+(AD.netBusy?' disabled':'')+'>다른 모양으로 펼치기</button></div>';
   else box.innerHTML='<button class="net-open" id="netOpen"'+(can&&!AD.netBusy?'':' disabled')+'><span>전개도 보기</span></button><p class="tr-net-tip">'+(can?AD.snap[1]+'를 펼쳐서 꼭짓점의 각의 결손을 확인해 봐요':'이름이 나온 모양에서 펼쳐 볼 수 있어요')+'</p>';
   const o=$('#netOpen'),fo=$('#netFold'),ag=$('#netAgain');
   if(o)o.addEventListener('click',()=>archNetShow(false));if(fo)fo.addEventListener('click',()=>{sfx.tap();archNetFold();});if(ag)ag.addEventListener('click',()=>archNetShow(true));
-  const b=document.querySelector('.adv-body');if(b)b.classList.toggle('netting',!!V);
+  const b=document.querySelector('.lab-body');if(b)b.classList.toggle('netting',!!V);
 }
 function archNetNote(){                              // 탐구 노트: 꼭짓점의 각의 결손과 720°
   const V=AD.netV,f=V.fan,sh=AD.shape,Vn=sh.V.length;
@@ -3872,7 +3921,7 @@ function bigNoteHide(){clearTimeout(bnTimer);const el=$('#bigNote');if(el){el.hi
 /* 심화 탐구: 끌어서 돌리기 */
 const viewSt=()=>M.mode==='adv'?AD:(QZ.on?QZ:null);       // 지금 손가락으로 돌릴 입체(심화 탐구 / 도전 문제)
 matEl.addEventListener('pointerdown',e=>{
-  const v=viewSt();if(!v||!v.shape||e.target.closest('button,input,.adv-tag,.quiz-bar'))return;
+  const v=viewSt();if(!v||!v.shape||e.target.closest('button,input,.lab-tag,.quiz-bar'))return;
   v.drag={id:e.pointerId,x:e.clientX,y:e.clientY};try{matEl.setPointerCapture(e.pointerId);}catch(_){}
   v.B=mulMM(rotY(v.phi),v.B);v.phi=0;matEl.classList.add('dragging');e.preventDefault();
 });
@@ -3883,16 +3932,16 @@ matEl.addEventListener('pointermove',e=>{
 });
 const advDragEnd=e=>{const v=viewSt();if(v&&v.drag&&(!e||e.pointerId===v.drag.id)){v.drag=null;v.ramp=performance.now();matEl.classList.remove('dragging');}};
 matEl.addEventListener('pointerup',advDragEnd);matEl.addEventListener('pointercancel',advDragEnd);
-document.querySelectorAll('.adv-tab').forEach(b=>b.addEventListener('click',()=>{if(AD.tab===b.dataset.tab)return;sfx.tap();advTab(b.dataset.tab);}));
-$('#advNoteBody').addEventListener('click',e=>{const h=e.target.closest('[data-fl]');if(!h||AD.tab!=='count')return;   // 탐구 노트 접기·펼치기
+document.querySelectorAll('.lab-tab').forEach(b=>b.addEventListener('click',()=>{if(AD.tab===b.dataset.tab)return;sfx.tap();advTab(b.dataset.tab);}));
+$('#labNoteBody').addEventListener('click',e=>{const h=e.target.closest('[data-fl]');if(!h||AD.tab!=='count')return;   // 탐구 노트 접기·펼치기
   const id=h.dataset.fl;if(FC.open.has(id))FC.open.delete(id);else FC.open.add(id);sfx.tap();renderNote();});
 function learnDashOK(){return M.mode==='learn'&&S.view==='solid'&&!studyEl.hidden&&ST.phase!=='net'&&!ST.netBusy;}
 function syncDash(){                                 // 점선 스위치: 심화 탐구, 학습 모드에서 입체를 볼 때
-  const b=$('#advDashBtn'),lrn=learnDashOK(),on=M.mode==='adv'||lrn;
+  const b=$('#labDashBtn'),lrn=learnDashOK(),on=M.mode==='adv'||lrn;
   b.hidden=!on;b.setAttribute('aria-checked',AD.dash?'true':'false');
   matEl.classList.toggle('dash-on',!!AD.dash&&on);matEl.classList.toggle('learn-dash',lrn);
 }
-$('#advDashBtn').addEventListener('click',()=>{AD.dash=!AD.dash;sfx.tap();syncDash();if(learnDashOK())drawStudy();});
+$('#labDashBtn').addEventListener('click',()=>{AD.dash=!AD.dash;sfx.tap();syncDash();if(learnDashOK())drawStudy();});
 
 /* ───────── 연결 ───────── */
 renderPicker();renderShelf();renderHof();drawBench();refresh();idleGuide();sceneStart();
@@ -3906,7 +3955,7 @@ $('#revBack').addEventListener('click',closeReveal);
 $('#revReset').addEventListener('click',resetAll);
 $('#learnBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);setMode('learn');hideStart();window.scrollTo(0,0);});
 $('#challengeBtn').addEventListener('click',()=>{audio();vib(15);startChallenge();});
-$('#advBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);hideStart();window.scrollTo(0,0);advStart();});
+$('#labBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);hideStart();window.scrollTo(0,0);advStart();});
 noBtn.addEventListener('click',sayNo);
 stBtn.addEventListener('click',()=>{
   if(S.busy||S.view!=='solid'||M.mode!=='learn'||ST.netBusy||ST.phase==='net')return;
