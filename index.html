@@ -1671,6 +1671,10 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
 .eb-chev{width:14px;height:14px;transform:scaleX(-1)}
 .ecat-head b{font-size:16px;font-weight:800;letter-spacing:-.02em}
 .ecat-head span{font-size:12.5px;font-weight:800;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.e-box .lab-item .ai-name{min-width:0;line-height:1.22;overflow-wrap:normal}   /* 단어는 쪼개지 않고, 칸에 넘치면 fitNames가 글씨를 줄임 */
+.e-box .lab-grid.stack .lab-item{flex-direction:column;justify-content:center;gap:4px;min-height:76px;padding:8px 4px;text-align:center}
+.e-box .lab-grid.stack .ai-ico{width:32px;height:32px}
+.e-box .lab-grid.stack .ai-name{width:100%}
 
 /* ───── 시작 화면: 정다면체 조금 크게 · 도전 카드 시곗바늘 ───── */
 .hero-cycle{margin-top:10px}
@@ -1695,6 +1699,30 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
 .hof .medal.m1 b{color:#FFFFFF}
 .hof .medal.m2 b,.hof .medal.m3 b{color:var(--panel)}
 .hof .hnew{top:-8px;right:8px}                       /* NEW 표시는 점수 숫자를 가리지 않게 줄 위로 */
+
+/* ───── 오일러 공식 탐구 노트: 긴 이름이 들어오면 왼쪽 칸이 가로로 넓어지고 가운데가 그만큼 좁아짐 ───── */
+@media (min-width:900px) and (orientation:landscape){
+  .layout{transition:grid-template-columns .45s cubic-bezier(.3,.7,.2,1)}
+  .layout.note-fit{grid-template-columns:var(--note-w,232px) minmax(0,1fr) clamp(244px,23vw,292px)}
+}
+@media (prefers-reduced-motion:reduce){.layout{transition:none}}
+.vef tr.new{animation:rowInB 1.4s ease}              /* 방금 고른 줄: 맨 위에서 파랗게 한 번 */
+@keyframes rowInB{0%{background:rgba(var(--hl-rgb),.2)}100%{background:transparent}}
+#eNet{margin-bottom:2px}
+
+/* ───── 깎기 실험실: 깎기 시작할 정다면체 5가지(면으로 세기의 입체 고르기와 같은 모양) ───── */
+.lab-fams{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.lab-fam{flex-direction:column;justify-content:center;gap:3px;min-height:68px;padding:6px 2px;text-align:center;font-size:12.5px}
+.lf-ico{width:32px;height:32px;flex:none}
+.lf-ico svg{display:block;width:100%;height:100%}
+.lf-name{white-space:nowrap;letter-spacing:-.02em}
+
+/* ───── 쌍대 다면체: 면의 한가운데 = 파란 점(면으로 세기와 같은 모양) · 첫 면에서 한가운데를 찾는 작도 선 ───── */
+.dual-halo{fill:var(--hl);fill-opacity:.2}
+.dual-core{fill:var(--hl);stroke:var(--mat);stroke-width:2.2}
+.dual-case{fill:none;stroke:var(--mat);stroke-width:6;stroke-linecap:round}
+.dual-cl{fill:none;stroke:var(--hl);stroke-width:2.6;stroke-linecap:round}
+.dual-mid{fill:var(--mat);stroke:var(--hl);stroke-width:2}
 </style>
 </head>
 <body>
@@ -2826,7 +2854,7 @@ function dragOff(){DRAG.on=false;matEl.classList.remove('grab','dragging');dragH
 /* 매트 바탕: 평면(조각 붙이기 · 평면 채우기 · 전개도)은 모눈종이, 입체는 원근 바닥 + 그림자 */
 const matShadow=$('#matShadow');
 function spaceNow(){
-  if(M.mode==='adv')return !(AD.tab==='trunc'&&AD.netV);                 // 실험실: 깎기 전개도만 평면
+  if(M.mode==='adv')return !AD.netV;                                      // 실험실: 전개도를 펼쳤을 때만 평면(깎기 · 오일러 공식)
   if(QZ.on)return true;                                                   // 도전 모드 가운데 입체 문제
   return S.view==='solid'&&!(M.mode==='learn'&&ST.phase==='net');        // 접어서 생긴 입체(전개도를 펼치면 평면)
 }
@@ -3033,7 +3061,7 @@ function setMode(mode){
   $('#timebar').hidden=!ch;noBtn.hidden=!ch;$('#acts').classList.toggle('duo',ch);
   $('#labNote').hidden=!ad;$('#labPanel').hidden=!ad;$('.drawer').classList.toggle('lab',ad);$('.shelf').classList.toggle('lab',ad);document.documentElement.classList.toggle('lab-mode',ad);
   document.documentElement.classList.toggle('mode-challenge',ch);                 // 도전 모드는 흰 매트 색으로
-  syncSpace();
+  syncSpace();fitNote();
 }
 function bumpEl(el){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');}
 function hudPop(id,text,bad){const e=$(id);e.textContent=text;e.classList.toggle('bad',!!bad);e.classList.remove('go');void e.offsetWidth;e.classList.add('go');}
@@ -3691,8 +3719,10 @@ function frusShape(n){const V=ringV(n,1,-.6).concat(ringV(n,.52,.6)),F=[nIdx(n,0
 const S3=1/3,S4=1/(2+Math.SQRT2),S5=1/(2+2*Math.sin(.3*Math.PI));   // 깎은 면이 정다각형이 되는 비율
 const FAMS={
   tetra:{P:'tetra',label:'정사면체',snaps:[[0,'정사면체','정다면체'],[S3,'깎은 정사면체','준정다면체','tt'],[.5,'정팔면체','정다면체'],[1-S3,'깎은 정사면체','준정다면체','tt'],[1,'정사면체','정다면체']]},
-  cube:{P:'cube',label:'정육면체 · 정팔면체',snaps:[[0,'정육면체','정다면체'],[S4,'깎은 정육면체','준정다면체','tc'],[.5,'육팔면체','준정다면체','co'],[1-S3,'깎은 정팔면체','준정다면체','to'],[1,'정팔면체','정다면체']]},
-  dodeca:{P:'dodeca',label:'정십이면체 · 정이십면체',snaps:[[0,'정십이면체','정다면체'],[S5,'깎은 정십이면체','준정다면체','td'],[.5,'십이이십면체','준정다면체','id'],[1-S3,'깎은 정이십면체','준정다면체','ti'],[1,'정이십면체','정다면체']]}
+  cube:{P:'cube',label:'정육면체',pair:'octa',snaps:[[0,'정육면체','정다면체'],[S4,'깎은 정육면체','준정다면체','tc'],[.5,'육팔면체','준정다면체','co'],[1-S3,'깎은 정팔면체','준정다면체','to'],[1,'정팔면체','정다면체']]},
+  octa:{P:'octa',label:'정팔면체',pair:'cube',snaps:[[0,'정팔면체','정다면체'],[S3,'깎은 정팔면체','준정다면체','to'],[.5,'육팔면체','준정다면체','co'],[1-S4,'깎은 정육면체','준정다면체','tc'],[1,'정육면체','정다면체']]},   // 짝꿍끼리는 같은 길을 거꾸로
+  dodeca:{P:'dodeca',label:'정십이면체',pair:'icosa',snaps:[[0,'정십이면체','정다면체'],[S5,'깎은 정십이면체','준정다면체','td'],[.5,'십이이십면체','준정다면체','id'],[1-S3,'깎은 정이십면체','준정다면체','ti'],[1,'정이십면체','정다면체']]},
+  icosa:{P:'icosa',label:'정이십면체',pair:'dodeca',snaps:[[0,'정이십면체','정다면체'],[S3,'깎은 정이십면체','준정다면체','ti'],[.5,'십이이십면체','준정다면체','id'],[1-S5,'깎은 정십이면체','준정다면체','td'],[1,'정십이면체','정다면체']]}
 };
 const ARCHI=[['tt','깎은 정사면체'],['tc','깎은 정육면체'],['co','육팔면체'],['to','깎은 정팔면체'],['td','깎은 정십이면체'],['id','십이이십면체'],['ti','깎은 정이십면체']];
 const NUMK={3:'삼',4:'사',5:'오',6:'육',7:'칠',8:'팔'};
@@ -3777,7 +3807,7 @@ function cached(k,fn){return AD.cache[k]||(AD.cache[k]=fn());}
 
 function advDraw(){
   const sh=AD.shape;if(!sh)return;
-  if(AD.tab==='trunc'&&AD.netV){FCP.ln.forEach(e=>{e.style.display='none';});FCP.dt.forEach(e=>{e.style.display='none';});drawArchNet();return;}
+  if(AD.netV){FCP.ln.forEach(e=>{e.style.display='none';});FCP.dt.forEach(e=>{e.style.display='none';});drawArchNet();return;}
   gLabNet.style.display='none';
   const R=mulMM(rotY(AD.phi),AD.B);let i=0;
   const put=(pts,fill,cls,op)=>{let e=advEls[i];if(!e){e=svgEl('polygon',null,gLab);advEls.push(e);}i++;
@@ -3806,10 +3836,27 @@ function advDraw(){
     else dash(sh,sc,'lab-dl');
   }
   for(;dl<advDashEls.length;dl++)advDashEls[dl].style.display='none';
-  let j=0;
-  if(AD.tab==='dual'&&AD.dotK>0.001&&AD.dualK<0.999){
-    sh.F.forEach(f=>{const n=mulMV(R,f.n);if(n[2]<=0.05)return;const c=mulMV(R,f.c);let e=advDots[j];if(!e){e=svgEl('circle',{class:'lab-dot'},gLabTop);advDots.push(e);}j++;
-      e.setAttribute('cx',(c[0]*sc).toFixed(1));e.setAttribute('cy',(-c[1]*sc).toFixed(1));e.setAttribute('r',(6.5*AD.dotK*(1-AD.dualK)).toFixed(2));e.style.display='';});
+  let j=0,lc=0;
+  if(AD.tab==='dual'&&AD.dualK<0.999&&(AD.cK>0||AD.dotK>0)){     // 쌍대: 면의 한가운데 = 파란 점(첫 면만 작도 선으로 찾는 과정을 보여 줌)
+    const shrink=1-AD.dualK,P=v=>{const p=mulMV(R,sh.V[v]);return [p[0]*sc,-p[1]*sc];};
+    const dot=(x,y,cls,r,op)=>{let e=advDots[j];if(!e){e=svgEl('circle',null,gLabTop);advDots.push(e);}j++;
+      e.setAttribute('class',cls);e.setAttribute('cx',x.toFixed(1));e.setAttribute('cy',y.toFixed(1));e.setAttribute('r',Math.max(0,r).toFixed(2));e.style.opacity=op==null?'':op;e.style.display='';};
+    const center=(f,k)=>{if(k<=0)return;const c=mulMV(R,f.c),x=c[0]*sc,y=-c[1]*sc;dot(x,y,'dual-halo',11*k*shrink);dot(x,y,'dual-core',5.5*k*shrink);};
+    const f0=sh.F[AD.cf];
+    if(f0&&AD.cK>0&&AD.cFade<1){                     // 작도: 짝수각형은 마주 보는 꼭짓점끼리, 홀수각형은 꼭짓점 → 마주 보는 변의 한가운데
+      const Q=f0.idx.map(P),L=Q.length,lines=[];
+      if(L%2===0)for(let i=0;i<L/2;i++)lines.push([Q[i],Q[i+L/2],false]);
+      else for(let i=0;i<L;i++){const a=Q[(i+(L-1)/2)%L],b=Q[(i+(L+1)/2)%L];lines.push([Q[i],[(a[0]+b[0])/2,(a[1]+b[1])/2],true]);}
+      const s=.12,span=1-(lines.length-1)*s,op=(1-AD.cFade).toFixed(2);
+      lines.forEach((ln,i)=>{const t=Math.min(1,Math.max(0,(AD.cK-i*s)/span));if(t<=0)return;
+        const A=ln[0],B=ln[1];
+        for(const cls of ['dual-case','dual-cl']){let e=advLines[lc];if(!e){e=svgEl('line',null,gLabTop);advLines.push(e);}lc++;   // 바탕색 테두리 + 파란 선
+          e.setAttribute('class',cls);e.setAttribute('x1',A[0].toFixed(1));e.setAttribute('y1',A[1].toFixed(1));
+          e.setAttribute('x2',(A[0]+(B[0]-A[0])*t).toFixed(1));e.setAttribute('y2',(A[1]+(B[1]-A[1])*t).toFixed(1));e.style.opacity=op;e.style.display='';}
+        if(ln[2])dot(B[0],B[1],'dual-mid',3.2,op);});  // 변의 한가운데
+    }
+    if(f0&&mulMV(R,f0.n)[2]>0.05)center(f0,popB(AD.dot0));
+    if(AD.dotK>0)sh.F.forEach((f,fi)=>{if(fi===AD.cf||mulMV(R,f.n)[2]<=0.05)return;center(f,AD.dotK);});
   }
   let li=0,di=0;
   if(AD.tab==='count'){                              // 면으로 세기: 맞닿은 변은 파란 선, 모인 꼭짓점은 파란 점
@@ -3820,16 +3867,23 @@ function advDraw(){
   }
   for(;li<FCP.ln.length;li++)FCP.ln[li].style.display='none';
   for(;di<FCP.dt.length;di++)FCP.dt[di].style.display='none';
-  advLines.forEach(e=>{e.style.display='none';});
+  for(;lc<advLines.length;lc++)advLines[lc].style.display='none';
   for(;j<advDots.length;j++)advDots[j].style.display='none';
 }
+function popB(t){if(t<=0)return 0;if(t>=1)return 1;const u=t-1;return 1+2.70158*u*u*u+1.70158*u*u;}   // 톡 튀어나오는 크기
 function advLoop(now){
   if(M.mode!=='adv'){AD.raf=0;return;}
   const dt=Math.min(.05,(now-(AD.last||now))/1000);AD.last=now;
   if(!AD.drag&&!calm&&!AD.spinOff)AD.phi+=dt*.4*Math.min(1,(now-AD.ramp)/900);
   if(AD.tab==='count'){FC.d=calm?FC.dT:FC.d+(FC.dT-FC.d)*Math.min(1,dt*5);if(Math.abs(FC.dT-FC.d)<1e-3)FC.d=FC.dT;}
-  if(AD.tab==='dual'&&AD.dualT0){const e=(now-AD.dualT0)/1000;
-    AD.dotK=calm?1:Math.min(1,e/.45);AD.dualK=calm?(e>.6?1:0):easeInOut(Math.min(1,Math.max(0,(e-.9)/1.1)));if(AD.dualK>=1)AD.dualT0=0;}
+  if(AD.tab==='dual'&&AD.dualT0){const e=(now-AD.dualT0)/1000,cl=x=>Math.min(1,Math.max(0,x));
+    AD.cK=calm?1:cl(e/.9);                           // 첫 면: 작도 선 긋기(0~0.9초)
+    AD.dot0=cl((e-.85)/.3);                          // 첫 면의 한가운데 점(0.85~1.15초)
+    AD.cFade=cl((e-1.45)/.35);                       // 작도 선 지우기(1.45~1.8초)
+    AD.dotK=cl((e-1.6)/.45);                         // 나머지 면의 한가운데 점(1.6~2.05초)
+    AD.dualK=calm?(e>2.8?1:0):easeInOut(cl((e-2.3)/1.1));   // 점을 이은 짝꿍 입체(2.3~3.4초)
+    if(AD.dualHold&&e>1.6){AD.dualHold=false;AD.spinOff=false;AD.ramp=now;}   // 작도를 보는 동안만 멈춤
+    if(AD.dualK>=1)AD.dualT0=0;}
   if(AD.play&&AD.tab==='trunc'){
     if(now>=AD.hold){const F=FAMS[AD.fam],nt=Math.min(1,AD.t+dt/9),hit=F.snaps.find(s=>s[0]>AD.t+1e-6&&s[0]<=nt+.0016);
       if(hit){advTrunc(hit[0],false);AD.hold=Math.max(now+(calm?1600:1300),(AD.noteEnd||0)+300);}else advTrunc(nt,false);   // 이름 알림이 사라질 때까지 잠시 멈춤
@@ -3864,11 +3918,11 @@ function advTab(tab){
     body.querySelectorAll('[data-fc]').forEach(b=>b.addEventListener('click',()=>{sfx.tap();fcPick(b.dataset.fc,false);}));
     fcPick(FC.id||'cube',true);
   }else if(tab==='euler'){
-    body.innerHTML='<p class="lab-lead" id="eLead"></p><div class="e-box" id="eBox"></div>';
+    body.innerHTML='<p class="lab-lead" id="eLead"></p><div class="tr-net" id="eNet"></div><div class="e-box" id="eBox"></div>';
     eulerList();
     if(AD.sel){advEuler(AD.sel,true);}else{advShow(cached('cube',()=>elShape('cube')));setTag('정육면체','정다면체');
       guide('E03','입체의 종류를 먼저 골라 보세요','종류마다 여러 입체가 있어요. 하나씩 골라 꼭짓점, 모서리, 면의 수를 세면 탐구 노트에 적어 줄게요. 무엇이 늘 같을까요?');}
-    markItems();
+    markItems();trNetUI(true);
   }else if(tab==='dual'){
     body.innerHTML='<p class="lab-lead">면의 한가운데에 점을 찍고 이웃한 점끼리 이으면 어떤 입체가 될까요?</p><div class="lab-pairs" id="labPairs"></div>'+
       '<div class="lab-acts"><button class="ghost" id="dualSwap">안팎 바꾸기</button><button class="ghost" id="dualAgain">다시 잇기</button></div>';
@@ -3877,8 +3931,8 @@ function advTab(tab){
     $('#dualAgain').addEventListener('click',()=>{if(AD.pair<0)return;sfx.tap();advDual(AD.pair,AD.swap);});
     advDual(AD.pair<0?0:AD.pair,AD.swap);
   }else{
-    body.innerHTML='<p class="lab-lead">꼭짓점을 조금씩 깎아 보세요. 깎은 면이 정다각형이 되는 순간이 있어요.</p><div class="lab-fams">'+
-      Object.keys(FAMS).map(f=>'<button class="lab-fam" data-f="'+f+'">'+FAMS[f].label+'</button>').join('')+
+    body.innerHTML='<p class="lab-lead">깎기 시작할 정다면체를 골라 보세요. 짝꿍인 정육면체 ⇄ 정팔면체, 정십이면체 ⇄ 정이십면체는 같은 길을 거꾸로 지나가요.</p><div class="lab-fams">'+
+      Object.keys(FAMS).map(f=>'<button class="lab-fam" data-f="'+f+'"><span class="lf-ico">'+shapeIcon(cached(FAMS[f].P,()=>elShape(FAMS[f].P)))+'</span><span class="lf-name">'+FAMS[f].label+'</span></button>').join('')+
       '</div><div class="tr-box"><div class="tr-ends"><span id="trA"></span><span id="trB"></span></div><div class="tr-slider"><input type="range" id="trRange" min="0" max="1000" step="1" value="0" aria-label="깎는 정도"><div class="tr-ticks" id="trTicks"></div></div></div>'+
       '<div class="lab-acts"><button class="primary" id="trPlay">자동으로 깎기</button><button class="ghost" id="trBack">처음으로</button></div><div class="tr-net" id="trNet"></div>';
     body.querySelectorAll('.lab-fam').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advFam(b.dataset.f);}));
@@ -3911,13 +3965,26 @@ function eulerList(){                                // 오일러 공식 오른�
       '<div class="lab-grid">'+cat.items.map(x=>'<button class="lab-item" data-id="'+x[0]+'"><span class="ai-ico">'+shapeIcon(cached(x[0],()=>elShape(x[0])))+'</span><span class="ai-name">'+x[1]+'</span></button>').join('')+'</div>';
     $('#eBack').addEventListener('click',()=>{sfx.tap();AD.ecat='';eulerList();});
     box.querySelectorAll('.lab-item').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advEuler(b.dataset.id);}));
-    markItems();
+    markItems();fitNames(box);
   }
 }
+function fitNames(box){                              // 입체 이름이 칸을 넘지 않게: 목록의 모든 이름이 들어가는 가장 큰 글씨 크기(한 목록은 같은 크기)
+  const grid=box.querySelector('.lab-grid'),els=[...box.querySelectorAll('.lab-item .ai-name')];if(!grid||!els.length)return;
+  const fits=()=>els.every(e=>e.scrollWidth<=e.clientWidth+.5);
+  const tryFit=(max,min)=>{let fs=max;els.forEach(e=>{e.style.fontSize=fs+'px';e.style.overflowWrap='';});
+    while(fs>min&&!fits()){fs-=.5;els.forEach(e=>{e.style.fontSize=fs+'px';});}return fits();};
+  grid.classList.remove('stack');
+  if(tryFit(14,11.5))return;                          // 그림 옆에 이름
+  grid.classList.add('stack');                        // 칸이 좁으면 그림 아래에 이름(이름 칸이 넓어짐)
+  if(tryFit(13.5,10))return;
+  els.forEach(e=>{e.style.overflowWrap='anywhere';}); // 아주 좁은 화면: 그래도 넘치면 칸 안에서 줄을 바꿈
+}
+window.addEventListener('resize',()=>{if(M.mode==='adv'&&AD.tab==='euler'){const b=$('#eBox');if(b)fitNames(b);}});
 function advEuler(id,quiet){
   const it=ELIST.find(e=>e[0]===id),sh=cached(id,()=>elShape(id)),V=sh.V.length,E=sh.E,F=sh.F.length;
-  AD.sel=id;advShow(sh);setTag(it[1],ekind(id));
-  if(!quiet){const isNew=!AD.noted.has(id);AD.noted.set(id,{name:it[1],V:V,E:E,F:F});AD.lastNew=isNew?id:'';sfx.again();}
+  if(AD.netV)archNetClear();                         // 전개도를 펼친 채 다른 입체를 고르면 접고 바꿈
+  AD.sel=id;advShow(sh);setTag(it[1],ekind(id));trNetUI(true);
+  if(!quiet){AD.noted.delete(id);AD.noted.set(id,{name:it[1],V:V,E:E,F:F});AD.lastNew=id;sfx.again();}   // 방금 고른 입체가 탐구 노트 맨 위로
   guide('E05',it[1]+': '+V+' − '+E+' + '+F+' = '+(V-E+F),'꼭짓점 '+V+'개, 모서리 '+E+'개, 면 '+F+'개예요. 다른 입체도 계산해 보세요.');
   markItems();renderNote();
   if(!quiet&&AD.noted.size>=4&&!AD.eulerShown){AD.eulerShown=true;const tok=++AD.dualTok;
@@ -3936,17 +4003,23 @@ function renderPairs(){                             // 짝 목록: 왼쪽 = 바�
 function advDual(i,swap){
   AD.pair=i;AD.swap=!!swap;const p=PAIRS[i],outId=swap?p[1]:p[0],outName=swap?p[3]:p[2],inName=swap?p[2]:p[3];
   const out=cached(outId,()=>elShape(outId));AD.dual=cached('in-'+outId,()=>dualShape(out,true));AD.outCol=SCOL[outId];
-  advShow(out);AD.dualT0=performance.now();AD.dotK=0;AD.dualK=0;AD.pend=true;
+  advShow(out);AD.dualT0=performance.now();AD.cK=0;AD.dot0=0;AD.cFade=0;AD.dotK=0;AD.dualK=0;AD.pend=true;
+  {const R=mulMM(rotY(AD.phi),AD.B);let bz=-9;out.F.forEach((f,fi)=>{const z=mulMV(R,f.n)[2];if(z>bz){bz=z;AD.cf=fi;}});}   // 작도할 면: 가장 앞을 보는 면
+  AD.spinOff=true;AD.dualHold=true;
   setTag(outName,'면의 한가운데를 이으면…');
-  guide('E03','면의 한가운데에 점을 찍어요','이웃한 점끼리 이으면 어떤 입체가 생길까요?');
+  const k=out.F[AD.cf].k;
+  guide('E03','면의 한가운데는 어떻게 찾을까요?',k%2===0?'마주 보는 꼭짓점끼리 선을 그으면, 선이 만나는 점이 면의 한가운데예요.'
+    :'꼭짓점에서 마주 보는 변의 한가운데까지 선을 그으면, '+(k===3?'세':'다섯')+' 선이 한 점에서 만나요. 그 점이 면의 한가운데예요.');
   renderPairs();renderNote();
   const tok=++AD.dualTok;
+  setTimeout(()=>{if(M.mode!=='adv'||AD.tab!=='dual'||AD.dualTok!==tok)return;
+    guide('E03','다른 면에도 한가운데에 점을 찍어요','이웃한 점끼리 이으면 어떤 입체가 생길까요?');},ms(1600));
   setTimeout(()=>{if(M.mode!=='adv'||AD.tab!=='dual'||AD.dualTok!==tok)return;
     AD.pend=false;setTag(outName,'안에 숨은 짝꿍: '+inName);sfx.gift();
     AD.revealed.add(i);renderPairs();renderNote();
     guide('E06',outName+' 안에 '+inName+'가 숨어 있어요',outName===inName?'정사면체의 짝꿍은 바로 자기 자신이에요.':'꼭짓점 수와 면 수가 서로 바뀌어요. 탐구 노트를 보세요.');
     if(!AD.dualShown){AD.dualShown=true;bigNote('쌍대 다면체','면의 한가운데를 이으면 짝꿍 정다면체!','꼭짓점 수와 면 수가 서로 바뀌고, 모서리 수는 같아요',true,3400);}
-  },ms(2100));
+  },ms(3500));
 }
 function advFam(f,keep){
   AD.fam=f;document.querySelectorAll('.lab-fam').forEach(b=>b.classList.toggle('on',b.dataset.f===f));
@@ -3962,19 +4035,19 @@ function trTicks(newKey){                            // 눈금: 정다면체는 
   box.querySelectorAll('.tk').forEach(b=>b.addEventListener('click',()=>{if(AD.netV||AD.netBusy)return;sfx.tap();AD.play=0;playBtnText();advTrunc(+b.dataset.t,false);}));
 }
 function playBtnText(){const b=$('#trPlay');if(b)b.textContent=AD.play?'멈추기':'자동으로 깎기';}
-const ARCHI_AT={};Object.keys(FAMS).forEach(f=>FAMS[f].snaps.forEach(s=>{if(s[3]&&!ARCHI_AT[s[3]])ARCHI_AT[s[3]]={f:f,t:s[0]};}));   // 준정다면체마다 어느 막대의 어디쯤인지
+const ARCHI_AT={};Object.keys(FAMS).forEach(f=>FAMS[f].snaps.forEach(s=>{if(s[3]&&(!ARCHI_AT[s[3]]||s[0]<ARCHI_AT[s[3]].t-1e-9))ARCHI_AT[s[3]]={f:f,t:s[0]};}));   // 준정다면체마다 가장 먼저 만나는 막대와 자리(깎은 정팔면체 → 정팔면체 막대)
 function goArchi(key){                               // 도감 칸·도감 모음에서 고르면 그 준정다면체로(아직 못 찾았으면 찾을 곳만 알려 줌)
   const at=ARCHI_AT[key];if(!at||M.mode!=='adv'||AD.tab!=='trunc'||AD.netV||AD.netBusy)return;
   AD.play=0;playBtnText();
   if(AD.fam!==at.f)advFam(at.f);
   if(AD.seen.has(key))advTrunc(at.t,false);
-  else guide('E08','아직 못 찾은 준정다면체예요',FAMS[at.f].label+' 막대를 밀어서 찾아보세요. 깎은 면이 정다각형이 되는 순간이 있어요.');
+  else guide('E08','아직 못 찾은 준정다면체예요',jo(FAMS[at.f].label,'을','를')+' 깎아서 찾아보세요. 깎은 면이 정다각형이 되는 순간이 있어요.');
 }
 function archCard(x){                                // 도감 모음 카드 한 장(못 찾은 것은 회색, 이름은 ?)
   const at=ARCHI_AT[x[0]],sh=cached('arch-'+x[0],()=>famShape(at.f,at.t)),got=AD.seen.has(x[0]),cur=!!(AD.snap&&AD.snap[3]===x[0]);
   return '<button type="button" class="arch-card'+(got?'':' locked')+(cur?' cur':'')+'" data-archi="'+x[0]+'" aria-label="'+(got?x[1]+' 보기':'아직 못 찾은 준정다면체')+'">'+
     '<span class="ac-art">'+shapeIcon(sh)+'</span><b class="ac-name">'+(got?x[1]:'?')+'</b>'+
-    '<span class="ac-faces">'+(got?faceText(sh,true):FAMS[at.f].label+' 막대에서 찾아보세요')+'</span>'+
+    '<span class="ac-faces">'+(got?faceText(sh,true):jo(FAMS[at.f].label,'을','를')+' 깎아서 찾아보세요')+'</span>'+
     (got?'<span class="ac-vef">꼭짓점 '+sh.V.length+' · 모서리 '+sh.E+' · 면 '+sh.F.length+'</span>':'')+'</button>';
 }
 function openArchis(){
@@ -3998,7 +4071,8 @@ function advTrunc(t,snapNow,fresh){
         const isNew=!AD.seen.has(snap[3]);if(isNew){AD.seen.add(snap[3]);trTicks(snap[3]);}(isNew?sfx.gift:sfx.again)();
         const first=!AD.archShown;AD.archShown=true;
         AD.noteDur=first?3400:2500;AD.noteEnd=performance.now()+AD.noteDur;bigNote(isNew?'준정다면체 발견!':'준정다면체',snap[1],first?'두 가지 이상의 정다각형으로 둘러싸이고, 어느 꼭짓점이든 모습이 같아요':ft+'로 둘러싸여 있어요',true,AD.noteDur);
-        guide(isNew?'E06':'E05',isNew?snap[1]+'를 찾았어요!':snap[1],ft+'로 둘러싸인 준정다면체예요.');}
+        guide(isNew?'E06':'E05',isNew?snap[1]+'를 찾았어요!':snap[1],ft+'로 둘러싸인 준정다면체예요.'+
+          (F.pair&&Math.abs(snap[0]-.5)<1e-9?' 짝꿍 '+FAMS[F.pair].label+'부터 깎아도 반만큼 깎으면 여기서 만나요.':''));}   // 정육면체 ⇄ 정팔면체: 가운데에서 만남
       else if(AD.t<1){sfx.gift();AD.noteDur=2500;AD.noteEnd=performance.now()+2500;bigNote('정다면체',snap[1],'정사면체를 반만큼 깎으면 정팔면체가 돼요',true,2500);guide('E06','어? '+snap[1]+'가 되었어요!','정사면체를 반만큼 깎으면 정팔면체가 돼요.');}
       else{sfx.gift();const why=AD.fam==='tetra'?'정사면체를 끝까지 깎으면 거꾸로 놓인 작은 정사면체가 돼요':'끝까지 깎으면 처음 입체의 짝꿍(쌍대) 정다면체가 작게 남아요';
         AD.noteDur=2500;AD.noteEnd=performance.now()+2500;bigNote('끝까지 깎았더니',snap[1],why,true,2500);guide('E06','끝까지 깎았더니 '+snap[1]+'!',why+'.');}
@@ -4027,7 +4101,7 @@ function renderNote(){
       (rows?'<ul class="fc-list">'+rows+'</ul>':'<p class="note-tip">계산한 식이 숫자의 뜻과 함께 여기에 적혀요.</p>');
     meta.textContent=FC.done.size+'/5';
   }else if(AD.tab==='euler'){
-    let rows='';AD.noted.forEach((r,id)=>{rows+='<tr class="'+(id===AD.lastNew?'new':'')+'"><th>'+r.name+'</th><td>'+r.V+'</td><td>'+r.E+'</td><td>'+r.F+'</td><td class="two">'+(r.V-r.E+r.F)+'</td></tr>';});
+    let rows='';[...AD.noted].reverse().forEach(([id,r])=>{rows+='<tr class="'+(id===AD.lastNew?'new':'')+'"><th>'+r.name+'</th><td>'+r.V+'</td><td>'+r.E+'</td><td>'+r.F+'</td><td class="two">'+(r.V-r.E+r.F)+'</td></tr>';});   // 최근에 고른 것부터
     if(!AD.noted.size)rows='<tr class="empty"><td colspan="5">오른쪽에서 입체를 골라 보세요</td></tr>';
     body.innerHTML=(AD.eulerShown?'<div class="law euler-law"><span>오일러 공식</span><b>꼭짓점 − 모서리 + 면 = 2</b></div>':'')+   // 공식은 노트 맨 위에 고정
       '<table class="vef"><thead><tr><th>입체</th><th>꼭짓점</th><th>모서리</th><th>면</th><th>꼭−모+면</th></tr></thead><tbody>'+rows+'</tbody></table>'+
@@ -4052,7 +4126,20 @@ function renderNote(){
     meta.textContent='';
   }
   $('#labNoteTitle').textContent=AD.tab==='trunc'&&AD.netV&&AD.netV.ready?'각의 결손':AD.tab==='euler'||AD.tab==='count'?'탐구 노트':AD.tab==='dual'?'짝꿍 비교':'지금 모양';
+  fitNote();
 }
+function fitNote(){                                  // 오일러 공식: 이름이 긴 입체가 들어오면 탐구 노트를 가로로 넓힘(가운데 작업판이 그만큼 좁아짐)
+  const lay=document.querySelector('.layout'),tb=document.querySelector('#labNoteBody .vef'),sh=document.querySelector('.shelf');if(!lay||!sh)return;
+  const base=Math.min(232,Math.max(180,innerWidth*.18));                 // 평소 너비(.layout 첫 칸과 같게)
+  let w=base;
+  if(M.mode==='adv'&&AD.tab==='euler'&&tb){
+    tb.style.width='max-content';const need=tb.offsetWidth;tb.style.width='';      // 표가 줄바꿈 없이 필요한 폭
+    const cs=getComputedStyle(sh),pad=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight)+parseFloat(cs.borderLeftWidth)+parseFloat(cs.borderRightWidth);
+    w=Math.min(Math.max(base,Math.ceil(need+pad+2)),Math.max(base,Math.round(innerWidth*.3)));
+  }
+  lay.style.setProperty('--note-w',w+'px');lay.classList.toggle('note-fit',w>base+.5);
+}
+window.addEventListener('resize',()=>{if(M.mode==='adv')fitNote();});
 function keyOf(id){return Object.keys(SOLIDS).find(k=>SOLIDS[k].id===id);}
 function shapeIcon(sh){
   const R=B0();let s='';const it=[];
@@ -4408,23 +4495,29 @@ function drawArchNet(){
     t.setAttribute('x',(P[0]+u[0]*d).toFixed(1));t.setAttribute('y',(P[1]+u[1]*d+fs*.35).toFixed(1));t.setAttribute('font-size',fs.toFixed(1));t.textContent=f.angles[k]+'°';t.style.display='';});
   for(let k=f.order.length;k<NHL.labels.length;k++)NHL.labels[k].style.display='none';
 }
+const jo=(w,a,b)=>{const c=w.charCodeAt(w.length-1)-0xAC00;return w+(c>=0&&c<11172&&c%28?a:b);};   // 받침에 따라 을/를 · 이/가
+function netName(){if(AD.tab==='euler'){const it=ELIST.find(e=>e[0]===(AD.sel||'cube'));return it?it[1]:'';}return AD.snap?AD.snap[1]:'';}   // 펼칠 입체 이름(오일러 공식 · 깎기 실험실)
+function netScale(sh){return AD.fit/(AD.tab==='trunc'?FAMS[AD.fam].rad:sh.rad);}  // 펼치기 전 입체의 화면 크기(advDraw와 같게)
 async function archNetShow(another){
-  if(!AD.snap||AD.netBusy||AD.tab!=='trunc')return;
-  AD.play=0;playBtnText();
-  const sh=AD.shape,prev=AD.netV,famSc=AD.fit/FAMS[AD.fam].rad,run=++AD.netTok,go=()=>run===AD.netTok&&M.mode==='adv'&&AD.tab==='trunc';
+  const tab=AD.tab,eu=tab==='euler',name=netName();
+  if(AD.netBusy||!(tab==='trunc'||eu)||!name||!AD.shape)return;
+  if(!eu){AD.play=0;playBtnText();}
+  const sh=AD.shape,prev=AD.netV,famSc=netScale(sh),run=++AD.netTok,go=()=>run===AD.netTok&&M.mode==='adv'&&AD.tab===tab;
   AD.netBusy=true;trNetUI(true);sfx.tap();
   const pick=pickArchNet(sh,prev?prev.key:null,!!another);
   if(!pick){AD.netBusy=false;trNetUI(true);guide('E07','이 모양은 펼치기 어려워요','다시 눌러 보세요.');return;}
   if(prev){prev.ready=false;sfx.fold();if(!await tween(ms(800),u=>{prev.u=1-u;prev.sc=prev.sc1+(famSc-prev.sc1)*u;},easeInOut,go))return;}
   else{AD.B=mulMM(rotY(AD.phi),AD.B);AD.phi=0;}
   const V=archNetPrep(sh,pick),R0=prev?prev.R1:AD.B,rb=rotBetween(R0,V.R1);
+  if(eu)V.fan=null;                                  // 오일러 공식: 각의 결손 표시 없이 전개도만
   Object.assign(V,{R0:R0,axis:rb.axis,ang:rb.ang,sc:famSc});AD.netV=V;AD.spinOff=true;syncSpace();
-  setTag(AD.snap[1],'전개도');
-  if(!prev)guide('E05',AD.snap[1]+'를 펼쳐 볼게요','어느 모서리를 자르면 겹치지 않게 펼쳐질까요?');
+  setTag(name,'전개도');
+  if(!prev)guide('E05',jo(name,'을','를')+' 펼쳐 볼게요','어느 모서리를 자르면 겹치지 않게 펼쳐질까요?');
   if(!await tween(ms(prev?400:650),t=>{V.turn=t;},easeInOut,go))return;
   V.turn=1;AD.B=V.R1;AD.phi=0;sfx.fold();
   if(!await tween(ms(1700),u=>{V.u=u;V.sc=famSc+(V.sc1-famSc)*u;},easeInOut,go))return;
   V.u=1;V.sc=V.sc1;V.ready=true;AD.netBusy=false;
+  if(eu){sfx.again();guide('E06',name+'의 전개도예요','면 '+sh.F.length+'개가 모서리로 이어져 있어요. 다시 접으면 '+jo(name,'이','가')+' 돼요.');trNetUI(true);renderNote();return;}
   V.fanSVG=archFanSVG(sh,V);
   const f=V.fan,Vn=sh.V.length;
   if(f){const isNew=!AD.gaps.has(AD.snap[1]);AD.gaps.set(AD.snap[1],{V:Vn,gap:f.gap});sfx.gift();
@@ -4436,22 +4529,24 @@ async function archNetShow(another){
 }
 async function archNetFold(){
   const V=AD.netV;if(!V||AD.netBusy)return;
-  const run=++AD.netTok,go=()=>run===AD.netTok&&M.mode==='adv'&&AD.tab==='trunc',famSc=AD.fit/FAMS[AD.fam].rad;
+  const tab=AD.tab,run=++AD.netTok,go=()=>run===AD.netTok&&M.mode==='adv'&&AD.tab===tab,famSc=netScale(AD.shape);
   AD.netBusy=true;V.ready=false;trNetUI(true);renderNote();sfx.fold();
   if(!await tween(ms(1300),u=>{V.u=1-u;V.sc=V.sc1+(famSc-V.sc1)*u;},easeInOut,go))return;
   archNetClear();AD.B=V.R1;AD.phi=0;AD.ramp=performance.now();
+  if(tab==='euler'){setTag(netName(),ekind(AD.sel||'cube'));trNetUI(true);renderNote();guide('E05','다시 접었어요','다른 입체도 전개도를 펼쳐 볼 수 있어요.');return;}
   if(AD.snap)setTag(AD.snap[1],AD.snap[2]);trNetUI(true);renderNote();
   guide('E05','다시 접었어요','다른 모양에서도 전개도를 펼쳐 각의 결손을 확인해 보세요.');
 }
 function archNetClear(){AD.netV=null;AD.netBusy=false;AD.netTok++;AD.spinOff=false;gLabNet.style.display='none';const b=document.querySelector('.lab-body');if(b)b.classList.remove('netting');syncSpace();}
-function trNetUI(force){
-  const box=$('#trNet');if(!box)return;const V=AD.netV,can=!!AD.snap,state=(V?'n':'s')+(AD.netBusy?'b':'')+(can?AD.snap[1]:'');
+function trNetUI(force){                            // 전개도 버튼: 깎기 실험실(#trNet) · 오일러 공식(#eNet)
+  const eu=AD.tab==='euler',box=$(eu?'#eNet':'#trNet');if(!box)return;const V=AD.netV,name=netName(),can=!!name,state=(V?'n':'s')+(AD.netBusy?'b':'')+name;
   if(!force&&box.dataset.state===state)return;box.dataset.state=state;
   if(V)box.innerHTML='<div class="lab-acts"><button class="primary" id="netFold"'+(AD.netBusy?' disabled':'')+'>다시 접기</button><button class="ghost" id="netAgain"'+(AD.netBusy?' disabled':'')+'>다른 모양으로 펼치기</button></div>';
-  else box.innerHTML='<button class="net-open" id="netOpen"'+(can&&!AD.netBusy?'':' disabled')+'><span>전개도 보기</span></button><p class="tr-net-tip">'+(can?AD.snap[1]+'를 펼쳐서 꼭짓점의 각의 결손을 확인해 봐요':'이름이 나온 모양에서 펼쳐 볼 수 있어요')+'</p>';
+  else box.innerHTML='<button class="net-open" id="netOpen"'+(can&&!AD.netBusy?'':' disabled')+'><span>전개도 보기</span></button><p class="tr-net-tip">'+
+    (eu?jo(name,'을','를')+' 펼쳐서 면이 어떻게 이어져 있는지 봐요':can?jo(name,'을','를')+' 펼쳐서 꼭짓점의 각의 결손을 확인해 봐요':'이름이 나온 모양에서 펼쳐 볼 수 있어요')+'</p>';
   const o=$('#netOpen'),fo=$('#netFold'),ag=$('#netAgain');
   if(o)o.addEventListener('click',()=>archNetShow(false));if(fo)fo.addEventListener('click',()=>{sfx.tap();archNetFold();});if(ag)ag.addEventListener('click',()=>archNetShow(true));
-  const b=document.querySelector('.lab-body');if(b)b.classList.toggle('netting',!!V);
+  const b=document.querySelector('.lab-body');if(b)b.classList.toggle('netting',!!V&&!eu);   // 깎기 실험실만: 펼친 동안 막대 · 버튼 잠금
 }
 function archNetNote(){                              // 탐구 노트: 꼭짓점의 각의 결손과 720°
   const V=AD.netV,f=V.fan,sh=AD.shape,Vn=sh.V.length;
