@@ -1717,6 +1717,54 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
 .lf-ico svg{display:block;width:100%;height:100%}
 .lf-name{white-space:nowrap;letter-spacing:-.02em}
 
+/* ───── 심화 탐구 탭 5개: 위 3개 · 아래 2개 ───── */
+.lab-tabs{grid-template-columns:repeat(6,minmax(0,1fr))}
+.lab-tab,.lab-tab:nth-child(2n){grid-column:span 2;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.lab-tab:nth-child(n+4){grid-column:span 3;border-bottom:0}
+.lab-tab:nth-child(3),.lab-tab:nth-child(5){border-right:0}
+
+/* ───── 단면 실험실 ───── */
+.sec-q{margin:2px 0 -4px;font-size:12.5px;font-weight:800;color:var(--ink-2)}
+.sec-poses{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.sec-pose{min-height:42px;padding:4px 6px;font:inherit;font-size:13.5px;font-weight:800;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:0;cursor:pointer;word-break:keep-all}
+.sec-pose.on{border:2px solid var(--ink)}
+@media (hover:hover){.sec-pose:hover{border-color:var(--ink)}}
+.sec-pose:focus-visible,.sec-solid:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.sec-plane{fill:var(--hl);fill-opacity:.07;stroke:var(--hl);stroke-opacity:.45;stroke-width:1.4;stroke-dasharray:6 5}
+.sec-face{stroke:rgba(8,16,38,.55);stroke-width:1.3;stroke-linejoin:round}
+.sec-ghost{fill-opacity:.16;stroke:var(--lab-glass);stroke-opacity:.45;stroke-width:1.2;stroke-linejoin:round}
+.sec-cap{fill:var(--hl);fill-opacity:.88;stroke:var(--mat);stroke-width:2.4;stroke-linejoin:round}
+.sec-rows{display:grid;gap:8px;margin:2px 0 0;padding:0;list-style:none}
+.sec-rows li{display:grid;grid-template-columns:52px minmax(0,1fr);align-items:center;gap:8px}
+.sec-rows b{font-size:13px;font-weight:800;color:var(--ink-2)}
+.sec-chips{display:flex;flex-wrap:wrap;gap:6px}
+.sec-chip{min-width:62px;padding:5px 8px;font-style:normal;font-size:13px;font-weight:800;text-align:center;color:var(--ink-2);background:var(--well);border:1px dashed var(--line)}
+.sec-chip.got{color:var(--ink);background:var(--panel);border:1px solid var(--line)}
+.sec-chip.cur{border:2px solid var(--hl);color:var(--hl-ink)}
+
+/* ───── 처음 들어올 때 짧은 사용법(학습 모드 · 심화 탐구) ───── */
+.coach{position:fixed;inset:0;z-index:120;cursor:pointer}
+.coach[hidden]{display:none}
+.coach-hole{position:fixed;left:50%;top:50%;width:0;height:0;box-shadow:0 0 0 200vmax rgba(0,0,0,.58);outline:3px solid var(--hl);outline-offset:3px;pointer-events:none;
+  transition:left .35s cubic-bezier(.3,.7,.2,1),top .35s cubic-bezier(.3,.7,.2,1),width .35s cubic-bezier(.3,.7,.2,1),height .35s cubic-bezier(.3,.7,.2,1)}
+.coach-card{position:fixed;left:16px;top:16px;width:min(340px,calc(100vw - 32px));display:grid;gap:4px;padding:16px 18px 14px;cursor:default;
+  background:var(--panel);color:var(--ink);border:1px solid var(--line);border-top:3px solid var(--hl);box-shadow:0 18px 40px rgba(0,0,0,.28);
+  transition:left .35s cubic-bezier(.3,.7,.2,1),top .35s cubic-bezier(.3,.7,.2,1)}
+.coach-step{margin:0;font-size:12.5px;font-weight:800;letter-spacing:.06em;color:var(--hl-ink);font-variant-numeric:tabular-nums}
+.coach-title{margin:0;font-size:20px;font-weight:800;letter-spacing:-.02em}
+.coach-desc{margin:0;font-size:15.5px;line-height:1.5;color:var(--ink-2);word-break:keep-all}
+.coach-acts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.coach-acts button{width:100%;height:48px;min-height:48px;padding:0 12px;font-size:15.5px;border-radius:0}   /* 건너뛰기 · 다음(시작하기): 같은 크기 */
+.coach-acts button:focus-visible{outline:2px solid var(--focus);outline-offset:-6px}                         /* 초점 표시는 칸 안쪽에(겉 크기는 그대로) */
+.coach-acts .primary:focus-visible{outline-color:#FFFFFF}                                                   /* 빨강 위에서는 흰 테로 보이게 */
+@media (prefers-reduced-motion:reduce){.coach-hole,.coach-card{transition:none}}
+
+/* ───── 도전 모드 전개도 문제: 선택지가 전개도 그림 ───── */
+.quiz-bar.nets .qz-btn{min-height:96px;padding:8px 4px 6px}
+.qz-btn svg.qn{display:block;width:72px;height:72px;margin:0 auto}
+.qz-btn svg.qn rect{fill:#4E9FD1;stroke:#FFFFFF;stroke-width:.07}
+@media (max-width:699.98px){.quiz-bar.nets .qz-btn{min-height:84px}.qz-btn svg.qn{width:62px;height:62px}}
+
 /* ───── 쌍대 다면체: 면의 한가운데 = 파란 점(면으로 세기와 같은 모양) · 첫 면에서 한가운데를 찾는 작도 선 ───── */
 .dual-halo{fill:var(--hl);fill-opacity:.2}
 .dual-core{fill:var(--hl);stroke:var(--mat);stroke-width:2.2}
@@ -1737,6 +1785,9 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
       <div class="hc hc-combo" id="hcCombo"><span class="hc-ico"><svg class="flame" viewBox="0 0 24 24" aria-hidden="true"><path d="M12.6 2c.5 3.1 4.9 5.4 4.9 10.3A5.5 5.5 0 0 1 12 18a5.5 5.5 0 0 1-5.5-5.6c0-2.3 1.2-3.9 2.3-5 .2 1.7 1 2.8 2.2 3.1C10.5 7.4 11.6 4.4 12.6 2z"/><path class="core" d="M12 21.6a3.8 3.8 0 0 1-3.8-3.8c0-1.6 1.2-2.7 2.1-3.5.3 1.2.9 1.8 1.7 2 .8-.3 1.5-1.1 1.6-2.3 1.2 1.1 2.2 2.3 2.2 3.8a3.8 3.8 0 0 1-3.8 3.8z"/></svg></span><span class="hl">콤보</span><b id="hudCombo">0</b></div>
     </div>
     <div class="tools">
+      <button class="icon-btn" id="helpBtn" aria-label="사용법 다시 보기" title="사용법 다시 보기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.1 8.5a2.9 2.9 0 1 1 4.1 2.65c-.75.35-1.2 1-1.2 1.85V14"/><circle cx="12" cy="17.4" r="1.2" fill="currentColor" stroke="none"/></svg>
+      </button>
       <button class="icon-btn" id="soundBtn" aria-pressed="true" aria-label="소리 끄기">
         <svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6"/><path d="M18 6.5a7.8 7.8 0 0 1 0 11"/></svg>
         <svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
@@ -1845,6 +1896,7 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
           <button class="lab-tab" data-tab="euler" role="tab">오일러 공식</button>
           <button class="lab-tab" data-tab="dual" role="tab">쌍대 다면체</button>
           <button class="lab-tab" data-tab="trunc" role="tab">깎기 실험실</button>
+          <button class="lab-tab" data-tab="sect" role="tab">단면 실험실</button>
         </div>
         <div class="lab-body" id="labBody"></div>
       </div>
@@ -1902,7 +1954,7 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
         <button class="mode-card deep" id="labBtn">
           <span class="mc-head"><span class="mc-no">03</span><span class="mc-ico" id="icoAdv" aria-hidden="true"></span></span>
           <span class="mc-title">심화 탐구</span>
-          <span class="mc-desc">오일러 공식 · 쌍대<br>· 준정다면체</span>
+          <span class="mc-desc">오일러 공식 · 쌍대<br>· 준정다면체 · 단면</span>
           <span class="mc-foot"><span>더 깊이 알아보기</span><span class="mc-go">시작<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h11M11 5.5 15.5 10 11 14.5"/></svg></span></span>
         </button>
       </div>
@@ -2025,6 +2077,17 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
     <p class="nets-lead" id="archLead"></p>
     <div class="arch-grid" id="archGrid"></div>
     <div class="rev-actions"><button class="primary" id="archClose">닫기</button></div>
+  </div>
+</div>
+
+<!-- 처음 들어올 때 짧은 사용법: 버튼 하나씩 밝게 비추며 설명 -->
+<div class="coach" id="coach" hidden role="dialog" aria-modal="true" aria-labelledby="coachT" aria-describedby="coachD">
+  <div class="coach-hole" id="coachHole"></div>
+  <div class="coach-card" id="coachCard">
+    <p class="coach-step" id="coachStep"></p>
+    <h3 class="coach-title" id="coachT"></h3>
+    <p class="coach-desc" id="coachD"></p>
+    <div class="coach-acts"><button class="ghost" id="coachSkip">건너뛰기</button><button class="primary" id="coachNext">다음</button></div>
   </div>
 </div>
 
@@ -2855,7 +2918,7 @@ function dragOff(){DRAG.on=false;matEl.classList.remove('grab','dragging');dragH
 const matShadow=$('#matShadow');
 function spaceNow(){
   if(M.mode==='adv')return !AD.netV;                                      // 실험실: 전개도를 펼쳤을 때만 평면(깎기 · 오일러 공식)
-  if(QZ.on)return true;                                                   // 도전 모드 가운데 입체 문제
+  if(QZ.on)return !QZ.net;                                                // 도전 모드 가운데 입체 문제(펼친 전개도 문제는 평면)
   return S.view==='solid'&&!(M.mode==='learn'&&ST.phase==='net');        // 접어서 생긴 입체(전개도를 펼치면 평면)
 }
 function placeShadow(){                              // 그림자는 입체 바로 아래 바닥에(입체 크기 · 위치에 맞춤)
@@ -2980,15 +3043,16 @@ function buildOrder(type){
     }
     case 'eqfv':return {id:'eqfv',text:'면의 수와 꼭짓점의 수가 같은 선물을 만들어 주세요',targets:['3-3']};
     case 'see':{const z=quizBuild(sk);return {id:'z'+sk+z.q,text:z.text,targets:[sk],quiz:z,why:z.why};}
+    case 'netq':{const z=netQuizBuild();return {id:'k'+z.q+z.key,text:z.text,targets:[z.key],quiz:z,why:z.why};}   // 전개도 문제
     default:{const t=pick(TRAPS);return {id:'x'+t[0],text:t[0],targets:[],why:t[1]};}      // 못 만드는 주문
   }
 }
 function makeOrder(){
   const c=M.correct;let types;
   if(c<2)types=['config'];                          // 처음 두 주문은 조작을 익히도록 만들 수 있는 선물만
-  else if(c<5)types=['name','die','shape','degree','mixed','see','see'];
-  else if(c<9)types=['name','die','faces','verts','shape','degree','combo','most','mixed','see','see'];
-  else types=['die','faces','verts','edges','angle','combo','ef','ev','most','dual','range','eqfv','mixed','trap','trap','see','see','see'];
+  else if(c<5)types=['name','die','shape','degree','mixed','see','see','netq'];
+  else if(c<9)types=['name','die','faces','verts','shape','degree','combo','most','mixed','see','see','netq','netq'];
+  else types=['die','faces','verts','edges','angle','combo','ef','ev','most','dual','range','eqfv','mixed','trap','trap','see','see','see','netq','netq'];
   const prev=M.order,prevT=prev?prev.targets:[];
   for(let i=0;i<60;i++){
     const tp=pick(types);
@@ -3004,7 +3068,7 @@ function makeOrder(){
 }
 function nextOrder(){
   M.order=makeOrder();M.t0=performance.now();M.miss=0;
-  const qz=!!M.order.quiz,how=qz?'가운데 선물을 끌어서 돌려 보며 답을 골라 주세요.':'조각을 골라 접어 주세요.';
+  const qz=!!M.order.quiz,netq=qz&&M.order.type==='netq',how=netq?'전개도를 머릿속으로 접어 보며 답을 골라 주세요.':qz?'가운데 선물을 끌어서 돌려 보며 답을 골라 주세요.':'조각을 골라 접어 주세요.';
   if(qz)quizShow(M.order);else quizHide();
   guide('V11',M.order.text,M.lastMsg||how,qz&&M.lastMsg?how:'');M.lastMsg='';
 }
@@ -3024,7 +3088,7 @@ function miss(msg){
   M.combo=0;M.wrong++;M.miss++;M.end-=2000;hudPop('#popTime','−2초',true);                                                        // 오답은 콤보가 끊기고 2초 줄어듦
   sfx.over();vib(50);
   let hint='';
-  if(M.miss>=2)hint=M.order.quiz?' 힌트: 선물을 천천히 돌려 보세요.':M.order.targets.length?' 힌트: '+POLY[+M.order.targets[0].split('-')[0]].name+'을 써 보세요.':' 힌트: 못 만드는 주문도 있어요.';
+  if(M.miss>=2)hint=M.order.type==='netq'?' 힌트: 바닥이 될 면을 하나 정하고, 옆면을 하나씩 세워 보세요.':M.order.quiz?' 힌트: 선물을 천천히 돌려 보세요.':M.order.targets.length?' 힌트: '+POLY[+M.order.targets[0].split('-')[0]].name+'을 써 보세요.':' 힌트: 못 만드는 주문도 있어요.';
   guide('E10',M.order.text,msg+hint);
 }
 async function foldChallenge(){
@@ -3058,7 +3122,7 @@ function setMode(mode){
   $('#pileBlock').hidden=mode!=='challenge';
   M.mode=mode;const ch=mode==='challenge',ad=mode==='adv';
   $('.title').hidden=ch;$('.title').textContent=ad?'입체도형 실험실':'여섯 번째 선물을 찾아라';$('#hud').hidden=!ch;$('#collBlock').hidden=ch||ad;$('#hofBlock').hidden=!ch;
-  $('#timebar').hidden=!ch;noBtn.hidden=!ch;$('#acts').classList.toggle('duo',ch);
+  $('#timebar').hidden=!ch;noBtn.hidden=!ch;$('#acts').classList.toggle('duo',ch);$('#helpBtn').hidden=ch;   // 사용법 다시 보기는 학습·심화에서만
   $('#labNote').hidden=!ad;$('#labPanel').hidden=!ad;$('.drawer').classList.toggle('lab',ad);$('.shelf').classList.toggle('lab',ad);document.documentElement.classList.toggle('lab-mode',ad);
   document.documentElement.classList.toggle('mode-challenge',ch);                 // 도전 모드는 흰 매트 색으로
   syncSpace();fitNote();
@@ -3662,7 +3726,7 @@ window.addEventListener('resize',()=>{if(M.mode==='challenge')pileLayout();});
 let armTimer=0;
 function disarm(){clearTimeout(armTimer);resetBtn.classList.remove('armed');resetBtn.textContent='처음부터';}
 function resetAll(){
-  disarm();resetView();S.game++;
+  disarm();resetView();S.game++;if(TUT.every)TUT.done={};if(TUT.steps)tutEnd();   // ?tut=1이면 다음 사람에게 사용법을 다시 보여 줌
   S.n=3;S.k=0;disp.kf=0;S.found.clear();S.tiles.clear();S.tried.clear();S.attempts=0;S.phase='explore';S.huntFolds=0;
   $('#five').hidden=true;$('#reveal').hidden=true;$('#result').hidden=true;$('#noSix').hidden=true;S.noSix=false;
   stopChallenge();setMode('learn');pileReset();M.newId=0;renderHof();hintReset();closeNets();
@@ -3807,6 +3871,8 @@ function cached(k,fn){return AD.cache[k]||(AD.cache[k]=fn());}
 
 function advDraw(){
   const sh=AD.shape;if(!sh)return;
+  gSec.style.display=AD.tab==='sect'?'':'none';
+  if(AD.tab==='sect'){secDraw();return;}               // 단면 실험실은 따로 그림
   if(AD.netV){FCP.ln.forEach(e=>{e.style.display='none';});FCP.dt.forEach(e=>{e.style.display='none';});drawArchNet();return;}
   gLabNet.style.display='none';
   const R=mulMM(rotY(AD.phi),AD.B);let i=0;
@@ -3903,7 +3969,7 @@ function advStart(){
 }
 function advStop(){
   if(AD.raf)cancelAnimationFrame(AD.raf);AD.raf=0;AD.drag=null;AD.play=0;AD.dualTok++;if(AD.netV)archNetClear();gLabNet.style.display='none';
-  gLab.style.display=gLabTop.style.display=gLabDash.style.display=gFC.style.display='none';matEl.classList.remove('lab-on','dragging','dash-on');Promise.resolve().then(syncDash);
+  gLab.style.display=gLabTop.style.display=gLabDash.style.display=gFC.style.display=gSec.style.display='none';matEl.classList.remove('lab-on','dragging','dash-on');Promise.resolve().then(syncDash);
   gPieces.style.display='';gauge.style.display='';dotEl.style.display='';gHint.style.display='';
   $('#labTag').hidden=true;bigNoteHide();
 }
@@ -3930,6 +3996,19 @@ function advTab(tab){
     $('#dualSwap').addEventListener('click',()=>{if(AD.pair<0)return;sfx.tap();advDual(AD.pair,!AD.swap);});
     $('#dualAgain').addEventListener('click',()=>{if(AD.pair<0)return;sfx.tap();advDual(AD.pair,AD.swap);});
     advDual(AD.pair<0?0:AD.pair,AD.swap);
+  }else if(tab==='sect'){
+    body.innerHTML='<p class="lab-lead">입체를 평면(칼)으로 자르면 자른 면, 곧 단면은 어떤 모양일까요?</p><div class="lab-fams sec-solids">'+
+      SEC_SOLIDS.map(s=>'<button class="lab-fam sec-solid" data-s="'+s[0]+'"><span class="lf-ico">'+shapeIcon(cached(s[0],()=>elShape(s[0])))+'</span><span class="lf-name">'+s[1]+'</span></button>').join('')+'</div>'+
+      '<p class="sec-q">어디를 위로 놓고 자를까요?</p><div class="sec-poses">'+SEC_POSES.map(p=>'<button class="sec-pose" data-pose="'+p[0]+'">'+p[1]+'</button>').join('')+'</div>'+
+      '<div class="tr-box"><div class="tr-ends"><span>위</span><span>칼의 높이</span><span>아래</span></div><div class="tr-slider"><input type="range" id="secRange" min="0" max="1000" step="1" aria-label="칼의 높이">'+
+      '<div class="tr-ticks"><i class="sec-mid" style="left:50%"></i></div></div></div><p class="tr-net-tip">입체를 손가락으로 끌어 기울여도 단면이 바뀌어요.</p>';
+    body.querySelectorAll('.sec-solid').forEach(b=>b.addEventListener('click',()=>{sfx.tap();secShow(b.dataset.s,true);}));
+    body.querySelectorAll('.sec-pose').forEach(b=>b.addEventListener('click',()=>{sfx.tap();secPose(b.dataset.pose);if(b.dataset.pose==='tilt'&&SEC.id==='cube'){SEC.k=.36;$('#secRange').value=360;}}));
+    const r=$('#secRange');r.value=Math.round(SEC.k*1000);
+    r.addEventListener('input',()=>{SEC.k=r.value/1000;});
+    r.addEventListener('change',()=>{if(Math.abs(SEC.k-.5)<.03){SEC.k=.5;r.value=500;}});   // 한가운데 근처에서 놓으면 딱 한가운데로
+    secShow(SEC.id,true);
+    guide('E03','입체를 잘라 보세요','어디를 위로 놓을지 고르고 칼의 높이를 바꿔 보세요. 자른 면은 어떤 모양이 될까요?');
   }else{
     body.innerHTML='<p class="lab-lead">깎기 시작할 정다면체를 골라 보세요. 짝꿍인 정육면체 ⇄ 정팔면체, 정십이면체 ⇄ 정이십면체는 같은 길을 거꾸로 지나가요.</p><div class="lab-fams">'+
       Object.keys(FAMS).map(f=>'<button class="lab-fam" data-f="'+f+'"><span class="lf-ico">'+shapeIcon(cached(FAMS[f].P,()=>elShape(FAMS[f].P)))+'</span><span class="lf-name">'+FAMS[f].label+'</span></button>').join('')+
@@ -3944,7 +4023,7 @@ function advTab(tab){
     advFam(AD.fam,true);trNetUI(true);
     guide('E03','꼭짓점을 깎아 보세요','막대를 밀면 꼭짓점이 깎여요. 끝까지 밀면 무엇이 될까요?');
   }
-  renderNote();
+  renderNote();syncDash();
 }
 function markItems(){document.querySelectorAll('.lab-item').forEach(b=>{b.classList.toggle('done',AD.noted.has(b.dataset.id));b.classList.toggle('on',b.dataset.id===AD.sel);});
   const hs=$('#eCount'),c=ECATS.find(x=>x.k===AD.ecat);if(hs&&c)hs.textContent=c.items.filter(x=>AD.noted.has(x[0])).length+'/'+c.items.length;}
@@ -4113,6 +4192,7 @@ function renderNote(){
       '<div class="dmid" aria-hidden="true">⇄</div><div class="dcol'+(dualPending?' hide':'')+'"><b>'+(dualPending?'?':dn)+'</b><span class="cf">꼭짓점 <em>'+(dualPending?'?':b.V)+'</em></span><span class="ce">모서리 <em>'+(dualPending?'?':b.E)+'</em></span><span class="cv">면 <em>'+(dualPending?'?':b.F)+'</em></span></div></div>'+
       '<p class="note-tip">'+(dualPending?'안에서 어떤 입체가 생기는지 보세요':'같은 색끼리 수가 같아요. 꼭짓점 수와 면 수가 서로 바뀌고, 모서리 수는 그대로예요.')+'</p>';
     meta.textContent='';
+  }else if(AD.tab==='sect'){body.innerHTML=secNote();const fs=SEC.found[SEC.id]||new Set();meta.textContent=fs.size+'/'+SEC_ROWS[SEC.id].reduce((s,r)=>s+r[1].length,0);
   }else if(AD.netV&&AD.netV.ready){body.innerHTML=archNetNote();meta.textContent='';
   }else{
     const sh=AD.shape,c={};sh.F.forEach(f=>{c[f.k]=(c[f.k]||0)+1;});const reg=!!AD.snap,V=sh.V.length,E=sh.E,F=sh.F.length;
@@ -4125,7 +4205,7 @@ function renderNote(){
       '<button type="button" class="archi-all" id="archAllBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="7" height="7"/><rect x="13.5" y="3.5" width="7" height="7"/><rect x="3.5" y="13.5" width="7" height="7"/><rect x="13.5" y="13.5" width="7" height="7"/></svg>도감 모아 보기</button>';
     meta.textContent='';
   }
-  $('#labNoteTitle').textContent=AD.tab==='trunc'&&AD.netV&&AD.netV.ready?'각의 결손':AD.tab==='euler'||AD.tab==='count'?'탐구 노트':AD.tab==='dual'?'짝꿍 비교':'지금 모양';
+  $('#labNoteTitle').textContent=AD.tab==='trunc'&&AD.netV&&AD.netV.ready?'각의 결손':AD.tab==='euler'||AD.tab==='count'?'탐구 노트':AD.tab==='dual'?'짝꿍 비교':AD.tab==='sect'?'단면 도감':'지금 모양';
   fitNote();
 }
 function fitNote(){                                  // 오일러 공식: 이름이 긴 입체가 들어오면 탐구 노트를 가로로 넓힘(가운데 작업판이 그만큼 좁아짐)
@@ -4293,18 +4373,18 @@ function quizBuild(sk){
 }
 function quizShow(o){
   const z=o.quiz,id=SOLIDS[z.key].id;
-  QZ.on=true;QZ.q=z;QZ.key=z.key;QZ.shape=cached(id,()=>elShape(id));QZ.B=mulMM(rotX(.42),rotY(.55));QZ.phi=Math.random()*TAU;QZ.ramp=performance.now();QZ.lock=false;
+  QZ.on=true;QZ.q=z;QZ.key=z.key;QZ.shape=cached(id,()=>elShape(id));QZ.net=z.net||null;QZ.B=mulMM(rotX(.42),rotY(.55));QZ.phi=Math.random()*TAU;QZ.ramp=performance.now();QZ.lock=false;
   QZ.col=pick(QCOL.filter(c=>c!==QZ.col));
   gPieces.style.display='none';gauge.style.display='none';dotEl.style.display='none';gHint.style.display='none';gQuiz.style.display='';
   matEl.classList.add('quiz-on');$('.drawer').classList.add('quiz');
-  const bar=$('#quizBar');
-  bar.innerHTML=z.choices.map((c,i)=>'<button class="qz-btn" data-i="'+i+'"><i>'+(i+1)+'</i><span>'+c+'</span></button>').join('');bar.hidden=false;
+  const bar=$('#quizBar');bar.classList.toggle('nets',z.q==='cubenet');           // 정육면체 전개도 고르기: 선택지가 그림
+  bar.innerHTML=z.choices.map((c,i)=>'<button class="qz-btn" data-i="'+i+'"'+(z.q==='cubenet'?' aria-label="'+(i+1)+'번 전개도"':'')+'><i>'+(i+1)+'</i><span>'+c+'</span></button>').join('');bar.hidden=false;
   bar.querySelectorAll('.qz-btn').forEach(b=>b.addEventListener('click',()=>quizAnswer(+b.dataset.i,b)));
   quizLayout();syncSpace();
   if(!QZ.raf){QZ.last=0;QZ.raf=requestAnimationFrame(quizLoop);}
 }
 function quizHide(){
-  if(!QZ.on)return;QZ.on=false;QZ.drag=null;if(QZ.raf)cancelAnimationFrame(QZ.raf);QZ.raf=0;
+  if(!QZ.on)return;QZ.on=false;QZ.net=null;QZ.drag=null;if(QZ.raf)cancelAnimationFrame(QZ.raf);QZ.raf=0;$('#quizBar').classList.remove('nets');
   gQuiz.style.display='none';gPieces.style.display='';gauge.style.display='';dotEl.style.display='';gHint.style.display='';
   matEl.classList.remove('quiz-on','dragging');$('.drawer').classList.remove('quiz');
   const bar=$('#quizBar');bar.hidden=true;bar.innerHTML='';drawBench();syncSpace();
@@ -4313,7 +4393,15 @@ function quizLayout(){
   const r=matEl.getBoundingClientRect(),b=$('#quizBar').getBoundingClientRect();if(!r.width||!r.height)return;
   const upp=440/Math.min(r.width,r.height),top=r.top+34,bot=(b.height?b.top:r.bottom)-12;
   QZ.cy=((top+bot)/2-(r.top+r.height/2))*upp;QZ.rpx=Math.max(60,Math.min(r.width*.34,(bot-top)*.46));QZ.upp=upp;
+  QZ.bw=r.width*.8*upp;QZ.bh=(bot-top)*.88*upp;                                       // 전개도 그림이 들어갈 칸(작업판 단위)
   if(QZ.on)placeShadow();
+}
+function quizNetDraw(){                              // 문제 전개도: 평평하게 펼친 그림(돌지 않음)
+  const pk=QZ.net,o=pk.o,c=Math.cos(o.a),s=Math.sin(o.a),cx=(o.x0+o.x1)/2,cy=(o.y0+o.y1)/2,k=Math.min((QZ.bw||300)/(o.x1-o.x0),(QZ.bh||260)/(o.y1-o.y0));let i=0;
+  pk.poly.forEach(fp=>{let e=qzEls[i];if(!e){e=svgEl('polygon',{class:'qz-face'},gQuiz);qzEls.push(e);}i++;
+    e.setAttribute('points',fp.map(p=>{const x=p[0]*c-p[1]*s,y=p[0]*s+p[1]*c;return ((x-cx)*k).toFixed(1)+','+((y-cy)*k+QZ.cy).toFixed(1);}).join(' '));
+    e.setAttribute('fill',QZ.col);e.style.display='';});
+  for(;i<qzEls.length;i++)qzEls[i].style.display='none';
 }
 function quizLoop(now){
   if(!QZ.on){QZ.raf=0;return;}
@@ -4322,6 +4410,7 @@ function quizLoop(now){
   quizDraw();QZ.raf=requestAnimationFrame(quizLoop);
 }
 function quizDraw(){
+  if(QZ.net){quizNetDraw();return;}
   const sh=QZ.shape;if(!sh)return;const R=mulMM(rotY(QZ.phi),QZ.B),sc=QZ.rpx*QZ.upp/sh.rad;let i=0;
   const P=sh.V.map(v=>{const p=mulMV(R,v);return [p[0]*sc,-p[1]*sc+QZ.cy,p[2]];}),it=[];
   sh.F.forEach(f=>{const n=mulMV(R,f.n);if(n[2]<=1e-4)return;let z=0;f.idx.forEach(v=>{z+=P[v][2];});it.push({f:f,n:n,z:z});});
@@ -4333,9 +4422,54 @@ function quizAnswer(i,btn){
   if(!QZ.on||!M.run||QZ.lock)return;const z=QZ.q;
   if(i===z.ans){QZ.lock=true;btn.classList.add('ok');sfx.tap();
     const run=M.runId;setTimeout(()=>{if(!M.run||run!==M.runId||!QZ.on||QZ.q!==z)return;QZ.lock=false;correct(z.key,bench);},ms(360));}
-  else{btn.classList.add('no');btn.disabled=true;miss('아니에요. 가운데 선물을 끌어서 돌려 보며 다시 세어 보세요.');}
+  else{btn.classList.add('no');btn.disabled=true;miss(z.q==='netname'||z.q==='cubenet'?'아니에요. 머릿속으로 접어 보세요. 면끼리 겹치면 안 돼요.':'아니에요. 가운데 선물을 끌어서 돌려 보며 다시 세어 보세요.');}
 }
 window.addEventListener('resize',()=>{if(QZ.on)quizLayout();});
+
+/* 도전 모드 전개도 문제: ① 이 전개도를 접으면 어떤 선물? ② 정육면체가 되는(안 되는) 전개도는? */
+let HEXO=null;
+function hexos(){                                    // 정사각형 6개를 변끼리 이은 모양 35가지(돌리거나 뒤집어 같은 것은 하나) → 정육면체 전개도 11가지 / 아닌 것 24가지
+  if(HEXO)return HEXO;
+  const norm=c=>{const mx=Math.min(...c.map(p=>p[0])),my=Math.min(...c.map(p=>p[1]));return c.map(p=>[p[0]-mx,p[1]-my]).sort((a,b)=>a[1]-b[1]||a[0]-b[0]);};
+  const key=c=>c.map(p=>p.join(',')).join(';'),canon=c=>{const o=[];let s=c;for(let r=0;r<4;r++){s=s.map(p=>[p[1],-p[0]]);o.push(key(norm(s)),key(norm(s.map(p=>[-p[0],p[1]]))));}return o.sort()[0];};
+  let cur=new Map([[canon([[0,0]]),[[0,0]]]]);
+  for(let n=1;n<6;n++){const nx=new Map();cur.forEach(c=>c.forEach(p=>[[1,0],[-1,0],[0,1],[0,-1]].forEach(d=>{const q=[p[0]+d[0],p[1]+d[1]];
+    if(c.some(r=>r[0]===q[0]&&r[1]===q[1]))return;const nc=norm(c.concat([q])),k=canon(nc);if(!nx.has(k))nx.set(k,nc);})));cur=nx;}
+  const all=[...cur.values()];HEXO={good:all.filter(foldsCube),bad:all.filter(c=>!foldsCube(c))};return HEXO;
+}
+function foldsCube(c){                               // 정육면체를 칸 위로 굴려 보기: 칸마다 바닥에 닿는 면이 모두 다르면 정육면체 전개도
+  const has=(x,y)=>c.some(p=>p[0]===x&&p[1]===y);
+  if(c.some(p=>has(p[0]+1,p[1])&&has(p[0],p[1]+1)&&has(p[0]+1,p[1]+1)))return false;     // 네모 4개가 한 점에 모이면 접을 수 없음
+  const seen=new Map([[c[0].join(','),0]]),st=[[c[0],{b:0,t:1,n:2,s:3,e:4,w:5}]];
+  const rolls=[[1,0,d=>({b:d.e,e:d.t,t:d.w,w:d.b,n:d.n,s:d.s})],[-1,0,d=>({b:d.w,w:d.t,t:d.e,e:d.b,n:d.n,s:d.s})],[0,1,d=>({b:d.s,s:d.t,t:d.n,n:d.b,e:d.e,w:d.w})],[0,-1,d=>({b:d.n,n:d.t,t:d.s,s:d.b,e:d.e,w:d.w})]];
+  while(st.length){const [p,d]=st.pop();rolls.forEach(([dx,dy,roll])=>{const q=[p[0]+dx,p[1]+dy],k=q.join(',');if(!has(q[0],q[1])||seen.has(k))return;const nd=roll(d);seen.set(k,nd.b);st.push([q,nd]);});}
+  return new Set(seen.values()).size===6;
+}
+function hexoSVG(c){                                 // 선택지 그림(돌리거나 뒤집어 섞어서)
+  let s=c.map(p=>p.slice());const r=Math.floor(Math.random()*4);for(let i=0;i<r;i++)s=s.map(p=>[p[1],-p[0]]);if(Math.random()<.5)s=s.map(p=>[-p[0],p[1]]);
+  const mx=Math.min(...s.map(p=>p[0])),my=Math.min(...s.map(p=>p[1]));s=s.map(p=>[p[0]-mx,p[1]-my]);
+  const W=Math.max(...s.map(p=>p[0]))+1,H=Math.max(...s.map(p=>p[1]))+1,m=Math.max(W,H)+.3;
+  return '<svg class="qn" viewBox="'+((W-m)/2).toFixed(2)+' '+((H-m)/2).toFixed(2)+' '+m.toFixed(2)+' '+m.toFixed(2)+'" aria-hidden="true">'+s.map(p=>'<rect x="'+p[0]+'" y="'+p[1]+'" width="1" height="1"/>').join('')+'</svg>';
+}
+function niceOrient(poly){                           // 전개도를 첫 면의 변이 가로가 되게 눕힘(그중 화면에 가장 크게 들어가는 방향)
+  const f=poly[0],n=f.length,th=Math.atan2(f[1][1]-f[0][1],f[1][0]-f[0][0]),step=n%2?Math.PI/n:2*Math.PI/n;let best=null;
+  for(let j=0;j*step<2*Math.PI-1e-9;j++){const a=-th+j*step,c=Math.cos(a),s=Math.sin(a);let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+    poly.forEach(fp=>fp.forEach(p=>{const x=p[0]*c-p[1]*s,y=p[0]*s+p[1]*c;if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}));
+    const fit=Math.min(400/(x1-x0),330/(y1-y0));if(!best||fit>best.fit)best={a:a,x0:x0,x1:x1,y0:y0,y1:y1,fit:fit};}
+  return best;
+}
+function netQuizBuild(){
+  const names=SLOT_ORDER.map(x=>SOLIDS[x].name),four=(c,pool)=>{const o=[c];shuf(pool.filter(x=>x!==c)).forEach(x=>{if(o.length<4)o.push(x);});return shuf(o);};
+  if(Math.random()<.5){                              // ① 펼친 전개도를 보고 어떤 정다면체인지
+    const sk=pick(SLOT_ORDER),info=SOLIDS[sk],n=+sk.split('-')[0],pk=pickArchNet(shapeOf(info.id),null,true),opts=four(info.name,names);
+    if(pk)pk.o=niceOrient(pk.poly);
+    if(pk)return {key:sk,q:'netname',text:'이 전개도를 접으면 어떤 선물이 될까요?',choices:opts,ans:opts.indexOf(info.name),net:pk,
+      why:POLY[n].name+' '+info.F+'개로 된 전개도라 접으면 '+info.name+'가 돼요.'};
+  }
+  const H=hexos(),good=Math.random()<.65,one=pick(good?H.good:H.bad),list=shuf([one].concat(shuf(good?H.bad:H.good).slice(0,3)));   // ② 정육면체 전개도 고르기
+  return {key:'4-3',q:'cubenet',text:good?'접으면 정육면체가 되는 전개도는 어느 것일까요?':'접어도 정육면체가 되지 않는 전개도는 어느 것일까요?',
+    choices:list.map(hexoSVG),ans:list.indexOf(one),why:good?'정사각형 6개가 겹치지 않고 정육면체의 여섯 면이 돼요.':'그 전개도는 접으면 정사각형끼리 겹쳐서 정육면체가 되지 않아요.'};
+}
 
 /* ───────── 학습 모드: 한동안 새 선물을 못 찾으면 버튼을 반짝이며 힌트 ───────── */
 const HINT={t:0,on:false,el:null,stage:''},HINT_DELAY=25000;HINT_READY=true;
@@ -4566,6 +4700,89 @@ function archNetNote(){                              // 탐구 노트: 꼭짓점
   return h;
 }
 
+/* ═══ 심화 탐구: 단면 실험실 — 칼(수평인 평면)로 입체를 자르면 자른 면은 어떤 모양일까 ═══ */
+const SEC={id:'cube',k:.5,pose:'face',name:'',found:{},cam:rotX(.5),tok:0};
+const SEC_SOLIDS=[['tetra','정사면체'],['cube','정육면체'],['octa','정팔면체']];
+const SEC_ROWS={                                     // 단면 도감: 변의 수별로(사각형은 정사각형이 아닌 모든 사각형)
+  tetra:[['삼각형',['정삼각형','삼각형']],['사각형',['정사각형','사각형']]],
+  cube:[['삼각형',['정삼각형','삼각형']],['사각형',['정사각형','사각형']],['오각형',['오각형']],['육각형',['정육각형','육각형']]],
+  octa:[['사각형',['정사각형','사각형']],['오각형',['오각형']],['육각형',['정육각형','육각형']]]};
+const SEC_POSES=[['face','면이 위로'],['edge','모서리가 위로'],['vertex','꼭짓점이 위로'],['tilt','비스듬히']];
+const gSec=svgEl('g',{id:'gSec'},bench),SECP={pl:svgEl('polygon',{class:'sec-plane'},gSec),lo:[],cap:null,hi:[]};gSec.style.display='none';
+const gSecLo=svgEl('g',null,gSec),gSecCap=svgEl('g',null,gSec),gSecHi=svgEl('g',null,gSec);SECP.cap=svgEl('polygon',{class:'sec-cap'},gSecCap);
+function upTo(d){d=unit(d);const ax=[-d[2],0,d[0]],l=len(ax);if(l<1e-9)return d[1]>0?I3:[[1,0,0],[0,-1,0],[0,0,-1]];return axisRot(sc3(ax,1/l),Math.acos(Math.max(-1,Math.min(1,d[1]))));}   // d가 위(+y)를 보도록
+function secDir(sh,pose){const f=unit(sh.F[0].n),a=sh.F[0].idx[0],b=sh.F[0].idx[1],v=unit(sh.V[a]),e=unit(add3(sh.V[a],sh.V[b]));
+  return pose==='face'?f:pose==='edge'?e:pose==='vertex'?v:unit(add3(sc3(f,.35),sc3(v,.65)));}   // 비스듬히: 면과 꼭짓점 사이(정육면체는 오각형이 잘 나옴)
+function secPose(pose,instant){                      // 고른 곳이 위로 오도록 입체를 돌림(칼은 늘 수평)
+  SEC.pose=pose;secPoseUI();const sh=AD.shape;if(!sh)return;
+  const Q=mulMM(rotY(-.62),upTo(secDir(sh,pose))),W0=mulMM(rotY(AD.phi),AD.B);AD.phi=0;AD.B=W0;
+  const tok=++SEC.tok;
+  if(instant||calm){AD.B=Q;return;}
+  const rb=rotBetween(W0,Q);AD.spinOff=true;
+  tween(ms(650),u=>{AD.B=mulMM(axisRot(rb.axis,rb.ang*u),W0);},easeInOut,()=>tok===SEC.tok&&M.mode==='adv'&&AD.tab==='sect')
+    .then(ok=>{if(ok){AD.B=Q;AD.spinOff=false;AD.ramp=performance.now();}});
+}
+function secPoseUI(){document.querySelectorAll('.sec-pose').forEach(b=>b.classList.toggle('on',b.dataset.pose===SEC.pose));}
+function secShow(id,keepPose){
+  SEC.id=id;SEC.name='';document.querySelectorAll('.sec-solid').forEach(b=>b.classList.toggle('on',b.dataset.s===id));
+  advShow(cached(id,()=>elShape(id)));secPose(keepPose&&SEC.pose?SEC.pose:'face',true);renderNote();
+}
+function secShape(P){                                // 단면 모양 이름(P: 자른 면 위의 점, 둘레 순서, [x,z])
+  const n=P.length;if(n<3)return '';
+  const L=P.map((p,i)=>{const q=P[(i+1)%n];return Math.hypot(q[0]-p[0],q[1]-p[1]);}),Lm=Math.max(...L),eqL=L.every(x=>Math.abs(x-L[0])<Lm*.025);
+  const ang=P.map((p,i)=>{const a=P[(i+n-1)%n],b=P[(i+1)%n],u=[a[0]-p[0],a[1]-p[1]],v=[b[0]-p[0],b[1]-p[1]];
+    return Math.acos(Math.max(-1,Math.min(1,(u[0]*v[0]+u[1]*v[1])/(Math.hypot(u[0],u[1])*Math.hypot(v[0],v[1])))))*180/Math.PI;});
+  const reg=eqL&&ang.every(a=>Math.abs(a-ang[0])<2.5);
+  if(n===3)return reg?'정삼각형':'삼각형';
+  if(n===4){const right=ang.every(a=>Math.abs(a-90)<2.5);if(right&&eqL)return '정사각형';if(right)return '직사각형';if(eqL)return '마름모';
+    const d=i=>{const p=P[i],q=P[(i+1)%4],l=Math.hypot(q[0]-p[0],q[1]-p[1]);return [(q[0]-p[0])/l,(q[1]-p[1])/l];},par=(i,j)=>{const a=d(i),b=d(j);return Math.abs(a[0]*b[1]-a[1]*b[0])<.03;};
+    const p1=par(0,2),p2=par(1,3);return p1&&p2?'평행사변형':p1||p2?'사다리꼴':'사각형';}
+  return (reg?'정':'')+({5:'오각형',6:'육각형'}[n]||n+'각형');
+}
+const secKey=nm=>['직사각형','마름모','평행사변형','사다리꼴'].indexOf(nm)>=0?'사각형':nm;   // 도감 칸 이름
+function secDraw(){
+  advEls.forEach(e=>{e.style.display='none';});advDots.forEach(e=>{e.style.display='none';});advLines.forEach(e=>{e.style.display='none';});
+  advDashEls.forEach(e=>{e.style.display='none';});FCP.ln.forEach(e=>{e.style.display='none';});FCP.dt.forEach(e=>{e.style.display='none';});gLabNet.style.display='none';
+  const sh=AD.shape,W=mulMM(rotY(AD.phi),AD.B),cam=SEC.cam,sc=AD.fit*.8/sh.rad,lift=sh.rad*.34,col=SCOL[SEC.id]||'#4E9FD1';
+  const Pw=sh.V.map(v=>mulMV(W,v)),ys=Pw.map(p=>p[1]),y0=Math.min(...ys),y1=Math.max(...ys),k=Math.min(.985,Math.max(.015,SEC.k)),h=y1-k*(y1-y0);
+  const toS=p=>{const q=mulMV(cam,p);return [q[0]*sc,-q[1]*sc+lift*sc*.45,q[2]];},str=pts=>pts.map(p=>{const s=toS(p);return s[0].toFixed(1)+','+s[1].toFixed(1);}).join(' ');
+  const pts=[];sh.ed.forEach(e=>{const a=Pw[e[0]],b=Pw[e[1]],da=a[1]-h,db=b[1]-h;if((da<0&&db>0)||(da>0&&db<0)){const t=da/(da-db);pts.push([a[0]+(b[0]-a[0])*t,h,a[2]+(b[2]-a[2])*t]);}});
+  Pw.forEach(p=>{if(Math.abs(p[1]-h)<1e-9)pts.push(p.slice());});
+  const S=[],eps=sh.rad*.004;pts.forEach(p=>{if(!S.some(q=>Math.hypot(q[0]-p[0],q[2]-p[2])<eps))S.push(p);});
+  let cx=0,cz=0;S.forEach(p=>{cx+=p[0];cz+=p[2];});cx/=S.length||1;cz/=S.length||1;
+  S.sort((a,b)=>Math.atan2(a[2]-cz,a[0]-cx)-Math.atan2(b[2]-cz,b[0]-cx));
+  const clip=(poly,sg)=>{const o=[];for(let i=0;i<poly.length;i++){const p=poly[i],q=poly[(i+1)%poly.length],dp=(p[1]-h)*sg,dq=(q[1]-h)*sg;
+    if(dp<=0)o.push(p);if((dp<0&&dq>0)||(dp>0&&dq<0)){const t=dp/(dp-dq);o.push([p[0]+(q[0]-p[0])*t,h,p[2]+(q[2]-p[2])*t]);}}return o;};
+  const lo=[],hi=[];
+  sh.F.forEach(f=>{const nv=mulMV(cam,mulMV(W,f.n));if(nv[2]<=1e-4)return;const poly=f.idx.map(i=>Pw[i]),a=clip(poly,1),b=clip(poly,-1),fill=lit(col,nv);
+    const z=pp=>pp.reduce((s,p)=>s+mulMV(cam,p)[2],0)/pp.length;
+    if(a.length>=3)lo.push({p:a,fill:fill,z:z(a)});if(b.length>=3){const bb=b.map(p=>[p[0],p[1]+lift,p[2]]);hi.push({p:bb,fill:fill,z:z(bb)});}});
+  const L=sh.rad*1.3;SECP.pl.setAttribute('points',str([[-L,h,-L],[L,h,-L],[L,h,L],[-L,h,L]]));     // 칼(평면)
+  const put=(pool,g,list,cls)=>{list.sort((x,y)=>x.z-y.z);let i=0;list.forEach(o=>{let e=pool[i];if(!e){e=svgEl('polygon',null,g);pool.push(e);}i++;
+    e.setAttribute('class',cls);e.setAttribute('points',str(o.p));e.setAttribute('fill',o.fill);e.style.display='';});for(;i<pool.length;i++)pool[i].style.display='none';};
+  put(SECP.lo,gSecLo,lo,'sec-face');put(SECP.hi,gSecHi,hi,'sec-ghost');
+  if(S.length>=3){SECP.cap.setAttribute('points',str(S));SECP.cap.style.display='';}else SECP.cap.style.display='none';
+  const nm=secShape(S.map(p=>[p[0],p[2]]));
+  if(nm!==SEC.name)secFound(nm);
+}
+function secFound(nm){                               // 단면 모양이 바뀌면 이름표 · 도감
+  SEC.name=nm;const sol=SEC_SOLIDS.find(s=>s[0]===SEC.id)[1];setTag(sol,nm?'단면: '+nm:'단면 없음');
+  const key=secKey(nm),rows=SEC_ROWS[SEC.id],can=rows.some(r=>r[1].indexOf(key)>=0),fs=SEC.found[SEC.id]||(SEC.found[SEC.id]=new Set());
+  if(can&&!fs.has(key)){fs.add(key);sfx.gift();
+    const tip={tetra:{'정사각형':'마주 보는 두 모서리와 나란히 한가운데를 자르면 네 변이 모두 같은 정사각형이 돼요.'},
+      cube:{'정육각형':'꼭짓점을 위로 놓고 한가운데를 자르면 여섯 면을 모두 지나서 정육각형이 돼요.','정삼각형':'꼭짓점을 위로 놓고 꼭짓점 가까이 자르면 세 면을 똑같이 잘라 정삼각형이 돼요.','오각형':'칼이 다섯 면을 지나면 오각형이 돼요.'},
+      octa:{'정육각형':'면을 위로 놓고 한가운데를 자르면 정육각형이 돼요.','정사각형':'꼭짓점을 위로 놓고 자르면 정사각형이 돼요.'}}[SEC.id][key];
+    guide('E06',key+'을 찾았어요!',tip||'단면의 변 '+(nm.indexOf('삼각')>=0?3:nm.indexOf('오각')>=0?5:nm.indexOf('육각')>=0?6:4)+'개는 칼이 지나간 면 하나하나예요.');}
+  renderNote();
+}
+function secNote(){                                  // 탐구 노트: 단면 도감
+  const sol=SEC_SOLIDS.find(s=>s[0]===SEC.id)[1],fs=SEC.found[SEC.id]||new Set(),cur=secKey(SEC.name),nF={tetra:4,cube:6,octa:8}[SEC.id];
+  return '<p class="tn-name">'+sol+'</p><p class="tn-kind">단면 도감</p><ul class="sec-rows">'+SEC_ROWS[SEC.id].map(r=>'<li><b>'+r[0]+'</b><span class="sec-chips">'+
+      r[1].map(x=>'<i class="sec-chip'+(fs.has(x)?' got':'')+(x===cur?' cur':'')+'">'+(fs.has(x)?x:'?')+'</i>').join('')+'</span></li>').join('')+'</ul>'+
+    '<p class="note-tip">단면의 변 하나하나는 칼이 지나간 면 하나하나예요. '+(SEC.id==='octa'?'정팔면체는 면이 8개지만 칼 하나가 지나는 면은 6개까지라 육각형까지만 나와요.':
+      sol+'는 면이 '+nF+'개라서 '+(nF===4?'사각형':'육각형')+'까지만 나와요.')+'</p>';
+}
+
 /* 큰 글씨로 잠깐 겹쳐 보이는 핵심 문장 */
 let bnTimer=0;
 function bigNote(kicker,main,sub,plain,dur){
@@ -4587,6 +4804,7 @@ matEl.addEventListener('pointermove',e=>{
   const v=viewSt();if(!v||!v.drag||e.pointerId!==v.drag.id)return;
   const dx=e.clientX-v.drag.x,dy=e.clientY-v.drag.y,sp=Math.PI/Math.max(240,matEl.clientWidth*0.9);
   v.drag.x=e.clientX;v.drag.y=e.clientY;v.B=mulMM(rotY(dx*sp),mulMM(rotX(dy*sp),v.B));
+  if(v===AD&&AD.tab==='sect'&&SEC.pose){SEC.pose='';SEC.tok++;AD.spinOff=false;secPoseUI();}   // 손으로 기울이면 '어디를 위로' 선택은 풀림
 });
 const advDragEnd=e=>{const v=viewSt();if(v&&v.drag&&(!e||e.pointerId===v.drag.id)){v.drag=null;v.ramp=performance.now();matEl.classList.remove('dragging');}};
 matEl.addEventListener('pointerup',advDragEnd);matEl.addEventListener('pointercancel',advDragEnd);
@@ -4595,7 +4813,7 @@ $('#labNoteBody').addEventListener('click',e=>{const h=e.target.closest('[data-f
   const id=h.dataset.fl;if(FC.open.has(id))FC.open.delete(id);else FC.open.add(id);sfx.tap();renderNote();});
 function learnDashOK(){return M.mode==='learn'&&S.view==='solid'&&!studyEl.hidden&&ST.phase!=='net'&&!ST.netBusy;}
 function syncDash(){                                 // 점선 스위치: 심화 탐구, 학습 모드에서 입체를 볼 때
-  const b=$('#labDashBtn'),lrn=learnDashOK(),on=M.mode==='adv'||lrn;
+  const b=$('#labDashBtn'),lrn=learnDashOK(),on=(M.mode==='adv'&&AD.tab!=='sect')||lrn;   // 단면 실험실에는 점선 스위치 없음
   b.hidden=!on;b.setAttribute('aria-checked',AD.dash?'true':'false');
   matEl.classList.toggle('dash-on',!!AD.dash&&on);matEl.classList.toggle('learn-dash',lrn);
 }
@@ -4611,9 +4829,67 @@ whyBtn.addEventListener('click',openReveal);
 $('#fiveBtn').addEventListener('click',closeFive);
 $('#revBack').addEventListener('click',closeReveal);
 $('#revReset').addEventListener('click',resetAll);
-$('#learnBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);setMode('learn');hideStart();window.scrollTo(0,0);});
+$('#learnBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);setMode('learn');hideStart();window.scrollTo(0,0);setTimeout(()=>tutStart('learn'),ms(450));});
 $('#challengeBtn').addEventListener('click',()=>{audio();vib(15);startChallenge();});
-$('#labBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);hideStart();window.scrollTo(0,0);advStart();});
+$('#labBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);hideStart();window.scrollTo(0,0);advStart();setTimeout(()=>tutStart('adv'),ms(450));});
+
+/* ───────── 처음 들어올 때 짧은 사용법: 누를 곳을 하나씩 밝게 비추며 설명(기기마다 한 번, ? 버튼으로 다시 보기) ───────── */
+/* 기본: 한 번 본 사용법은 이 기기에 기억(다시 들어와도 안 나옴, ? 버튼으로 다시 보기)
+   ?tut=1 → 처음부터를 누를 때마다 다음 사람에게 다시 보여 줌(센터 기기용) · ?tut=0 → 자동으로 안 보여 줌 */
+const TUT_KEY='sixgift.tut';
+const TUT={done:{},i:0,steps:null,back:null,on:params.get('tut')!=='0',every:params.get('tut')==='1'};
+if(!TUT.every){try{const v=JSON.parse(localStorage.getItem(TUT_KEY)||'{}');if(v&&typeof v==='object')TUT.done=v;}catch(e){}}
+function tutSave(){if(TUT.every)return;try{localStorage.setItem(TUT_KEY,JSON.stringify(TUT.done));}catch(e){}}
+const TUT_STEPS={
+  learn:[['#picker','조각을 골라요','꼭짓점에 모을 정다각형을 하나 눌러요.'],
+    ['#plusBtn','조각을 붙여요','+를 누를 때마다 꼭짓점에 조각이 하나씩 붙어요. −는 하나 떼어 내요.'],
+    ['.mat','빈틈을 봐요','조각이 가운데 꼭짓점에 모여요. 각의 합이 360°보다 작으면 빈틈이 남아요.'],
+    ['#foldBtn','접어 봐요','접기를 누르면 빈틈이 닫히면서 입체가 되는지 볼 수 있어요.'],
+    ['#collBlock','선물을 모아요','찾은 정다면체는 선물 상자에 모여요. 다섯 개를 모두 찾아 보세요!']],
+  adv:[['.lab-tabs','탐구를 골라요','다섯 가지 탐구 중 하나를 눌러요. 언제든 바꿀 수 있어요.'],
+    ['#labBody','입체와 버튼','탐구마다 고를 입체와 눌러 볼 버튼이 여기에 나와요.'],
+    ['.mat','돌려 보며 살펴봐요','가운데 입체를 손가락으로 끌면 이리저리 돌려 볼 수 있어요.'],
+    ['#labNote','탐구 노트','알아낸 것은 탐구 노트에 차곡차곡 적혀요. 이제 시작해 볼까요?']]};
+function tutStart(mode,again){                      // again: ? 버튼으로 다시 보기
+  if(!again&&(!TUT.on||TUT.done[mode]))return;
+  if(TUT.steps||!startEl.hidden||(mode==='learn'?M.mode!=='learn':M.mode!=='adv'))return;
+  TUT.done[mode]=true;tutSave();TUT.back=again?document.activeElement:null;
+  TUT.steps=TUT_STEPS[mode];TUT.i=0;$('#coach').hidden=false;tutShow(true);
+}
+function tutShow(first){
+  const st=TUT.steps[TUT.i],el=document.querySelector(st[0]);
+  if(!el||!el.getClientRects().length){tutNext();return;}                 // 안 보이는 칸은 건너뜀
+  const r=el.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)el.scrollIntoView({block:'center'});
+  $('#coachStep').textContent=(TUT.i+1)+' / '+TUT.steps.length;$('#coachT').textContent=st[1];$('#coachD').textContent=st[2];
+  $('#coachNext').textContent=TUT.i===TUT.steps.length-1?'시작하기':'다음';
+  const hole=$('#coachHole'),card=$('#coachCard');if(first){hole.style.transition=card.style.transition='none';}
+  tutPlace();if(first){void hole.offsetWidth;hole.style.transition=card.style.transition='';}
+  $('#coachNext').focus({preventScroll:true});
+}
+function tutPlace(){                                 // 밝게 비출 자리 + 말풍선(아래 → 위 → 오른쪽 → 왼쪽 → 화면 아래 가운데)
+  if(!TUT.steps)return;const el=document.querySelector(TUT.steps[TUT.i][0]);if(!el)return;
+  const r=el.getBoundingClientRect(),pad=6,hole=$('#coachHole'),card=$('#coachCard'),cw=card.offsetWidth,ch=card.offsetHeight,vw=innerWidth,vh=innerHeight,g=14;
+  hole.style.left=(r.left-pad)+'px';hole.style.top=(r.top-pad)+'px';hole.style.width=(r.width+pad*2)+'px';hole.style.height=(r.height+pad*2)+'px';
+  let x,y;
+  if(r.bottom+pad+g+ch<=vh-8){y=r.bottom+pad+g;x=r.left+r.width/2-cw/2;}
+  else if(r.top-pad-g-ch>=8){y=r.top-pad-g-ch;x=r.left+r.width/2-cw/2;}
+  else if(r.right+pad+g+cw<=vw-8){x=r.right+pad+g;y=r.top+r.height/2-ch/2;}
+  else if(r.left-pad-g-cw>=8){x=r.left-pad-g-cw;y=r.top+r.height/2-ch/2;}
+  else{x=vw/2-cw/2;y=vh-ch-16;}
+  card.style.left=Math.max(8,Math.min(vw-cw-8,x))+'px';card.style.top=Math.max(8,Math.min(vh-ch-8,y))+'px';
+}
+function tutNext(){if(!TUT.steps)return;TUT.i++;if(TUT.i>=TUT.steps.length){tutEnd();return;}sfx.tap();tutShow(false);}
+function tutEnd(){
+  $('#coach').hidden=true;TUT.steps=null;window.scrollTo(0,0);
+  const b=TUT.back;TUT.back=null;if(b&&b.isConnected&&!b.hidden)b.focus({preventScroll:true});   // ? 버튼으로 열었으면 초점을 ? 버튼으로 되돌림
+}
+$('#helpBtn').addEventListener('click',()=>{if(M.mode==='challenge')return;audio();sfx.tap();tutStart(M.mode==='adv'?'adv':'learn',true);});
+$('#coachNext').addEventListener('click',e=>{e.stopPropagation();tutNext();});
+$('#coachSkip').addEventListener('click',e=>{e.stopPropagation();sfx.tap();tutEnd();});
+$('#coachCard').addEventListener('click',e=>e.stopPropagation());
+$('#coach').addEventListener('click',()=>tutNext());                      // 어두운 곳을 눌러도 다음으로
+document.addEventListener('keydown',e=>{if(!TUT.steps)return;if(e.key==='Escape'){e.preventDefault();e.stopPropagation();tutEnd();}else if(e.key==='ArrowRight'){e.preventDefault();e.stopPropagation();tutNext();}},true);
+window.addEventListener('resize',tutPlace);window.addEventListener('scroll',tutPlace,{passive:true});
 noBtn.addEventListener('click',sayNo);
 stBtn.addEventListener('click',()=>{
   if(S.busy||S.view!=='solid'||M.mode!=='learn'||ST.netBusy||ST.phase==='net')return;
@@ -4648,7 +4924,7 @@ document.addEventListener('keydown',e=>{
 });
 window.addEventListener('resize',()=>{if(S.view==='bench'&&M.mode!=='adv')drawBench();});
 
-if(params.has('debug'))window.SG={fcStep:fcStep,fcPick:fcPick,archNetShow:archNetShow,archNetFold:archNetFold,pickArchNet:pickArchNet,archNetPrep:archNetPrep,netOverlaps:netOverlaps,netFlat:netFlat,netWrap:netWrap,HERO:HERO,FC:FC,HINT:HINT,hintSync:hintSync,openNets:openNets,netClasses:netClasses,netFlat:netFlat,netKey:netKey,allTrees:allTrees,switchNet:switchNet,syncDash:syncDash,QZ:QZ,quizShow:quizShow,quizHide:quizHide,PILE:PILE,quizAnswer:quizAnswer,quizBuild:quizBuild,AD:AD,FAMS:FAMS,famShape:famShape,elShape:elShape,dualShape:dualShape,shapeOf:shapeOf,truncShape:truncShape,advTab:advTab,advTrunc:advTrunc,advEuler:advEuler,advDual:advDual,advFam:advFam,bigNote:bigNote,pileAdd:pileAdd,renderHof:renderHof,netPose:netPose,openNoSix:openNoSix,curR:curR,frontOf:()=>{const R=curR();return ST.m.F.map(f=>mulMV(R,f.n)[2]>1e-4);},ST:ST,M:M,HOF:HOF,nextOrder:nextOrder,buildOrder:buildOrder,makeOrder:makeOrder,endChallenge:endChallenge,S:S,disp:disp,drawBench:drawBench,fold:fold,unfold:unfold,choosePoly:choosePoly,changeCount:changeCount,openFive:openFive,openReveal:openReveal,MODEL:MODEL,SOLIDS:SOLIDS,refresh:refresh,renderShelf:renderShelf,
+if(params.has('debug'))window.SG={fcStep:fcStep,fcPick:fcPick,hexos:hexos,netQuizBuild:netQuizBuild,SEC:SEC,secShow:secShow,secPose:secPose,archNetShow:archNetShow,archNetFold:archNetFold,pickArchNet:pickArchNet,archNetPrep:archNetPrep,netOverlaps:netOverlaps,netFlat:netFlat,netWrap:netWrap,HERO:HERO,FC:FC,HINT:HINT,hintSync:hintSync,openNets:openNets,netClasses:netClasses,netFlat:netFlat,netKey:netKey,allTrees:allTrees,switchNet:switchNet,syncDash:syncDash,QZ:QZ,quizShow:quizShow,quizHide:quizHide,PILE:PILE,quizAnswer:quizAnswer,quizBuild:quizBuild,AD:AD,FAMS:FAMS,famShape:famShape,elShape:elShape,dualShape:dualShape,shapeOf:shapeOf,truncShape:truncShape,advTab:advTab,advTrunc:advTrunc,advEuler:advEuler,advDual:advDual,advFam:advFam,bigNote:bigNote,pileAdd:pileAdd,renderHof:renderHof,netPose:netPose,openNoSix:openNoSix,curR:curR,frontOf:()=>{const R=curR();return ST.m.F.map(f=>mulMV(R,f.n)[2]>1e-4);},ST:ST,M:M,HOF:HOF,nextOrder:nextOrder,buildOrder:buildOrder,makeOrder:makeOrder,endChallenge:endChallenge,S:S,disp:disp,drawBench:drawBench,fold:fold,unfold:unfold,choosePoly:choosePoly,changeCount:changeCount,openFive:openFive,openReveal:openReveal,MODEL:MODEL,SOLIDS:SOLIDS,refresh:refresh,renderShelf:renderShelf,
   capCompare:function(n,k){          // 접힌 조각과 입체의 첫 모습이 겹치는지 확인용
     const info=SOLIDS[n+'-'+k],solid=MODEL[info.id],cEnd=Math.tan(interior(n)*DEG/2)/Math.tan(Math.PI/k);
     S.n=n;S.k=k;disp.kf=k;drawBench({c:cEnd});
