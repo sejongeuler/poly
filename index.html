@@ -1771,6 +1771,41 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
 .dual-case{fill:none;stroke:var(--mat);stroke-width:6;stroke-linecap:round}
 .dual-cl{fill:none;stroke:var(--hl);stroke-width:2.6;stroke-linecap:round}
 .dual-mid{fill:var(--mat);stroke:var(--hl);stroke-width:2}
+
+/* ───── 스마트폰 최적화 2 ───── */
+/* 세로 휴대폰 · 심화 탐구: 안내와 입체를 화면 위에 붙여 두고, 아래 버튼·슬라이더만 넘기며 결과를 바로 봄 */
+@media (max-width:699.98px) and (orientation:portrait){
+  html.lab-mode .stage{position:sticky;top:env(safe-area-inset-top,0px);z-index:8;margin:-4px -12px 0;padding:6px 12px 8px;background:var(--page);
+    box-shadow:0 12px 12px -14px rgba(0,0,0,.45)}
+  html.lab-mode .mat{height:min(calc(100vw - 24px),34vh)!important;min-height:200px}
+  html.lab-mode .stage>.guide{padding:6px 10px 6px 6px;gap:8px}
+  html.lab-mode .stage>.guide .avatar{width:46px;height:46px;margin:-2px 0}
+  html.lab-mode .stage>.guide::after{left:24px}
+  html.lab-mode .stage>.guide h2{font-size:15.5px}
+  html.lab-mode .stage>.guide p{font-size:13.5px}
+}
+/* 세로 휴대폰 시작 화면: 세 가지 모드가 첫 화면에 다 보이게(아이콘 · 제목 · 설명을 가로 한 장 카드로) */
+@media (max-width:699.98px){
+  .start-in{padding:28px 16px 22px!important}
+  .start .kicker{font-size:17px!important;margin-bottom:4px!important}
+  .start h1{font-size:clamp(28px,8.6vw,36px)!important}
+  .start-q{font-size:16.5px!important;margin-top:8px!important}
+  .hero-cycle{margin-top:8px}
+  .hero-cycle svg{width:clamp(130px,27vh,240px);height:clamp(130px,27vh,240px)}
+  .hc-shadow{width:clamp(100px,18vh,180px);height:12px}
+  .hc-name{font-size:15px;margin-top:4px}
+  .hc-dots{margin-top:6px}
+  .start .modes{gap:10px!important;margin-top:14px!important}
+  .start .modes .mode-card{grid-template-columns:38px minmax(0,1fr) auto;grid-template-areas:"ico title go" "ico desc go" "ico meta go";
+    column-gap:14px;row-gap:2px;align-items:center;align-content:center;padding:13px 16px!important}
+  .start .modes .mc-head,.start .modes .mc-foot{display:contents}
+  .start .modes .mc-no,.start .modes .mc-foot>span:first-child{display:none}
+  .start .modes #chalMeta.rec{display:block;grid-area:meta;font-size:12px!important;font-weight:700}   /* 도전 기록이 있으면 한 줄 더 */
+  .start .modes .mc-ico{grid-area:ico;width:36px!important;height:36px!important;margin:0}
+  .start .modes .mc-title{grid-area:title;font-size:20px!important;line-height:1.25}
+  .start .modes .mc-desc{grid-area:desc;margin-top:0;font-size:14px!important;line-height:1.4!important}
+  .start .modes .mc-go{grid-area:go;font-size:14px!important}
+}
 </style>
 </head>
 <body>
@@ -3226,7 +3261,7 @@ function hofRows(list,max,wide){
 }
 function renderHof(){
   hofRows($('#hofList'),3,false);hofRows($('#resHof'),8,true);
-  $('#chalMeta').textContent=HOF.length?'최고 '+won(HOF[0].score)+'점 · '+HOF[0].name:'점수 · 콤보 · 기록';
+  $('#chalMeta').textContent=HOF.length?'최고 '+won(HOF[0].score)+'점 · '+HOF[0].name:'점수 · 콤보 · 기록';$('#chalMeta').classList.toggle('rec',HOF.length>0);
 }
 async function unfold(){
   if(S.busy||S.view==='bench')return;
@@ -4859,12 +4894,18 @@ function tutStart(mode,again){                      // again: ? 버튼으로 다
 function tutShow(first){
   const st=TUT.steps[TUT.i],el=document.querySelector(st[0]);
   if(!el||!el.getClientRects().length){tutNext();return;}                 // 안 보이는 칸은 건너뜀
-  const r=el.getBoundingClientRect();if(r.top<0||r.bottom>innerHeight)el.scrollIntoView({block:'center'});
+  const r=el.getBoundingClientRect(),cover=stickCover(el),room=innerHeight-cover;   // 휴대폰에서 위에 붙은 입체 아래로 보이게
+  if(r.top<cover||r.bottom>innerHeight)window.scrollBy(0,r.height<room?r.top-cover-(room-r.height)/2:r.top-cover-8);
   $('#coachStep').textContent=(TUT.i+1)+' / '+TUT.steps.length;$('#coachT').textContent=st[1];$('#coachD').textContent=st[2];
   $('#coachNext').textContent=TUT.i===TUT.steps.length-1?'시작하기':'다음';
   const hole=$('#coachHole'),card=$('#coachCard');if(first){hole.style.transition=card.style.transition='none';}
   tutPlace();if(first){void hole.offsetWidth;hole.style.transition=card.style.transition='';}
   $('#coachNext').focus({preventScroll:true});
+}
+function stickCover(el){                             // 화면 위에 붙어 있는 작업판(.stage)이 el을 가리는 높이
+  const st=$('.stage');if(!st||st.contains(el)||getComputedStyle(st).position!=='sticky')return 0;
+  const a=st.getBoundingClientRect(),b=el.getBoundingClientRect();if(a.right<=b.left||a.left>=b.right)return 0;
+  return st.offsetHeight+(parseFloat(getComputedStyle(st).top)||0);
 }
 function tutPlace(){                                 // 밝게 비출 자리 + 말풍선(아래 → 위 → 오른쪽 → 왼쪽 → 화면 아래 가운데)
   if(!TUT.steps)return;const el=document.querySelector(TUT.steps[TUT.i][0]);if(!el)return;
