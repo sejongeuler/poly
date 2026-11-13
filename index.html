@@ -1541,14 +1541,16 @@ body{background:var(--page)}
 .hud .hc .hl{font-size:13px!important;font-weight:700;color:var(--ink-2);letter-spacing:0;white-space:nowrap}
 .hud .hc b{justify-self:end;min-width:0;font-size:23px;line-height:1;text-align:right;font-variant-numeric:tabular-nums}
 .hud .hc-time.late #hudTime{color:var(--acc-ink)}
-@media (max-width:699.98px){
-  .hud{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
-  .hud .hc,.hud .hc-score{grid-template-columns:22px auto minmax(0,1fr);gap:5px!important;height:42px;padding:0 9px 0 7px}
-  .hud .hc-ico{width:22px;height:22px}
-  .hud .hc-ico .flame,.hud .hc-ico .hc-star{width:18px;height:18px}
-  .hud .hc .hl{font-size:11px!important}
-  .hud .hc b{font-size:17px}
+@media (max-width:899.98px),(max-height:520px){      /* 휴대폰·세로 태블릿·가로 휴대폰: 칸마다 위에 아이콘·이름, 아래에 숫자(모두 가운데) — 큰 점수도 이름을 가리지 않고, 로고도 덮지 않게 */
+  .hud{grid-template-columns:repeat(3,minmax(0,124px));gap:6px}
+  .hud .hc,.hud .hc-score{grid-template-columns:minmax(0,1fr) auto auto minmax(0,1fr);grid-template-rows:auto auto;justify-content:stretch!important;align-content:center;align-items:center!important;
+    column-gap:5px!important;row-gap:3px!important;height:52px;padding:0 4px}
+  .hud .hc-ico{grid-column:2;grid-row:1;width:17px;height:17px}
+  .hud .hc-ico .flame,.hud .hc-ico .hc-star{width:16px;height:16px}
+  .hud .hc .hl{grid-column:3;grid-row:1;font-size:12px!important;line-height:1.1}
+  .hud .hc b,.hud .hc-combo b{grid-column:1/-1;grid-row:2;justify-self:center;min-width:0;font-size:21px;line-height:1;text-align:center}
 }
+@media (max-width:699.98px){.hud{grid-template-columns:repeat(3,minmax(0,1fr))}}   /* 세로 휴대폰: 둘째 줄을 꽉 채움 */
 
 /* ───── 오일러 공식: 탐구 노트 맨 위에 고정, 한 줄로 ───── */
 .euler-law{position:sticky;top:0;z-index:2;container-type:inline-size}
@@ -1805,6 +1807,16 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
   .start .modes .mc-title{grid-area:title;font-size:20px!important;line-height:1.25}
   .start .modes .mc-desc{grid-area:desc;margin-top:0;font-size:14px!important;line-height:1.4!important}
   .start .modes .mc-go{grid-area:go;font-size:14px!important}
+}
+/* 휴대폰(세로·가로): 맨 위 ? · 소리 · 처음부터 버튼을 작게(누르는 범위는 둘레로 조금 넉넉하게) */
+@media (max-width:699.98px),(max-height:520px){
+  .tools{gap:6px}
+  .tools .icon-btn{width:32px;height:32px}
+  .tools .icon-btn svg{width:17px;height:17px}
+  .tools .chip-btn{height:32px;padding:0 10px;font-size:13px}
+  .tools .icon-btn,.tools .chip-btn{position:relative}
+  .tools .icon-btn::after,.tools .chip-btn::after{content:"";position:absolute;inset:-5px -3px}
+  .tools.arming .icon-btn{display:none}             /* '한 번 더 누르면 처음으로'가 길어져도 로고를 덮지 않게 잠깐 숨김 */
 }
 </style>
 </head>
@@ -3759,7 +3771,7 @@ window.addEventListener('resize',()=>{if(M.mode==='challenge')pileLayout();});
 
 /* ───────── 처음부터 ───────── */
 let armTimer=0;
-function disarm(){clearTimeout(armTimer);resetBtn.classList.remove('armed');resetBtn.textContent='처음부터';}
+function disarm(){clearTimeout(armTimer);resetBtn.classList.remove('armed');resetBtn.parentElement.classList.remove('arming');resetBtn.textContent='처음부터';}
 function resetAll(){
   disarm();resetView();S.game++;if(TUT.every)TUT.done={};if(TUT.steps)tutEnd();   // ?tut=1이면 다음 사람에게 사용법을 다시 보여 줌
   S.n=3;S.k=0;disp.kf=0;S.found.clear();S.tiles.clear();S.tried.clear();S.attempts=0;S.phase='explore';S.huntFolds=0;
@@ -4943,7 +4955,7 @@ $('#resAgain').addEventListener('click',()=>{startChallenge();});
 $('#resHome').addEventListener('click',resetAll);
 resetBtn.addEventListener('click',()=>{
   if(resetBtn.classList.contains('armed')){resetAll();return;}
-  resetBtn.classList.add('armed');resetBtn.textContent='한 번 더 누르면 처음으로';
+  resetBtn.classList.add('armed');resetBtn.parentElement.classList.add('arming');resetBtn.textContent='한 번 더 누르면 처음으로';
   armTimer=setTimeout(disarm,2600);
 });
 function paintSound(){soundBtn.setAttribute('aria-pressed',String(S.sound));soundBtn.setAttribute('aria-label',S.sound?'소리 끄기':'소리 켜기');}
