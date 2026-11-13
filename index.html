@@ -1844,6 +1844,21 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
   #study.net #stName{display:block;margin:0;font-size:20px;line-height:1.15;letter-spacing:-.03em;white-space:nowrap}
   .mat .drag-hint{bottom:56px}                      /* '끌어서 돌려 보세요'는 세기 패널 바로 위 */
 }
+/* 깎기·단면 실험실 막대 눈금(마름모): 막대 선 위에 작게 올림(모든 화면) — 막대 상자 밖으로 삐져나오지 않게
+   · 겹치는 순서: 막대 선(.tr-slider::before) → 눈금 → 입력 막대(선은 투명, 손잡이만 보임) — 손잡이가 눈금을 자연스럽게 덮고, 손잡이·막대는 늘 바로 잡힘
+   · 눈금 누르기는 tickTap()이 처리(키보드는 눈금 버튼 그대로) */
+.tr-slider{padding-bottom:0!important}
+.tr-slider::before{content:"";position:absolute;left:0;right:0;top:12px;height:8px;background:var(--line);pointer-events:none}
+.tr-slider input[type=range]{position:relative;z-index:2}
+.tr-slider input[type=range]::-webkit-slider-runnable-track{background:transparent}
+.tr-slider input[type=range]::-moz-range-track{background:transparent}
+.tr-ticks{top:16px;bottom:auto;height:0;z-index:1}
+.tr-ticks>i{top:0;bottom:auto;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;background:var(--ink-2);opacity:.7;box-shadow:0 0 0 2px var(--well)}
+.tr-ticks .tk{top:-12px;bottom:auto}
+.tr-ticks .tk i{position:absolute;left:50%;top:50%;bottom:auto;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;background:var(--ink-2);opacity:.7;box-shadow:0 0 0 2px var(--well)}
+.tr-ticks .tk.arch i{width:9px;height:9px;margin:-4.5px 0 0 -4.5px;background:var(--hl-ink);opacity:1;box-shadow:0 0 0 2px var(--well)}
+.tr-ticks .tk.hot i{transform:rotate(45deg) scale(1.35)}
+@media (pointer:coarse),(hover:none),(max-width:699.98px){.tr-ticks .tk{top:-18px;bottom:auto}}
 </style>
 </head>
 <body>
@@ -4149,6 +4164,7 @@ function advTab(tab){
     const r=$('#trRange');
     r.addEventListener('input',()=>{AD.play=0;playBtnText();sliderTick(r.value/1000);advTrunc(r.value/1000,false);});
     r.addEventListener('change',()=>{advTrunc(r.value/1000,true);});
+    tickTap(r,t=>{if(AD.netV||AD.netBusy)return;sfx.pick();AD.play=0;playBtnText();advTrunc(t,false);});
     $('#trPlay').addEventListener('click',()=>{sfx.tap();if(AD.play){AD.play=0;}else{if(AD.t>=.999)advTrunc(0,false);AD.play=1;AD.hold=performance.now()+300;}playBtnText();});
     $('#trBack').addEventListener('click',()=>{sfx.tap();AD.play=0;playBtnText();advTrunc(0,false);});
     advFam(AD.fam,true);trNetUI(true);
@@ -4242,7 +4258,22 @@ function trTicks(newKey){                            // 눈금: 정다면체는 
   const F=FAMS[AD.fam],box=$('#trTicks');if(!box)return;
   box.innerHTML=F.snaps.map(s=>{const arch=!!s[3];if(arch&&!AD.seen.has(s[3]))return '';
     return '<button type="button" class="tk'+(arch?' arch':'')+(arch&&s[3]===newKey?' new':'')+'" style="left:'+(s[0]*100).toFixed(2)+'%" data-t="'+s[0]+'" aria-label="'+s[1]+' 보기" title="'+s[1]+'"><i></i></button>';}).join('');
-  box.querySelectorAll('.tk').forEach(b=>b.addEventListener('click',()=>{if(AD.netV||AD.netBusy)return;sfx.pick();AD.play=0;playBtnText();advTrunc(+b.dataset.t,false);}));
+  box.querySelectorAll('.tk').forEach(b=>b.addEventListener('click',()=>{if(AD.netV||AD.netBusy)return;sfx.pick();AD.play=0;playBtnText();advTrunc(+b.dataset.t,false);}));   // 키보드(Enter·Space)
+}
+function tickTap(r,go){                              // 눈금은 막대(입력) 밑에 깔려 있으므로: 손잡이에서 떨어진 눈금 근처를 톡 누르면 그 모양으로
+  let P=null;                                        // (막대 바닥을 눌러도 손잡이가 오지 않는 iPad 등 · 손잡이가 오는 브라우저는 놓을 때 눈금에 딱 맞춤)
+  const ticks=()=>{const b=r.parentNode.querySelector('.tr-ticks');return b?[...b.querySelectorAll('.tk')]:[];};
+  const near=x=>{const R=r.getBoundingClientRect(),w=R.width-28,px=x-R.left-14;let best=null;
+    ticks().forEach(b=>{const d=Math.abs(+b.dataset.t*w-px);if(d<18&&(!best||d<best.d))best={b:b,d:d};});return best&&best.b;};
+  r.addEventListener('pointerdown',e=>{P={id:e.pointerId,x:e.clientX,y:e.clientY,v:+r.value};});
+  r.addEventListener('pointercancel',()=>{P=null;});
+  r.addEventListener('pointerup',e=>{if(!P||P.id!==e.pointerId)return;const p=P;P=null;
+    if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>8||+r.value!==p.v)return;              // 끌었거나 브라우저가 이미 손잡이를 옮김
+    const R=r.getBoundingClientRect();if(Math.abs(e.clientX-R.left-14-p.v/1000*(R.width-28))<15)return;   // 손잡이를 누름
+    const b=near(e.clientX);if(b)go(+b.dataset.t);});
+  r.addEventListener('pointermove',e=>{if(e.pointerType!=='mouse')return;const b=near(e.clientX);   // 마우스: 가리킨 눈금을 살짝 키우고 이름 풍선말
+    ticks().forEach(x=>x.classList.toggle('hot',x===b));r.title=b?b.title:'';});
+  r.addEventListener('pointerleave',()=>{ticks().forEach(x=>x.classList.remove('hot'));r.title='';});
 }
 function playBtnText(){const b=$('#trPlay');if(b)b.textContent=AD.play?'멈추기':'자동으로 깎기';}
 const ARCHI_AT={};Object.keys(FAMS).forEach(f=>FAMS[f].snaps.forEach(s=>{if(s[3]&&(!ARCHI_AT[s[3]]||s[0]<ARCHI_AT[s[3]].t-1e-9))ARCHI_AT[s[3]]={f:f,t:s[0]};}));   // 준정다면체마다 가장 먼저 만나는 막대와 자리(깎은 정팔면체 → 정팔면체 막대)
