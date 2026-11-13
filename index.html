@@ -2322,32 +2322,89 @@ const NO_FOLD=['3-6','4-4','6-3','3-7','4-5','5-4','6-4','7-3'];   // 평평해�
 const pick=a=>a[Math.floor(Math.random()*a.length)];
 const won=n=>n.toLocaleString('ko-KR');
 
-/* ───────── 소리 ───────── */
-let AC=null;
+/* ───────── 소리: 종과 오르골(오르골 · 핸드벨 · 썰매 방울) — 소리 파일 없이 브라우저에서 바로 만듦 ─────────
+   소리 하나 = 사인파 여러 겹(배음) + 짧은 잡음, 잔향(컨볼버)과 압축기를 거쳐 나감. 음계는 도레미솔라(C5부터) */
+let AC=null,sndBus=null,sndRev=null,sndNoise=null,sndT=0;
 function audio(){
-  if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(C){try{AC=new C();}catch(e){AC=null;}}}
+  if(!AC){const C=window.AudioContext||window.webkitAudioContext;if(C){try{AC=new C();sndInit(AC);}catch(e){AC=null;}}}
   if(AC&&AC.state==='suspended')AC.resume();
   return AC;
 }
-function tone(f,d,o){
-  if(!S.sound)return;const a=audio();if(!a)return;o=o||{};
-  const t=a.currentTime+(o.at||0),osc=a.createOscillator(),g=a.createGain();
-  osc.type=o.type||'sine';osc.frequency.setValueAtTime(f,t);
-  if(o.to)osc.frequency.exponentialRampToValueAtTime(o.to,t+d);
-  g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(o.vol||0.06,t+0.012);g.gain.exponentialRampToValueAtTime(0.0001,t+d);
-  osc.connect(g);g.connect(a.destination);osc.start(t);osc.stop(t+d+0.03);
+function sndInit(a){
+  const comp=a.createDynamicsCompressor();comp.threshold.value=-16;comp.knee.value=12;comp.ratio.value=3.5;comp.attack.value=.004;comp.release.value=.2;
+  const out=a.createGain();out.gain.value=.8;sndBus=a.createGain();sndRev=a.createConvolver();
+  const n=Math.floor(a.sampleRate*1.9),b=a.createBuffer(2,n,a.sampleRate);                 // 잔향: 1.9초 동안 줄어드는 잡음
+  for(let c=0;c<2;c++){const d=b.getChannelData(c);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,3)*.5;}
+  sndRev.buffer=b;const wet=a.createGain();wet.gain.value=.8;
+  sndBus.connect(comp);sndRev.connect(wet);wet.connect(comp);comp.connect(out);out.connect(a.destination);
 }
-const sfx={
-  tick:k=>tone(360+k*48,0.07,{type:'triangle',vol:0.05}),
-  off:()=>tone(300,0.06,{type:'triangle',vol:0.04}),
-  fold:()=>tone(230,0.55,{to:520,vol:0.04}),
-  gift:()=>[523,659,784,1047].forEach((f,i)=>tone(f,0.3,{at:i*0.09,type:'triangle',vol:0.07})),
-  again:()=>[659,784].forEach((f,i)=>tone(f,0.2,{at:i*0.09,type:'triangle',vol:0.05})),
-  flat:()=>[440,440,587].forEach((f,i)=>tone(f,0.22,{at:i*0.11,vol:0.06})),
-  over:()=>tone(175,0.28,{type:'square',to:105,vol:0.03}),
-  five:()=>[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,0.32,{at:i*0.11,type:'triangle',vol:0.07})),
-  tap:()=>tone(640,0.045,{vol:0.03})
+const sHz=m=>440*Math.pow(2,(m-69)/12),SPENT=[72,74,76,79,81,84,86,88,91,93,96,98,100],sP=i=>SPENT[Math.max(0,Math.min(SPENT.length-1,i))];
+function sAfter(dt,fn){const k=sndT;sndT=k+dt;fn();sndT=k;}
+function sOut(node,send){node.connect(sndBus);if(send>0){const s=AC.createGain();s.gain.value=send;node.connect(s);s.connect(sndRev);}}
+function sEnv(g,T,a,v,d){g.gain.setValueAtTime(.0001,T);g.gain.linearRampToValueAtTime(Math.max(.0002,v),T+a);g.gain.exponentialRampToValueAtTime(.0001,T+a+d);}
+function sOsc(f,t,a,d,v,send){                      // 사인파 한 겹
+  if(f>17000)return;const T=sndT+(t||0),o=AC.createOscillator(),g=AC.createGain();
+  o.frequency.setValueAtTime(f,T);sEnv(g,T,a,v,d);o.connect(g);sOut(g,send);o.start(T);o.stop(T+a+d+.05);
+}
+function sLow(f,t,d,v,lp,send){                     // 먹먹한 사인파(낮은 통과 필터)
+  const T=sndT+(t||0),o=AC.createOscillator(),fl=AC.createBiquadFilter(),g=AC.createGain();
+  o.frequency.setValueAtTime(f,T);fl.type='lowpass';fl.frequency.setValueAtTime(lp,T);fl.Q.value=.7;sEnv(g,T,.002,v,d);
+  o.connect(fl);fl.connect(g);sOut(g,send);o.start(T);o.stop(T+d+.05);
+}
+function sNoise(t,type,f,to,q,a,d,v,send){           // 걸러 낸 잡음(방울 소리 · 바람 소리)
+  const T=sndT+(t||0);
+  if(!sndNoise){sndNoise=AC.createBuffer(1,AC.sampleRate,AC.sampleRate);const x=sndNoise.getChannelData(0);for(let i=0;i<x.length;i++)x[i]=Math.random()*2-1;}
+  const s=AC.createBufferSource(),fl=AC.createBiquadFilter(),g=AC.createGain();s.buffer=sndNoise;s.loop=true;
+  fl.type=type;fl.frequency.setValueAtTime(f,T);fl.Q.value=q;if(to)fl.frequency.exponentialRampToValueAtTime(to,T+a+d);
+  sEnv(g,T,a,v,d);s.connect(fl);fl.connect(g);sOut(g,send);s.start(T,Math.random()*.5);s.stop(T+a+d+.05);
+}
+function sBell(m,t,v,d,send){                        // 핸드벨: 종의 배음 다섯 겹
+  const f=sHz(m);send=send==null?.32:send;
+  [[1,1,1],[2,.42,.55],[2.76,.3,.42],[5.4,.14,.26],[8.93,.07,.16]].forEach(p=>sOsc(f*p[0],t,.002,d*p[2],v*p[1],send));
+}
+function sMbell(m,t,v){const f=sHz(m);sLow(f,t,.32,v,2000,.15);sLow(f*2.76,t,.12,v*.25,2800,.1);}   // 손으로 막은 종(아쉬움)
+function sMbox(m,t,v,d){                             // 오르골
+  const f=sHz(m);sOsc(f,t,.002,d,v,.28);sOsc(f*3,t,.002,d*.32,v*.13,.28);sOsc(f*5.4,t,.001,d*.1,v*.07,.28);
+  sNoise(t,'highpass',6000,0,1,.003,.012,v*.25,0);
+}
+function sGlass(m,t,v){const f=sHz(m);sOsc(f,t,.001,.07,v,.12);sOsc(f*2.01,t,.001,.03,v*.35,.08);}  // 유리 톡
+function sJingle(t,dur,v,n){                         // 썰매 방울
+  for(let i=0;i<n;i++){const tt=t+dur*(i/n)+Math.random()*dur/n*.8,vv=v*(.55+Math.random()*.6);
+    sNoise(tt,'highpass',7000,0,.6,.001,.05+Math.random()*.05,vv,.18);
+    sOsc(2600+Math.random()*900,tt,.001,.07,vv*.32,.2);sOsc(4300+Math.random()*1200,tt,.001,.05,vv*.22,.2);}
+}
+function sWhoosh(t,f0,f1,d,v){sNoise(t,'bandpass',f0,f1,1.1,d*.4,d*.6,v,.18);}                   // 접히고 펼쳐지는 바람 소리
+function sPlay(fn){return function(){if(!S.sound)return;const a=audio();if(!a||!sndBus)return;sndT=a.currentTime+.02;try{fn.apply(null,arguments);}catch(e){}};}
+const SFX={
+  tap:()=>{sGlass(100,0,.13);sGlass(88,0,.05);},                                            // 버튼
+  pick:()=>sMbox(91,0,.11,.5),                                                                // 조각 · 입체 · 탭 고르기
+  enter:()=>{sJingle(0,.5,.05,8);[84,88,91,96].forEach((m,i)=>sMbox(m,.05+i*.09,.12,.8));},  // 모드 시작
+  open:()=>{sMbox(88,0,.1,.35);sMbox(93,.07,.1,.5);},close:()=>{sMbox(93,0,.08,.3);sMbox(88,.07,.08,.45);},
+  add:k=>sMbox(sP(k-1)+12,0,.13,.6),remove:k=>sMbox(sP(k-1)+12,0,.1,.4),                     // 조각 붙이기(붙일수록 높게) · 떼기
+  fold:()=>{sWhoosh(0,450,2600,.5,.07);sGlass(96,.5,.06);sBell(84,.52,.07,1.1);},
+  unfold:()=>{sWhoosh(0,2600,520,.45,.06);sMbox(88,.42,.08,.4);sMbox(84,.5,.08,.6);},
+  discover:()=>{[84,88,91,96].forEach((m,i)=>sBell(m,i*.1,.11,1.6));sJingle(.32,.6,.05,9);},
+  again:()=>{sBell(91,0,.08,.9);sBell(96,.11,.07,1.1);},
+  flat:()=>{sMbox(93,0,.11,.35);sMbox(93,.14,.11,.35);sMbox(100,.28,.1,.8);},
+  over:()=>{sMbell(79,0,.14);sMbell(78,.14,.13);},
+  count:n=>sGlass(sP((Math.max(1,n)-1)%6)+19,0,.09),                                         // 하나씩 세기
+  five:()=>{[[84,0],[88,.12],[91,.24],[96,.36],[91,.54],[96,.66],[100,.8]].forEach((x,i)=>sMbox(x[0],x[1],.13,i===6?1.4:.6));
+    sBell(72,.8,.09,2);sBell(79,.8,.07,2);sJingle(.75,.8,.05,12);},
+  countdown:c=>{if(c>0)sBell(81,0,.09,.5);else{sBell(93,0,.12,1.2);sJingle(0,.45,.05,7);}},  // 3 · 2 · 1 · 시작
+  correct:()=>{sBell(88,0,.09,.9);sBell(91,.05,.09,.9);sBell(96,.1,.1,1.2);sJingle(.05,.3,.04,5);},
+  wrong:()=>{sMbell(72,0,.14);sMbell(71,.13,.13);},
+  combo:n=>{const m=sP(Math.min(n,8)-1)+12;sBell(m,.26,.09,.8);if(n>=3)sJingle(.26,.22,.035,4);},  // 콤보가 클수록 높게
+  clock:s=>sGlass(s%2?95:100,0,.1),                                                          // 마지막 5초 째깍
+  timeup:()=>{sJingle(0,.75,.06,14);sBell(60,.05,.12,2.2);sBell(67,.05,.08,2.2);},
+  slider:v=>sGlass(sP(Math.round(v*8))+12,0,.06),                                            // 슬라이더 눈금
+  labfind:()=>{[88,91,96,100].forEach((m,i)=>sBell(m,i*.06,.08,1.1));sJingle(.15,.4,.04,6);},
+  rise:i=>sMbox(sP(i)+12,0,.12,.6),level:()=>sMbox(79,0,.1,.45),                             // 여섯 번째 선물 정리 표
+  nosix:()=>{sMbell(67,0,.13);sBell(48,.42,.13,1.8,.4);sBell(55,.42,.07,1.6,.4);},
+  land:()=>sGlass(96,0,.07)                                                                  // 선물이 쌓일 때
 };
+const sfx={};Object.keys(SFX).forEach(k=>{sfx[k]=sPlay(SFX[k]);});
+let slTick={i:-1,t:0};
+function sliderTick(v){const i=Math.round(v*16),now=performance.now();if(i===slTick.i||now-slTick.t<40)return;slTick.i=i;slTick.t=now;sfx.slider(v);}
 
 /* ───────── 매트 그리기 ───────── */
 const pieceEls=[];
@@ -2581,7 +2638,7 @@ function choosePoly(n){
   if(S.busy||(M.mode==='challenge'&&!M.run))return;
   if(S.view!=='bench')resetView();
   if(n===S.n&&S.k>=3){drawBench();refresh();idleGuide();return;}   // 같은 조각을 다시 누르면 그대로
-  sfx.tap();vib(8);
+  sfx.pick();vib(8);
   if(n!==S.n){S.n=n;disp.kf=0;}
   S.k=3;                                                            // 꼭짓점이 될 수 있는 최소 개수부터
   refresh();idleGuide();animateCount();
@@ -2590,7 +2647,7 @@ function changeCount(d){
   if(S.busy||(M.mode==='challenge'&&!M.run))return;
   if(S.view!=='bench')resetView();
   const k=S.k+d;if(k<0||k>maxCount(S.n)){drawBench();refresh();idleGuide();return;}
-  S.k=k;if(d>0){sfx.tick(k);vib(8);}else sfx.off();
+  S.k=k;if(d>0){sfx.add(k);vib(8);}else sfx.remove(k);
   refresh();idleGuide();animateCount();
 }
 const dur=t=>ms(M.mode==='challenge'?t*0.42:t);        // 도전 모드에서는 장면을 빠르게
@@ -2660,7 +2717,7 @@ async function fold(){
 function learnSolid(n,k,key){
   const isNew=!S.found.has(key);S.found.add(key);
   studyInit(n,k,key);
-  if(isNew){hintReset();sfx.gift();vib([18,40,18]);renderShelf(key);ST.ctx='new';study(true,true);}
+  if(isNew){hintReset();sfx.discover();vib([18,40,18]);renderShelf(key);ST.ctx='new';study(true,true);}
   else{sfx.again();ST.ctx='again';study(true,false);}
 }
 function checkFive(){
@@ -2778,7 +2835,7 @@ function drawStudy(){
   }
   POOLS.forEach(p=>p.end());
 }
-const studyTick=i=>tone(400+Math.min(i,36)*18,0.06,{type:'triangle',vol:0.045});
+const studyTick=i=>sfx.count(i);
 function setRow(k,state,val){
   const li=studyEl.querySelector('li[data-k="'+k+'"]');
   li.classList.toggle('on',state==='on');li.classList.toggle('done',state==='done');
@@ -2903,7 +2960,7 @@ async function degreeDemo(go){
   },easeInOut,go);
   if(!ok)return false;
   ST.phi=0;m.V.forEach((v,i)=>{if(!ST.deg.has(i)){ST.deg.add(i);ST.bornB.set(i,performance.now());}});ST.lastBirth=performance.now();ST.flash=new Set();drawStudy();
-  setRow('D','done','면 '+k+'개');sfx.gift();
+  setRow('D','done','면 '+k+'개');sfx.discover();
   guide('E03','어느 꼭짓점이든 '+pn+'이 '+k+'개씩!','꼭짓점마다 모이는 면의 수가 모두 같아요. 이것도 정다면체가 되는 조건이에요.');
   return await wait(ms(1000),go);
 }
@@ -3028,7 +3085,7 @@ function renderCands(){
 function pickCand(n,k,first){
   if(S.busy)return;
   if(S.view!=='bench')resetView();
-  sfx.tap();vib(8);
+  sfx.pick();vib(8);
   if(n!==S.n){S.n=n;disp.kf=0;}
   S.k=k;refresh();animateCount();
   const done=CANDS.filter(c=>S.tried.has(c)).length;
@@ -3127,13 +3184,13 @@ function correct(key,fromEl){
   const pts=3000+Math.min(5000,500*(M.combo-1))+Math.max(0,Math.min(2000,Math.round((6-t)*4)*100));   // 기본 + 콤보 + 빠르기
   const addT=M.bonus<15;M.score+=pts;if(addT){M.bonus++;M.end+=1000;}
   hudPop('#popScore','+'+won(pts));if(addT)hudPop('#popTime','+1초');                                              // 정답마다 +1초(최대 15초)
-  sfx.gift();vib([15,30,15]);
+  sfx.correct();if(M.combo>=2)sfx.combo(M.combo);vib([15,30,15]);
   M.lastMsg='정답! +'+won(pts)+'점'+(o.why?'. '+o.why:'');
   clearBench();nextOrder();refresh();
 }
 function miss(msg){
   M.combo=0;M.wrong++;M.miss++;M.end-=2000;hudPop('#popTime','−2초',true);                                                        // 오답은 콤보가 끊기고 2초 줄어듦
-  sfx.over();vib(50);
+  sfx.wrong();vib(50);
   let hint='';
   if(M.miss>=2)hint=M.order.type==='netq'?' 힌트: 바닥이 될 면을 하나 정하고, 옆면을 하나씩 세워 보세요.':M.order.quiz?' 힌트: 선물을 천천히 돌려 보세요.':M.order.targets.length?' 힌트: '+POLY[+M.order.targets[0].split('-')[0]].name+'을 써 보세요.':' 힌트: 못 만드는 주문도 있어요.';
   guide('E10',M.order.text,msg+hint);
@@ -3183,7 +3240,7 @@ function paintHud(left){
     M.shownSec=sec;$('#hudTime').textContent=sec;
     const tc=$('#hcTime');tc.classList.toggle('late',sec<=10);tc.classList.toggle('warn',sec>10&&sec<=20);
     $('#timebar').classList.toggle('late',sec<=10);
-    if(M.run&&sec<=5&&sec>0)sfx.tap();
+    if(M.run&&sec<=5&&sec>0)sfx.clock(sec);
   }
   $('#timeFill').style.width=Math.max(0,Math.min(100,left/60*100)).toFixed(1)+'%';
   if(M.score!==M.shownScore){const up=M.shownScore>=0&&M.score>M.shownScore;M.shownScore=M.score;$('#hudScore').textContent=won(M.score);if(up)bumpEl($('#hcScore'));}
@@ -3215,11 +3272,11 @@ async function startChallenge(){
   guide('V11','준비!','주문대로 선물을 접어 주세요. 선물이 될 수 없는 주문에는 못 만들어요를 눌러요.');
   const cnt=$('#gCount');cnt.style.display='';
   for(const c of ['3','2','1']){
-    cnt.textContent=c;sfx.tap();
+    cnt.textContent=c;sfx.countdown(+c);
     await wait(ms(650));
     if(run!==M.runId)return;
   }
-  cnt.style.display='none';M.counting=false;
+  cnt.style.display='none';M.counting=false;sfx.countdown(0);
   M.run=true;M.end=performance.now()+60000;
   drawBench();nextOrder();refresh();
   M.raf=requestAnimationFrame(tick);
@@ -3241,7 +3298,8 @@ function endChallenge(){
   input.value='';input.disabled=M.score<=0;save.disabled=M.score<=0;save.textContent='기록 남기기';
   renderHof();
   $('#result').hidden=false;$('#result').scrollTop=0;
-  if(g>=10){sfx.five();confetti();}else sfx.flat();
+  sfx.timeup();const rid=M.runId;setTimeout(()=>{if(rid===M.runId&&!$('#result').hidden)(g>=10?sfx.five:sfx.flat)();},850);   // 시간 끝 → 결과
+  if(g>=10)confetti();
 }
 function saveRecord(){
   if(M.saved||M.score<=0)return;
@@ -3356,10 +3414,10 @@ function revealPlay(){                               // ① 정다면체 칸 반
   (async()=>{
     if(!await wait(ms(500),go))return;
     step('rvS1');const sol=by('solid');
-    for(let i=0;i<sol.length;i++){show(sol[i],true);$('#rvC1').textContent=i+1;tone(523*Math.pow(2,i*2/12),0.2,{type:'triangle',vol:0.06});if(!await wait(ms(430),go))return;}
+    for(let i=0;i<sol.length;i++){show(sol[i],true);$('#rvC1').textContent=i+1;sfx.rise(i);if(!await wait(ms(430),go))return;}
     if(!await wait(ms(650),go))return;
     step('rvS2');const fl=by('flat');
-    for(let i=0;i<fl.length;i++){show(fl[i],true);$('#rvC2').textContent=i+1;tone(392,0.22,{vol:0.05});if(!await wait(ms(430),go))return;}
+    for(let i=0;i<fl.length;i++){show(fl[i],true);$('#rvC2').textContent=i+1;sfx.level();if(!await wait(ms(430),go))return;}
     if(!await wait(ms(650),go))return;
     step('rvS3');const ov=by('over');sfx.over();
     for(let i=0;i<ov.length;i++){show(ov[i],false);$('#rvC3').textContent=i+1;if(!await wait(ms(55),go))return;}
@@ -3376,7 +3434,7 @@ function openReveal(){
   $('#reveal').hidden=false;$('#reveal').scrollTop=0;$('#revReplay').focus({preventScroll:true});
   revealPlay();
 }
-function closeReveal(){RV.tok++;$('#reveal').hidden=true;sfx.tap();}
+function closeReveal(){RV.tok++;$('#reveal').hidden=true;sfx.close();}
 
 
 /* ───────── 시작 화면: 정다면체 다섯 가지가 한 자리에서 차례로 바뀌며 돎 ───────── */
@@ -3463,10 +3521,10 @@ function openNoSix(){
     return '<li class="'+(flat?'flat':'over')+'">'+polyIcon(c.n)+c.name+' <i>'+sumSay(c.n,c.k)+(flat?' 평평':' 넘침')+'</i></li>';}).join('');
   const st=$('.ns-stamp');st.classList.remove('go');void st.offsetWidth;st.classList.add('go');
   $('#noSix').hidden=false;$('#noSix').scrollTop=0;
-  tone(150,0.12,{type:'triangle',vol:0.06});tone(95,0.32,{type:'square',vol:0.05,at:0.42});tone(70,0.4,{vol:0.08,at:0.42});vib([0,420,70]);
+  sfx.nosix();vib([0,420,70]);
   $('#noSixWhy').focus({preventScroll:true});
 }
-function closeNoSix(){$('#noSix').hidden=true;sfx.tap();}
+function closeNoSix(){$('#noSix').hidden=true;sfx.close();}
 
 /* ───────── 전개도 보기 ───────── */
 const netBtn=$('#netBtn');
@@ -3590,7 +3648,7 @@ async function showNet(){
   guide('E08',ST.info.name+'를 펼쳐 볼까요?','이어진 모서리를 따라 면이 하나씩 펼쳐져요.');
   const V=netViewFor();ST.netOff=V.off;
   if(!await turnTo(V.R,700,go))return;
-  ST.phase='net';ST.netU=0;syncSpace();const s0=ST.scale;sfx.fold();
+  ST.phase='net';ST.netU=0;syncSpace();const s0=ST.scale;sfx.unfold();
   if(!await tween(ms(2000),u=>{ST.netU=u;ST.scale=s0+(V.scale-s0)*u;drawStudy();},easeInOut,go))return;
   ST.netBusy=false;setActs('net');sfx.again();
   guide('E05',ST.info.name+'의 전개도예요','면 '+ST.info.F+'개가 모서리로 이어져 있어요. 다시 접으면 '+ST.info.name+'가 돼요.',ST.info.name+'의 전개도는 모두 '+NET_COUNT[ST.info.id]+'가지예요');
@@ -3693,7 +3751,7 @@ function openNets(){
   grid.innerHTML=list.map((c,i)=>'<button class="net-card'+(c.key===curKey?' cur':'')+'" data-i="'+i+'"><span class="nc-no">'+(i+1)+'</span>'+netThumb(c.poly,ST.color)+(c.key===curKey?'<span class="nc-cur">지금 전개도</span>':'')+'</button>').join('');
   grid.querySelectorAll('.net-card').forEach(b=>b.addEventListener('click',()=>{const c=list[+b.dataset.i];closeNets();if(c.key!==curKey)switchNet(c.T);}));
   $('#netsMore').hidden=!big;
-  $('#netsModal').hidden=false;$('#netsModal').scrollTop=0;sfx.tap();
+  $('#netsModal').hidden=false;$('#netsModal').scrollTop=0;sfx.open();
   hintVis(null);
 }
 function closeNets(){$('#netsModal').hidden=true;}
@@ -3706,7 +3764,7 @@ async function switchNet(T){                         // 지금 전개도를 접�
   ST.netU=0;ST.scale=s0;m.net=netPrepareTree(m,T);ST.netOff=null;drawStudy();
   const V=netViewFor();
   if(!await turnTo(V.R,600,go))return;
-  ST.netOff=V.off;const sA=ST.scale;sfx.fold();
+  ST.netOff=V.off;const sA=ST.scale;sfx.unfold();
   if(!await tween(ms(1700),u=>{ST.netU=u;ST.scale=sA+(V.scale-sA)*u;drawStudy();},easeInOut,go))return;
   ST.netBusy=false;setActs('net');sfx.again();
   guide('E05','다른 전개도로 펼쳤어요','이 전개도를 접어도 '+ST.info.name+'가 될까요? 다시 접기를 눌러 확인해 보세요.',ST.info.name+'의 전개도는 모두 '+NET_COUNT[ST.info.id]+'가지예요');
@@ -3719,12 +3777,12 @@ netBtn.addEventListener('click',()=>{
 $('#noSixClose').addEventListener('click',closeNoSix);
 $('#revReplay').addEventListener('click',()=>{sfx.tap();revealPlay();});
 $('#netsBtn').addEventListener('click',()=>{if(S.busy||S.view!=='solid'||M.mode!=='learn')return;openNets();});
-$('#netsClose').addEventListener('click',()=>{sfx.tap();closeNets();});
-$('#netsMore').addEventListener('click',()=>{sfx.tap();openNets();});
+$('#netsClose').addEventListener('click',()=>{sfx.close();closeNets();});
+$('#netsMore').addEventListener('click',()=>{openNets();});
 $('#netsModal').addEventListener('click',e=>{if(e.target.id==='netsModal')closeNets();});
-$('#labNoteBody').addEventListener('click',e=>{const b=e.target.closest('[data-archi]');if(b){sfx.tap();goArchi(b.dataset.archi);return;}if(e.target.closest('#archAllBtn'))openArchis();});
-$('#archGrid').addEventListener('click',e=>{const b=e.target.closest('[data-archi]');if(!b)return;sfx.tap();closeArchis();goArchi(b.dataset.archi);});
-$('#archClose').addEventListener('click',()=>{sfx.tap();closeArchis();});
+$('#labNoteBody').addEventListener('click',e=>{const b=e.target.closest('[data-archi]');if(b){sfx.pick();goArchi(b.dataset.archi);return;}if(e.target.closest('#archAllBtn'))openArchis();});
+$('#archGrid').addEventListener('click',e=>{const b=e.target.closest('[data-archi]');if(!b)return;sfx.pick();closeArchis();goArchi(b.dataset.archi);});
+$('#archClose').addEventListener('click',()=>{sfx.close();closeArchis();});
 $('#archModal').addEventListener('click',e=>{if(e.target.id==='archModal')closeArchis();});
 $('#noSixWhy').addEventListener('click',()=>{$('#noSix').hidden=true;openReveal();});
 
@@ -3765,7 +3823,7 @@ function pileAdd(key,fromEl){
     {transform:'translate(0px,0px) scale(1) rotate(0deg)'},
     {transform:'translate('+mx+'px,'+my+'px) scale('+((1+k)/2)+') rotate('+(r*0.5+180)+'deg)',offset:0.55},
     {transform:'translate('+(tx-sx)+'px,'+(ty-sy)+'px) scale('+k+') rotate('+(r+360)+'deg)'}],{duration:720,easing:'cubic-bezier(.4,.05,.35,1)',fill:'forwards'});
-  an.onfinish=()=>{fl.remove();land();tone(880,0.07,{type:'triangle',vol:0.04});};
+  an.onfinish=()=>{fl.remove();land();sfx.land();};
 }
 window.addEventListener('resize',()=>{if(M.mode==='challenge')pileLayout();});
 
@@ -4028,7 +4086,7 @@ function advTab(tab){
   if(tab==='count'){
     body.innerHTML='<p class="lab-lead">면을 떼어 놓고 세면 모서리와 꼭짓점의 수를 계산할 수 있어요.</p><div class="lab-grid fc-grid">'+
       FC_LIST.map(id=>'<button class="lab-item fc-item" data-fc="'+id+'"><span class="ai-ico">'+shapeIcon(cached(id,()=>elShape(id)))+'</span><span class="ai-name">'+SOLIDS[keyOf(id)].name+'</span></button>').join('')+'</div><div class="fc-box" id="fcBox"></div>';
-    body.querySelectorAll('[data-fc]').forEach(b=>b.addEventListener('click',()=>{sfx.tap();fcPick(b.dataset.fc,false);}));
+    body.querySelectorAll('[data-fc]').forEach(b=>b.addEventListener('click',()=>{sfx.pick();fcPick(b.dataset.fc,false);}));
     fcPick(FC.id||'cube',true);
   }else if(tab==='euler'){
     body.innerHTML='<p class="lab-lead" id="eLead"></p><div class="tr-net" id="eNet"></div><div class="e-box" id="eBox"></div>';
@@ -4049,10 +4107,10 @@ function advTab(tab){
       '<p class="sec-q">어디를 위로 놓고 자를까요?</p><div class="sec-poses">'+SEC_POSES.map(p=>'<button class="sec-pose" data-pose="'+p[0]+'">'+p[1]+'</button>').join('')+'</div>'+
       '<div class="tr-box"><div class="tr-ends"><span>위</span><span>칼의 높이</span><span>아래</span></div><div class="tr-slider"><input type="range" id="secRange" min="0" max="1000" step="1" aria-label="칼의 높이">'+
       '<div class="tr-ticks"><i class="sec-mid" style="left:50%"></i></div></div></div><p class="tr-net-tip">입체를 손가락으로 끌어 기울여도 단면이 바뀌어요.</p>';
-    body.querySelectorAll('.sec-solid').forEach(b=>b.addEventListener('click',()=>{sfx.tap();secShow(b.dataset.s,true);}));
-    body.querySelectorAll('.sec-pose').forEach(b=>b.addEventListener('click',()=>{sfx.tap();secPose(b.dataset.pose);if(b.dataset.pose==='tilt'&&SEC.id==='cube'){SEC.k=.36;$('#secRange').value=360;}}));
+    body.querySelectorAll('.sec-solid').forEach(b=>b.addEventListener('click',()=>{sfx.pick();secShow(b.dataset.s,true);}));
+    body.querySelectorAll('.sec-pose').forEach(b=>b.addEventListener('click',()=>{sfx.pick();secPose(b.dataset.pose);if(b.dataset.pose==='tilt'&&SEC.id==='cube'){SEC.k=.36;$('#secRange').value=360;}}));
     const r=$('#secRange');r.value=Math.round(SEC.k*1000);
-    r.addEventListener('input',()=>{SEC.k=r.value/1000;});
+    r.addEventListener('input',()=>{SEC.k=r.value/1000;sliderTick(SEC.k);});
     r.addEventListener('change',()=>{if(Math.abs(SEC.k-.5)<.03){SEC.k=.5;r.value=500;}});   // 한가운데 근처에서 놓으면 딱 한가운데로
     secShow(SEC.id,true);
     guide('E03','입체를 잘라 보세요','어디를 위로 놓을지 고르고 칼의 높이를 바꿔 보세요. 자른 면은 어떤 모양이 될까요?');
@@ -4061,9 +4119,9 @@ function advTab(tab){
       Object.keys(FAMS).map(f=>'<button class="lab-fam" data-f="'+f+'"><span class="lf-ico">'+shapeIcon(cached(FAMS[f].P,()=>elShape(FAMS[f].P)))+'</span><span class="lf-name">'+FAMS[f].label+'</span></button>').join('')+
       '</div><div class="tr-box"><div class="tr-ends"><span id="trA"></span><span id="trB"></span></div><div class="tr-slider"><input type="range" id="trRange" min="0" max="1000" step="1" value="0" aria-label="깎는 정도"><div class="tr-ticks" id="trTicks"></div></div></div>'+
       '<div class="lab-acts"><button class="primary" id="trPlay">자동으로 깎기</button><button class="ghost" id="trBack">처음으로</button></div><div class="tr-net" id="trNet"></div>';
-    body.querySelectorAll('.lab-fam').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advFam(b.dataset.f);}));
+    body.querySelectorAll('.lab-fam').forEach(b=>b.addEventListener('click',()=>{sfx.pick();advFam(b.dataset.f);}));
     const r=$('#trRange');
-    r.addEventListener('input',()=>{AD.play=0;playBtnText();advTrunc(r.value/1000,false);});
+    r.addEventListener('input',()=>{AD.play=0;playBtnText();sliderTick(r.value/1000);advTrunc(r.value/1000,false);});
     r.addEventListener('change',()=>{advTrunc(r.value/1000,true);});
     $('#trPlay').addEventListener('click',()=>{sfx.tap();if(AD.play){AD.play=0;}else{if(AD.t>=.999)advTrunc(0,false);AD.play=1;AD.hold=performance.now()+300;}playBtnText();});
     $('#trBack').addEventListener('click',()=>{sfx.tap();AD.play=0;playBtnText();advTrunc(0,false);});
@@ -4083,14 +4141,14 @@ function eulerList(){                                // 오일러 공식 오른�
     box.innerHTML='<div class="ecats">'+ECATS.map(c=>{const g=got(c);
       return '<button type="button" class="ecat" data-cat="'+c.k+'"><span class="ec-ico">'+shapeIcon(cached(c.ico,()=>elShape(c.ico)))+'</span>'+
         '<span class="ec-txt"><b>'+c.name+'</b><small>'+c.desc+'</small></span><span class="ec-n'+(g?' got':'')+'">'+g+'/'+c.items.length+'</span><span class="ec-chev">'+CHEV+'</span></button>';}).join('')+'</div>';
-    box.querySelectorAll('.ecat').forEach(b=>b.addEventListener('click',()=>{sfx.tap();AD.ecat=b.dataset.cat;eulerList();
+    box.querySelectorAll('.ecat').forEach(b=>b.addEventListener('click',()=>{sfx.pick();AD.ecat=b.dataset.cat;eulerList();
       const c=ECATS.find(x=>x.k===AD.ecat);guide('E03',c.name+' '+c.items.length+'가지',c.desc+'이에요. 하나씩 골라 꼭짓점 − 모서리 + 면을 계산해 보세요.');}));
   }else{
     lead.textContent=cat.desc+'. 입체를 골라 꼭짓점, 모서리, 면의 수를 세어 보세요.';
     box.innerHTML='<div class="ecat-head"><button type="button" class="ecat-back" id="eBack" aria-label="대분류로 돌아가기"><span class="eb-chev">'+CHEV+'</span>대분류</button><b>'+cat.name+'</b><span id="eCount">'+got(cat)+'/'+cat.items.length+'</span></div>'+
       '<div class="lab-grid">'+cat.items.map(x=>'<button class="lab-item" data-id="'+x[0]+'"><span class="ai-ico">'+shapeIcon(cached(x[0],()=>elShape(x[0])))+'</span><span class="ai-name">'+x[1]+'</span></button>').join('')+'</div>';
     $('#eBack').addEventListener('click',()=>{sfx.tap();AD.ecat='';eulerList();});
-    box.querySelectorAll('.lab-item').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advEuler(b.dataset.id);}));
+    box.querySelectorAll('.lab-item').forEach(b=>b.addEventListener('click',()=>{sfx.pick();advEuler(b.dataset.id);}));
     markItems();fitNames(box);
   }
 }
@@ -4124,7 +4182,7 @@ function renderPairs(){                             // 짝 목록: 왼쪽 = 바�
       '<span class="ap-side"><span class="ap-ico">'+shapeIcon(cached(L,()=>elShape(L)))+'</span><span class="ap-name">'+Ln+'</span></span>'+
       '<span class="ap-arrow" aria-hidden="true">⇄</span>'+
       '<span class="ap-side">'+(rev?'<span class="ap-ico">'+shapeIcon(cached(R,()=>elShape(R)))+'</span><span class="ap-name">'+Rn+'</span>':'<span class="ap-ico ap-unk">?</span><span class="ap-name dim">짝꿍은?</span>')+'</span></button>';}).join('');
-  box.querySelectorAll('.lab-pair').forEach(b=>b.addEventListener('click',()=>{sfx.tap();advDual(+b.dataset.i,AD.swap);}));
+  box.querySelectorAll('.lab-pair').forEach(b=>b.addEventListener('click',()=>{sfx.pick();advDual(+b.dataset.i,AD.swap);}));
 }
 function advDual(i,swap){
   AD.pair=i;AD.swap=!!swap;const p=PAIRS[i],outId=swap?p[1]:p[0],outName=swap?p[3]:p[2],inName=swap?p[2]:p[3];
@@ -4141,7 +4199,7 @@ function advDual(i,swap){
   setTimeout(()=>{if(M.mode!=='adv'||AD.tab!=='dual'||AD.dualTok!==tok)return;
     guide('E03','다른 면에도 한가운데에 점을 찍어요','이웃한 점끼리 이으면 어떤 입체가 생길까요?');},ms(1600));
   setTimeout(()=>{if(M.mode!=='adv'||AD.tab!=='dual'||AD.dualTok!==tok)return;
-    AD.pend=false;setTag(outName,'안에 숨은 짝꿍: '+inName);sfx.gift();
+    AD.pend=false;setTag(outName,'안에 숨은 짝꿍: '+inName);sfx.labfind();
     AD.revealed.add(i);renderPairs();renderNote();
     guide('E06',outName+' 안에 '+inName+'가 숨어 있어요',outName===inName?'정사면체의 짝꿍은 바로 자기 자신이에요.':'꼭짓점 수와 면 수가 서로 바뀌어요. 탐구 노트를 보세요.');
     if(!AD.dualShown){AD.dualShown=true;bigNote('쌍대 다면체','면의 한가운데를 이으면 짝꿍 정다면체!','꼭짓점 수와 면 수가 서로 바뀌고, 모서리 수는 같아요',true,3400);}
@@ -4158,7 +4216,7 @@ function trTicks(newKey){                            // 눈금: 정다면체는 
   const F=FAMS[AD.fam],box=$('#trTicks');if(!box)return;
   box.innerHTML=F.snaps.map(s=>{const arch=!!s[3];if(arch&&!AD.seen.has(s[3]))return '';
     return '<button type="button" class="tk'+(arch?' arch':'')+(arch&&s[3]===newKey?' new':'')+'" style="left:'+(s[0]*100).toFixed(2)+'%" data-t="'+s[0]+'" aria-label="'+s[1]+' 보기" title="'+s[1]+'"><i></i></button>';}).join('');
-  box.querySelectorAll('.tk').forEach(b=>b.addEventListener('click',()=>{if(AD.netV||AD.netBusy)return;sfx.tap();AD.play=0;playBtnText();advTrunc(+b.dataset.t,false);}));
+  box.querySelectorAll('.tk').forEach(b=>b.addEventListener('click',()=>{if(AD.netV||AD.netBusy)return;sfx.pick();AD.play=0;playBtnText();advTrunc(+b.dataset.t,false);}));
 }
 function playBtnText(){const b=$('#trPlay');if(b)b.textContent=AD.play?'멈추기':'자동으로 깎기';}
 const ARCHI_AT={};Object.keys(FAMS).forEach(f=>FAMS[f].snaps.forEach(s=>{if(s[3]&&(!ARCHI_AT[s[3]]||s[0]<ARCHI_AT[s[3]].t-1e-9))ARCHI_AT[s[3]]={f:f,t:s[0]};}));   // 준정다면체마다 가장 먼저 만나는 막대와 자리(깎은 정팔면체 → 정팔면체 막대)
@@ -4180,7 +4238,7 @@ function openArchis(){
   if(M.mode!=='adv'||AD.tab!=='trunc')return;
   $('#archLead').textContent='찾은 준정다면체 '+AD.seen.size+'/7 · 누르면 그 모양으로 가요. 아직 못 찾은 것은 회색으로 보여요.';
   $('#archGrid').innerHTML=ARCHI.map(archCard).join('');
-  $('#archModal').hidden=false;$('#archModal').scrollTop=0;sfx.tap();
+  $('#archModal').hidden=false;$('#archModal').scrollTop=0;sfx.open();
 }
 function closeArchis(){$('#archModal').hidden=true;}
 function advTrunc(t,snapNow,fresh){
@@ -4194,13 +4252,13 @@ function advTrunc(t,snapNow,fresh){
     if(snap!==was&&AD.t>0){                       // 이름이 있는 모양에 닿을 때마다 큰 글씨로 알림
       const ft=faceText(sh,true);
       if(snap[3]){
-        const isNew=!AD.seen.has(snap[3]);if(isNew){AD.seen.add(snap[3]);trTicks(snap[3]);}(isNew?sfx.gift:sfx.again)();
+        const isNew=!AD.seen.has(snap[3]);if(isNew){AD.seen.add(snap[3]);trTicks(snap[3]);}(isNew?sfx.labfind:sfx.again)();
         const first=!AD.archShown;AD.archShown=true;
         AD.noteDur=first?3400:2500;AD.noteEnd=performance.now()+AD.noteDur;bigNote(isNew?'준정다면체 발견!':'준정다면체',snap[1],first?'두 가지 이상의 정다각형으로 둘러싸이고, 어느 꼭짓점이든 모습이 같아요':ft+'로 둘러싸여 있어요',true,AD.noteDur);
         guide(isNew?'E06':'E05',isNew?snap[1]+'를 찾았어요!':snap[1],ft+'로 둘러싸인 준정다면체예요.'+
           (F.pair&&Math.abs(snap[0]-.5)<1e-9?' 짝꿍 '+FAMS[F.pair].label+'부터 깎아도 반만큼 깎으면 여기서 만나요.':''));}   // 정육면체 ⇄ 정팔면체: 가운데에서 만남
-      else if(AD.t<1){sfx.gift();AD.noteDur=2500;AD.noteEnd=performance.now()+2500;bigNote('정다면체',snap[1],'정사면체를 반만큼 깎으면 정팔면체가 돼요',true,2500);guide('E06','어? '+snap[1]+'가 되었어요!','정사면체를 반만큼 깎으면 정팔면체가 돼요.');}
-      else{sfx.gift();const why=AD.fam==='tetra'?'정사면체를 끝까지 깎으면 거꾸로 놓인 작은 정사면체가 돼요':'끝까지 깎으면 처음 입체의 짝꿍(쌍대) 정다면체가 작게 남아요';
+      else if(AD.t<1){sfx.labfind();AD.noteDur=2500;AD.noteEnd=performance.now()+2500;bigNote('정다면체',snap[1],'정사면체를 반만큼 깎으면 정팔면체가 돼요',true,2500);guide('E06','어? '+snap[1]+'가 되었어요!','정사면체를 반만큼 깎으면 정팔면체가 돼요.');}
+      else{sfx.labfind();const why=AD.fam==='tetra'?'정사면체를 끝까지 깎으면 거꾸로 놓인 작은 정사면체가 돼요':'끝까지 깎으면 처음 입체의 짝꿍(쌍대) 정다면체가 작게 남아요';
         AD.noteDur=2500;AD.noteEnd=performance.now()+2500;bigNote('끝까지 깎았더니',snap[1],why,true,2500);guide('E06','끝까지 깎았더니 '+snap[1]+'!',why+'.');}
     }
   }else setTag('깎는 중…',faceText(sh,false));
@@ -4372,7 +4430,7 @@ function fcAnswer(v,btn){
     if(s===1){if(!FC.okS){FC.okS=true;fcProg(1);}else{FC.okC=true;FC.ok=true;fcProg(2);}}
     else{FC.ok=true;fcProg(s===2?3:4);}
     sfx.again();vib(12);fcRender();renderNote();fcGuide();
-  }else{sfx.over();vib(40);btn.classList.add('no');btn.disabled=true;
+  }else{sfx.wrong();vib(40);btn.classList.add('no');btn.disabled=true;
     const hint=s===1?(FC.okS?'조각 '+I.F+'개에 꼭짓점이 '+I.n+'개씩 있어요. 곱셈으로 구해 보세요.':'조각 '+I.F+'개에 변이 '+I.n+'개씩 있어요. 곱셈으로 구해 보세요.')
       :s===2?'파란 선을 세어 보세요. 모서리 양쪽에 조각이 하나씩 있어요.':'파란 점을 세어 보세요.';
     guide('E07','다시 생각해 보세요',hint);}
@@ -4467,7 +4525,7 @@ function quizDraw(){
 }
 function quizAnswer(i,btn){
   if(!QZ.on||!M.run||QZ.lock)return;const z=QZ.q;
-  if(i===z.ans){QZ.lock=true;btn.classList.add('ok');sfx.tap();
+  if(i===z.ans){QZ.lock=true;btn.classList.add('ok');sfx.pick();
     const run=M.runId;setTimeout(()=>{if(!M.run||run!==M.runId||!QZ.on||QZ.q!==z)return;QZ.lock=false;correct(z.key,bench);},ms(360));}
   else{btn.classList.add('no');btn.disabled=true;miss(z.q==='netname'||z.q==='cubenet'?'아니에요. 머릿속으로 접어 보세요. 면끼리 겹치면 안 돼요.':'아니에요. 가운데 선물을 끌어서 돌려 보며 다시 세어 보세요.');}
 }
@@ -4695,13 +4753,13 @@ async function archNetShow(another){
   setTag(name,'전개도');
   if(!prev)guide('E05',jo(name,'을','를')+' 펼쳐 볼게요','어느 모서리를 자르면 겹치지 않게 펼쳐질까요?');
   if(!await tween(ms(prev?400:650),t=>{V.turn=t;},easeInOut,go))return;
-  V.turn=1;AD.B=V.R1;AD.phi=0;sfx.fold();
+  V.turn=1;AD.B=V.R1;AD.phi=0;sfx.unfold();
   if(!await tween(ms(1700),u=>{V.u=u;V.sc=famSc+(V.sc1-famSc)*u;},easeInOut,go))return;
   V.u=1;V.sc=V.sc1;V.ready=true;AD.netBusy=false;
   if(eu){sfx.again();guide('E06',name+'의 전개도예요','면 '+sh.F.length+'개가 모서리로 이어져 있어요. 다시 접으면 '+jo(name,'이','가')+' 돼요.');trNetUI(true);renderNote();return;}
   V.fanSVG=archFanSVG(sh,V);
   const f=V.fan,Vn=sh.V.length;
-  if(f){const isNew=!AD.gaps.has(AD.snap[1]);AD.gaps.set(AD.snap[1],{V:Vn,gap:f.gap});sfx.gift();
+  if(f){const isNew=!AD.gaps.has(AD.snap[1]);AD.gaps.set(AD.snap[1],{V:Vn,gap:f.gap});sfx.labfind();
     guide('E06','꼭짓점 하나를 들여다봐요',f.angles.join('° + ')+'° = '+f.sum+'°, 360°에서 모자란 각의 결손은 '+f.gap+'°예요. 꼭짓점 '+Vn+'개 × '+f.gap+'° = '+(Vn*f.gap)+'°. 다른 입체도 그럴까요?');
     if(isNew&&AD.gaps.size>=3&&!AD.gapShown){AD.gapShown=true;const tok=AD.netTok;
       setTimeout(()=>{if(AD.netTok!==tok||M.mode!=='adv'||AD.tab!=='trunc')return;sfx.five();renderNote();
@@ -4815,7 +4873,7 @@ function secDraw(){
 function secFound(nm){                               // 단면 모양이 바뀌면 이름표 · 도감
   SEC.name=nm;const sol=SEC_SOLIDS.find(s=>s[0]===SEC.id)[1];setTag(sol,nm?'단면: '+nm:'단면 없음');
   const key=secKey(nm),rows=SEC_ROWS[SEC.id],can=rows.some(r=>r[1].indexOf(key)>=0),fs=SEC.found[SEC.id]||(SEC.found[SEC.id]=new Set());
-  if(can&&!fs.has(key)){fs.add(key);sfx.gift();
+  if(can&&!fs.has(key)){fs.add(key);sfx.labfind();
     const tip={tetra:{'정사각형':'마주 보는 두 모서리와 나란히 한가운데를 자르면 네 변이 모두 같은 정사각형이 돼요.'},
       cube:{'정육각형':'꼭짓점을 위로 놓고 한가운데를 자르면 여섯 면을 모두 지나서 정육각형이 돼요.','정삼각형':'꼭짓점을 위로 놓고 꼭짓점 가까이 자르면 세 면을 똑같이 잘라 정삼각형이 돼요.','오각형':'칼이 다섯 면을 지나면 오각형이 돼요.'},
       octa:{'정육각형':'면을 위로 놓고 한가운데를 자르면 정육각형이 돼요.','정사각형':'꼭짓점을 위로 놓고 자르면 정사각형이 돼요.'}}[SEC.id][key];
@@ -4855,7 +4913,7 @@ matEl.addEventListener('pointermove',e=>{
 });
 const advDragEnd=e=>{const v=viewSt();if(v&&v.drag&&(!e||e.pointerId===v.drag.id)){v.drag=null;v.ramp=performance.now();matEl.classList.remove('dragging');}};
 matEl.addEventListener('pointerup',advDragEnd);matEl.addEventListener('pointercancel',advDragEnd);
-document.querySelectorAll('.lab-tab').forEach(b=>b.addEventListener('click',()=>{if(AD.tab===b.dataset.tab)return;sfx.tap();advTab(b.dataset.tab);}));
+document.querySelectorAll('.lab-tab').forEach(b=>b.addEventListener('click',()=>{if(AD.tab===b.dataset.tab)return;sfx.pick();advTab(b.dataset.tab);}));
 $('#labNoteBody').addEventListener('click',e=>{const h=e.target.closest('[data-fl]');if(!h||AD.tab!=='count')return;   // 탐구 노트 접기·펼치기
   const id=h.dataset.fl;if(FC.open.has(id))FC.open.delete(id);else FC.open.add(id);sfx.tap();renderNote();});
 function learnDashOK(){return M.mode==='learn'&&S.view==='solid'&&!studyEl.hidden&&ST.phase!=='net'&&!ST.netBusy;}
@@ -4876,9 +4934,9 @@ whyBtn.addEventListener('click',openReveal);
 $('#fiveBtn').addEventListener('click',closeFive);
 $('#revBack').addEventListener('click',closeReveal);
 $('#revReset').addEventListener('click',resetAll);
-$('#learnBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);setMode('learn');hideStart();window.scrollTo(0,0);setTimeout(()=>tutStart('learn'),ms(450));});
+$('#learnBtn').addEventListener('click',()=>{audio();sfx.enter();vib(15);setMode('learn');hideStart();window.scrollTo(0,0);setTimeout(()=>tutStart('learn'),ms(450));});
 $('#challengeBtn').addEventListener('click',()=>{audio();vib(15);startChallenge();});
-$('#labBtn').addEventListener('click',()=>{audio();sfx.gift();vib(15);hideStart();window.scrollTo(0,0);advStart();setTimeout(()=>tutStart('adv'),ms(450));});
+$('#labBtn').addEventListener('click',()=>{audio();sfx.enter();vib(15);hideStart();window.scrollTo(0,0);advStart();setTimeout(()=>tutStart('adv'),ms(450));});
 
 /* ───────── 처음 들어올 때 짧은 사용법: 누를 곳을 하나씩 밝게 비추며 설명(기기마다 한 번, ? 버튼으로 다시 보기) ───────── */
 /* 기본: 한 번 본 사용법은 이 기기에 기억(다시 들어와도 안 나옴, ? 버튼으로 다시 보기)
