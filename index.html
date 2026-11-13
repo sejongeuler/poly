@@ -1242,9 +1242,12 @@ html.lab-mode{--page:#E5EBF4}
 .mat.mat-tiny .lab-tag{left:10px;top:10px}
 .mat.mat-tiny .lab-dash{right:10px;top:10px}
 .mat.mat-tiny .at-name{font-size:24px}
-/* 학습 모드: 넓은 작업판은 오른쪽 아래, 좁은 작업판(휴대폰 등)은 왼쪽 위에 작게 */
+/* 학습 모드: 넓은 작업판은 오른쪽 아래, 휴대폰의 좁은 작업판은 왼쪽 위에 작게
+   (휴대폰이 아니면 세기 패널이 왼쪽 위에 있으므로 작업판이 좁아도 오른쪽 아래 — 1024×768 등에서 겹침 방지) */
 .mat.learn-dash .lab-dash{left:auto;right:16px;top:auto;bottom:16px}
-.mat.learn-dash.mat-narrow .lab-dash,.mat.learn-dash.mat-tiny .lab-dash{left:10px;right:auto;top:10px;bottom:auto}
+@media (max-width:699.98px),(max-height:520px){
+  .mat.learn-dash.mat-narrow .lab-dash,.mat.learn-dash.mat-tiny .lab-dash{left:10px;right:auto;top:10px;bottom:auto}
+}
 .guide.g-narrow{gap:10px;padding:8px 14px 8px 10px;min-height:0}
 .guide.g-narrow .avatar{width:64px;height:64px;margin:-4px 0 -4px -4px}
 .guide.g-narrow h2{font-size:16.5px}
@@ -1817,6 +1820,29 @@ html.mode-challenge .mat-bg>.mb-sky,html.mode-challenge .mat-bg>.mb-grid,html.mo
   .tools .icon-btn,.tools .chip-btn{position:relative}
   .tools .icon-btn::after,.tools .chip-btn::after{content:"";position:absolute;inset:-5px -3px}
   .tools.arming .icon-btn{display:none}             /* '한 번 더 누르면 처음으로'가 길어져도 로고를 덮지 않게 잠깐 숨김 */
+}
+/* 휴대폰(세로·가로) · 심화 탐구 이름표: 작은 글씨 설명은 빼고 이름만 한 줄로, 오른쪽 점선 스위치와 같은 높이(38px)로 작게
+   · 단면 실험실은 입체 이름 대신 지금 단면 모양(단면: 정육각형)을 보여 줌(kfirst) */
+@media (max-width:699.98px),(max-height:520px){
+  #labTag{display:flex;align-items:center;left:10px;top:10px;min-height:38px;max-width:calc(100% - 112px);padding:4px 12px}
+  #labTag .at-name,#labTag.kfirst .at-kind{min-width:0;margin:0;font-family:var(--brush);font-weight:400;font-size:20px;line-height:1.15;letter-spacing:-.03em;
+    color:var(--ovl-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #labTag .at-kind,#labTag.kfirst .at-name{display:none}
+  #labTag.kfirst .at-kind{display:block}
+  html.lab-mode .mat .lab-dash{top:10px;right:10px}
+}
+/* 휴대폰(세로·가로) · 학습 모드 세기 패널: 큰 이름(안내 멘트에 나옴)은 빼고 면·꼭짓점·모서리·꼭짓점마다 수만 한 줄로,
+   점선 스위치와 같은 높이(38px)로 작게 매트 왼쪽 아래에 · 전개도를 볼 때는 숫자 대신 입체 이름만 */
+@media (max-width:699.98px),(max-height:520px){
+  #study{display:flex;align-items:center;left:10px;right:auto;top:auto;bottom:10px;min-width:0;max-width:calc(100% - 20px);min-height:38px;padding:4px 12px}
+  #study #stName,#study #stSub{display:none}
+  #study ul{display:flex;flex-wrap:wrap;align-items:center;gap:0 11px;white-space:nowrap}
+  #study li{display:flex;align-items:baseline;gap:4px;margin:0;padding:0;border:0;font-size:12.5px;line-height:1.5}
+  #study li b{font-size:15px;min-width:0;text-align:left}
+  #study li.done span::after{display:none}
+  #study.net ul{display:none}
+  #study.net #stName{display:block;margin:0;font-size:20px;line-height:1.15;letter-spacing:-.03em;white-space:nowrap}
+  .mat .drag-hint{bottom:56px}                      /* '끌어서 돌려 보세요'는 세기 패널 바로 위 */
 }
 </style>
 </head>
@@ -4063,7 +4089,7 @@ function advLoop(now){
   advDraw();AD.raf=requestAnimationFrame(advLoop);
 }
 function advShow(sh,keep){AD.shape=sh;if(!keep){AD.B=B0();AD.phi=0;}}
-function setTag(name,kind){$('#atName').textContent=name;const k=$('#atKind');k.textContent=kind||'';k.hidden=!kind;}
+function setTag(name,kind,kfirst){$('#atName').textContent=name;const k=$('#atKind');k.textContent=kind||'';k.hidden=!kind;$('#labTag').classList.toggle('kfirst',!!(kfirst&&kind));}   // kfirst: 휴대폰 한 줄 이름표에 이름 대신 둘째 줄을 보여 줌
 
 function advStart(){
   setMode('adv');resetView();studyHide();dragOff();
@@ -4871,7 +4897,7 @@ function secDraw(){
   if(nm!==SEC.name)secFound(nm);
 }
 function secFound(nm){                               // 단면 모양이 바뀌면 이름표 · 도감
-  SEC.name=nm;const sol=SEC_SOLIDS.find(s=>s[0]===SEC.id)[1];setTag(sol,nm?'단면: '+nm:'단면 없음');
+  SEC.name=nm;const sol=SEC_SOLIDS.find(s=>s[0]===SEC.id)[1];setTag(sol,nm?'단면: '+nm:'단면 없음',true);
   const key=secKey(nm),rows=SEC_ROWS[SEC.id],can=rows.some(r=>r[1].indexOf(key)>=0),fs=SEC.found[SEC.id]||(SEC.found[SEC.id]=new Set());
   if(can&&!fs.has(key)){fs.add(key);sfx.labfind();
     const tip={tetra:{'정사각형':'마주 보는 두 모서리와 나란히 한가운데를 자르면 네 변이 모두 같은 정사각형이 돼요.'},
