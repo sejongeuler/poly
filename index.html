@@ -900,7 +900,7 @@ html.mode-challenge .se-out{display:none}
 /* ───── 면으로 세기 ───── */
 .lab-hl{stroke:#FFD34D;stroke-width:6;stroke-linecap:round;filter:drop-shadow(0 0 4px rgba(255,200,60,.9))}
 .fc-box{display:grid;gap:10px;padding:12px;background:var(--well);border:1px solid var(--line)}
-.fc-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0;padding:0;list-style:none}
+.fc-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;margin:0;padding:0;list-style:none}
 .fc-steps li{padding:4px 1px 5px;text-align:center;font-size:11px;font-weight:800;color:var(--ink-2);border-bottom:3px solid var(--line);white-space:nowrap}
 .fc-steps li.now{color:var(--ink);border-bottom-color:#E9B135}
 .fc-steps li.done{color:#2E9B6E;border-bottom-color:#2E9B6E}
@@ -1030,11 +1030,13 @@ html.lab-mode{--page:#E5EBF4}
 @media (prefers-reduced-motion:reduce){.hint-glow,.hint-tip{animation:none}.hint-glow{box-shadow:0 0 0 4px rgba(242,193,78,.8)}}
 
 /* ───── 면으로 세기: 두 줄 계산 · 탐구 노트 식 ───── */
-.fc-row{display:grid;gap:2px;padding:6px 8px;border-left:3px solid var(--line)}
+.fc-row{display:grid;gap:2px;padding:4px 8px;border-left:3px solid var(--line)}
+.fc-row.done .fc-eq{font-size:18px}
 .fc-row.now{border-left-color:#E9B135}
 .fc-row.done{border-left-color:#2E9B6E}
 .fc-lab{font-size:11.5px;font-weight:800;color:var(--ink-2)}
 .fc-row .fc-eq{font-size:22px;text-align:left}
+.fc-row .fc-eq small{margin-left:2px;font-size:14px;font-weight:800;color:var(--ink-2)}
 .fc-q2{margin:2px 0 0;font-size:14.5px;font-weight:800;color:var(--ink);word-break:keep-all}
 .fc-list li.cur{border-color:#C9962A}
 .fl-name{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:900}
@@ -1042,7 +1044,7 @@ html.lab-mode{--page:#E5EBF4}
 .fl-eq{margin:3px 0 0;font-size:12.5px;line-height:1.6;color:var(--ink-2);word-break:keep-all}
 .fl-eq .fn{white-space:nowrap}
 .fl-eq b{font-size:15px;font-weight:900;color:var(--ink);font-variant-numeric:tabular-nums}
-.fl-eq small{font-size:10.5px;font-weight:700;color:var(--ink-2)}
+.fl-eq small{font-size:10.5px;font-weight:700;color:var(--ink-2);white-space:normal}   /* 긴 뜻풀이는 좁은 노트에서 줄바꿈(노트가 옆으로 넘치지 않게) */
 .fl-eq.new{animation:rowIn 1.6s ease}
 
 /* ───── 쌍대: 짝 목록(양쪽 그림) ───── */
@@ -4582,13 +4584,13 @@ function renderNote(){
   if(AD.tab==='count'){
     const num=(x,lab)=>'<span class="fn"><b>'+x+'</b><small>('+lab+')</small></span>';
     const lines=(I,lv)=>{const t=I.F*I.n,L=[];
-      if(lv>=1)L.push(num(I.F,'면의 수')+' × '+num(I.n,'한 면의 변의 수')+' = '+num(t,'조각의 변의 수'));
-      if(lv>=2)L.push(num(I.F,'면의 수')+' × '+num(I.n,'한 면의 꼭짓점 수')+' = '+num(t,'조각의 꼭짓점 수'));
-      if(lv>=3)L.push(num(t,'조각의 변의 수')+' ÷ '+num(2,'모서리 하나에 맞닿은 변의 수')+' = '+num(I.E,'모서리의 수'));
+      if(lv>=1)L.push(num(I.F,'면의 수')+' × '+num(I.n,'한 면의 변의 수')+' = '+num(t,'조각의 변의 수'));       // 모서리 단계
+      if(lv>=2)L.push(num(t,'조각의 변의 수')+' ÷ '+num(2,'모서리 하나에 맞닿은 변의 수')+' = '+num(I.E,'모서리의 수'));
+      if(lv>=3)L.push(num(I.F,'면의 수')+' × '+num(I.n,'한 면의 꼭짓점 수')+' = '+num(t,'조각의 꼭짓점 수'));     // 꼭짓점 단계
       if(lv>=4)L.push(num(t,'조각의 꼭짓점 수')+' ÷ '+num(I.k,'꼭짓점 하나에 모인 조각의 수')+' = '+num(I.V,'꼭짓점의 수'));
       return L;};
     const rows=FC_LIST.filter(id=>FC.prog[id]).map(id=>{const I=fcInfo(id),lv=FC.prog[id],L=lines(I,lv),open=FC.open.has(id);
-      const sum=lv>=4?'모서리 '+I.E+' · 꼭짓점 '+I.V:'식 '+lv+'개';
+      const sum=lv>=4?'모서리 '+I.E+' · 꼭짓점 '+I.V:lv>=2?'모서리 '+I.E:'식 '+lv+'개';
       return '<li class="'+(id===FC.id?'cur':'')+(open?' open':'')+'"><button class="fl-head" data-fl="'+id+'" aria-expanded="'+(open?'true':'false')+'">'+
         '<b class="fl-name">'+I.name+(FC.done.has(id)?'<i>완료</i>':'')+'</b><span class="fl-sum">'+(open?'':sum)+'</span><span class="fl-chev" aria-hidden="true"></span></button>'+
         (open?L.map((x,i)=>'<p class="fl-eq'+(FC.newLine===id+':'+(i+1)?' new':'')+'">'+x+'</p>').join(''):'')+'</li>';}).join('');
@@ -4651,47 +4653,68 @@ function wireShape(sh){
   return '<svg viewBox="-1.12 -1.12 2.24 2.24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="'+back+'" stroke-width="0.05" opacity=".32"/><path d="'+front+'" stroke-width="0.085"/></svg>';
 }
 
-/* ═══ 심화 탐구: 면으로 세기(면 수 × 한 면의 모서리 수 = 모서리 수 × 2 = 꼭짓점 수 × 한 꼭짓점의 면 수) ═══ */
-const FC={id:'',step:0,ok:false,okS:false,okC:false,d:0,dT:0,edge:null,vtx:-1,face:-1,done:new Map(),law:false,prog:{},newLine:'',open:new Set()};
+/* ═══ 심화 탐구: 면으로 세기(면 수 × 한 면의 모서리 수 = 모서리 수 × 2 = 꼭짓점 수 × 한 꼭짓점의 면 수) ═══
+   step 0 시작 → 1 모서리 → 2 꼭짓점 → 3 정리. 모서리 · 꼭짓점 단계는 따로따로 같은 순서(FC.sub):
+   0 떼어 놓은 조각의 변(꼭짓점) 세기 → 1 다시 붙이기 버튼 → 2 모서리 하나에 맞닿은 변(꼭짓점 하나에 모인 조각의 꼭짓점) 수 → 3 나누는 수 고르기 → 4 다 구함 */
+const FC={id:'',step:0,sub:0,d:0,dT:0,edge:null,vtx:-1,face:-1,done:new Map(),law:false,prog:{},newLine:'',open:new Set()};
 const FC_LIST=['tetra','cube','octa','dodeca','icosa'];
 function fcInfo(id){const key=keyOf(id),p=key.split('-'),s=SOLIDS[key];return {id:id,name:s.name,F:s.F,E:s.E,V:s.V,n:+p[0],k:+p[1]};}
 function fcPick(id,keep){
   const same=FC.id===id;
-  if(!same||!keep){FC.id=id;FC.step=0;FC.ok=false;FC.okS=false;FC.okC=false;FC.dT=0;FC.edge=null;FC.vtx=-1;FC.face=-1;}
+  if(!same||!keep){FC.id=id;FC.step=0;FC.sub=0;FC.dT=0;FC.edge=null;FC.vtx=-1;FC.face=-1;}
   if(!same)FC.open=new Set([id]);                    // 다른 입체로 넘어가면 이전 기록은 접어 둠
   const sh=cached(id,()=>elShape(id));advShow(sh,keep&&same);if(!(keep&&same))FC.d=0;
-  AD.spinOff=FC.step>=1&&FC.step<=3;                 // 파란 표시를 보는 단계에서는 멈춰 둠(끌어서 돌릴 수는 있음)
+  AD.spinOff=FC.step===1||FC.step===2;               // 파란 표시를 보는 단계에서는 멈춰 둠(끌어서 돌릴 수는 있음)
   const I=fcInfo(id);setTag(I.name,'면 '+I.F+'개 · 한 면의 모서리 '+I.n+'개');
   document.querySelectorAll('[data-fc]').forEach(b=>{b.classList.toggle('on',b.dataset.fc===id);b.classList.toggle('done',FC.done.has(b.dataset.fc));});
   fcRender();renderNote();fcGuide();
 }
 function fcGuide(){                                  // 지금 단계에 맞는 수탐이 말(탭을 오가도 그대로)
-  const I=fcInfo(FC.id),t=I.F*I.n,s=FC.step,ok=FC.ok;
+  const I=fcInfo(FC.id),t=I.F*I.n,s=FC.step,u=FC.sub;
   if(s===0)guide('E03',I.name+'를 면 하나하나로 떼어 볼까요?','떼어 낸 조각을 세면 모서리와 꼭짓점의 수를 계산으로 구할 수 있어요.');
-  else if(s===1){
-    if(!FC.okS)guide('E05','면을 하나씩 떼어 놓았어요','파란 선이 조각 하나의 변 '+I.n+'개예요. 조각 '+I.F+'개의 변은 모두 몇 개일까요?');
-    else if(!FC.okC)guide('E05','조각의 변은 모두 '+t+'개예요','이번엔 파란 점이 조각 하나의 꼭짓점 '+I.n+'개예요. 조각 '+I.F+'개의 꼭짓점은 모두 몇 개일까요?');
-    else guide('E06','조각의 변도, 꼭짓점도 모두 '+t+'개예요','이제 조각을 다시 붙여서 입체의 모서리와 꼭짓점이 몇 개인지 알아봐요.');
+  else if(s<3){const eg=s===1,W=eg?'변':'꼭짓점',X=eg?'모서리':'꼭짓점',m=eg?2:I.k,R=eg?I.E:I.V;
+    if(u===0)guide('E05',eg?'면을 하나씩 떼어 놓았어요':'조각을 다시 떼어 놓았어요',(eg?'파란 선이':'이번엔 파란 점이')+' 조각 하나의 '+W+' '+I.n+'개예요. 조각 '+I.F+'개의 '+W+'은 모두 몇 개일까요?');
+    else if(u===1)guide('E06','조각의 '+W+'은 모두 '+t+'개예요',eg?'이제 조각을 다시 붙여서 변끼리 어떻게 만나는지 볼까요?':'이제 조각을 다시 붙여서 꼭짓점이 어떻게 모이는지 볼까요?');
+    else if(u===2){if(eg)guide('E03','조각을 다시 붙였어요','파란 선을 보세요. 입체의 모서리 하나에 조각의 변이 몇 개 맞닿아 있나요?');
+      else guide('E03','이번에는 꼭짓점을 보세요','파란 점이 모인 곳이 입체의 꼭짓점 하나예요. 조각의 꼭짓점이 몇 개 모였나요?');}
+    else if(u===3)guide('E05',eg?'모서리 하나에 조각의 변이 2개씩 맞닿아 있어요':'꼭짓점 하나에 조각의 꼭짓점이 '+I.k+'개씩 모여요',
+      '그러면 조각의 '+W+' '+t+'개를 셀 때 입체의 '+X+' 하나는 몇 번씩 세어졌을까요? 몇으로 나눌지 골라 보세요.');
+    else guide('E06',X+(eg?'는 ':'은 ')+t+' ÷ '+m+' = '+R+'개','조각의 '+W+'을 세면 입체의 '+X+' 하나를 '+m+'번씩 세게 돼요. 그래서 '+fcRo(m)+' 나누었어요.'+(eg?' 이번엔 꼭짓점을 알아봐요.':''));
   }
-  else if(s===2)ok?guide('E06','모서리는 '+t+' ÷ 2 = '+I.E+'개','모서리 하나에 조각의 변이 2개씩 맞닿아 있어서, 변을 세면 모서리가 두 번씩 세어져요.')
-    :guide('E03','조각을 다시 붙여 볼까요?','파란 선을 보세요. 입체의 모서리 하나에 조각의 변이 몇 개 맞닿아 있나요?');
-  else if(s===3)ok?guide('E06','꼭짓점은 '+t+' ÷ '+I.k+' = '+I.V+'개','꼭짓점 하나에 조각의 꼭짓점이 '+I.k+'개씩 모여서, '+I.k+'번씩 세어져요.')
-    :guide('E03','이번에는 꼭짓점을 보세요','파란 점이 모인 곳이 입체의 꼭짓점 하나예요. 조각의 꼭짓점이 몇 개 모였나요?');
   else guide('E06',I.name+': '+I.F+' × '+I.n+' = '+I.E+' × 2 = '+I.V+' × '+I.k,'면으로 세어서 모서리와 꼭짓점의 수를 구했어요. 다른 정다면체도 이렇게 될까요?');
 }
+function fcRo(x){return x+(x%10===3||x%10===6||x%10===0?'으로':'로');}   // 2로 · 3으로 · 4로 · 5로
 function fcProg(lv){FC.prog[FC.id]=Math.max(FC.prog[FC.id]||0,lv);FC.newLine=FC.id+':'+lv;}
-function fcStep(s){
-  FC.step=s;FC.ok=false;FC.edge=null;FC.vtx=-1;FC.face=-1;
-  if(s===1){FC.dT=.62;FC.okS=false;FC.okC=false;AD.spinOff=true;fcPickFace();}   // 앞쪽 조각 하나의 변 · 꼭짓점을 파랑으로
-  else if(s===2){FC.dT=.17;AD.spinOff=true;fcPickEdge();}
-  else if(s===3){FC.dT=.17;AD.spinOff=true;fcPickVertex();}
-  else if(s===4){FC.dT=0;AD.spinOff=false;AD.ramp=performance.now();FC.done.set(FC.id,true);
+function fcStep(s){                                  // 1 모서리 · 2 꼭짓점: 조각을 떼어 놓고 시작 · 3 정리
+  FC.step=s;FC.sub=0;FC.edge=null;FC.vtx=-1;FC.face=-1;
+  if(s===1||s===2){FC.dT=.62;AD.spinOff=true;fcPickFace();}   // 앞쪽 조각 하나의 변(모서리 단계) · 꼭짓점(꼭짓점 단계)을 파랑으로
+  else if(s===3){FC.dT=0;AD.spinOff=false;AD.ramp=performance.now();FC.done.set(FC.id,true);
     document.querySelectorAll('[data-fc]').forEach(b=>b.classList.toggle('done',FC.done.has(b.dataset.fc)));
     if(FC.done.size>=3&&!FC.law){FC.law=true;const tok=++AD.dualTok;
       setTimeout(()=>{if(M.mode!=='adv'||AD.tab!=='count'||AD.dualTok!==tok)return;sfx.five();renderNote();
         bigNote('면으로 세기 · 결론','면의 수 × 한 면의 모서리 수 = 모서리의 수 × 2','이 수는 꼭짓점의 수 × 한 꼭짓점에 모인 면의 수와도 같아요',true,4200);},ms(700));}
   }
   sfx.tap();fcRender();renderNote();fcGuide();
+}
+function fcAttach(){                                 // 다시 붙이기: 모서리 단계는 모서리 하나(파란 선 2개), 꼭짓점 단계는 꼭짓점 하나(파란 점)
+  FC.sub=2;FC.face=-1;FC.dT=.17;if(FC.step===1)fcPickEdge();else fcPickVertex();
+  sfx.tap();fcRender();renderNote();fcGuide();
+}
+function fcNext(){if(FC.step===0)fcStep(1);else if(FC.step<3&&FC.sub===1)fcAttach();else fcStep(FC.step+1);fcReveal();}
+function fcReveal(){                                 // 다음에 볼 곳(지금 계산 줄 ~ 보기 · 버튼)이 가려 있으면 보이게: 컴퓨터는 오른쪽 칸 안에서, 휴대폰은 위에 붙은 작업판 아래로
+  const box=$('#fcBox');if(!box||!box.getClientRects().length)return;
+  const end=box.querySelector('.fc-choices,#fcNext,#fcAgain');if(!end)return;
+  const from=box.querySelector('.fc-row.now')||box.querySelector('.fc-q2,.fc-note,.fc-chain')||end;
+  let sc=box.parentElement;
+  while(sc&&sc!==document.body){const o=getComputedStyle(sc).overflowY;if((o==='auto'||o==='scroll')&&sc.scrollHeight>sc.clientHeight+1)break;sc=sc.parentElement;}
+  if(sc===document.body)sc=null;
+  const a=from.getBoundingClientRect(),b=end.getBoundingClientRect(),r=sc?sc.getBoundingClientRect():null;
+  const top=r?r.top:stickCover(box),bot=r?r.bottom:innerHeight-stickBottom(box),pad=12;
+  let dy=0;
+  if(b.bottom-a.top<=bot-top-pad*2){if(b.bottom>bot-pad)dy=b.bottom-(bot-pad);else if(a.top<top+pad)dy=a.top-(top+pad);}
+  else dy=b.bottom-(bot-pad);                        // 다 안 들어가면 누를 곳부터
+  if(Math.abs(dy)<2)return;
+  (sc||window).scrollBy({top:dy,behavior:calm?'auto':'smooth'});
 }
 function fcPickEdge(){
   const sh=AD.shape,R=mulMM(rotY(AD.phi),AD.B),m=new Map();
@@ -4706,24 +4729,29 @@ function fcPickFace(){const sh=AD.shape,R=mulMM(rotY(AD.phi),AD.B);let bi=0,bz=-
 function fcChoices(vals){
   return '<div class="fc-choices">'+vals.map(v=>'<button data-v="'+v+'">'+v+'</button>').join('')+'</div>';
 }
+function fcDivs(I){                                  // 나누는 수 고르기: 2 · 한 면의 변 수 · 한 꼭짓점의 면 수(겹치면 다음 수로 채움)
+  const a=[];[2,I.n,I.k].forEach(x=>{if(a.indexOf(x)<0)a.push(x);});for(let x=3;a.length<3;x++)if(a.indexOf(x)<0)a.push(x);
+  return a.sort((x,y)=>x-y);
+}
 function fcRender(){
-  const box=$('#fcBox');if(!box)return;const I=fcInfo(FC.id),t=I.F*I.n,s=FC.step;
-  let h='<ol class="fc-steps">'+['조각 세기','모서리','꼭짓점','정리'].map((x,i)=>{const st=i+1;return '<li class="'+(s>st||(s===st&&FC.ok)||(s===4&&st===4)?'done':s===st?'now':'')+'">'+x+'</li>';}).join('')+'</ol>';
+  const box=$('#fcBox');if(!box)return;const I=fcInfo(FC.id),t=I.F*I.n,s=FC.step,u=FC.sub;
+  let h='<ol class="fc-steps">'+['모서리','꼭짓점','정리'].map((x,i)=>{const st=i+1;return '<li class="'+(s>st||(s===st&&(u>=4||st===3))?'done':s===st?'now':'')+'">'+x+'</li>';}).join('')+'</ol>';
   if(s===0){h+='<p class="fc-q">'+I.name+'를 면 하나하나로 떼어 놓으면 조각이 몇 개 생길까요?</p><button class="primary" id="fcNext">면 떼어 놓기</button>';}
-  else if(s===1){
-    const v=[t,I.F+I.n,t/2],rot=(a,r)=>a.slice(r).concat(a.slice(0,r));
-    h+='<p class="fc-q">조각은 '+I.F+'개이고, 조각마다 변이 '+I.n+'개, 꼭짓점도 '+I.n+'개예요.</p>';
-    h+='<div class="fc-row'+(FC.okS?' done':' now')+'"><span class="fc-lab"><i class="fc-key ln" aria-hidden="true"></i>조각의 변</span><p class="fc-eq">'+I.F+' × '+I.n+' = '+(FC.okS?'<b class="got">'+t+'</b>':'<b class="blank">?</b>')+'</p></div>';
-    if(FC.okS)h+='<div class="fc-row'+(FC.okC?' done':' now')+'"><span class="fc-lab"><i class="fc-key dt" aria-hidden="true"></i>조각의 꼭짓점</span><p class="fc-eq">'+I.F+' × '+I.n+' = '+(FC.okC?'<b class="got">'+t+'</b>':'<b class="blank">?</b>')+'</p></div>';
-    if(!FC.okS)h+='<p class="fc-q2">조각의 변은 모두 몇 개일까요?</p>'+fcChoices(rot(v,I.F%3));
-    else if(!FC.okC)h+='<p class="fc-q2">조각의 꼭짓점은 모두 몇 개일까요?</p>'+fcChoices(rot(v,(I.F+1)%3));
-    else h+='<button class="primary" id="fcNext">다시 붙여 보기</button>';
-  }else if(s===2){
-    h+='<p class="fc-q">조각을 붙이면 변끼리 맞닿아 입체의 모서리가 돼요.<br>모서리 하나에 조각의 변이 몇 개 맞닿아 있나요?</p>';
-    h+=FC.ok?'<p class="fc-eq">'+t+' ÷ 2 = <b class="got">'+I.E+'</b></p><p class="fc-note">모서리는 '+I.E+'개예요.</p><button class="primary" id="fcNext">꼭짓점도 세어 보기</button>':fcChoices([1,2,3]);
-  }else if(s===3){
-    h+='<p class="fc-q">조각의 꼭짓점은 모두 '+t+'개였어요.<br>입체의 꼭짓점 하나에 조각의 꼭짓점이 몇 개 모여 있나요?</p>';
-    h+=FC.ok?'<p class="fc-eq">'+t+' ÷ '+I.k+' = <b class="got">'+I.V+'</b></p><p class="fc-note">꼭짓점은 '+I.V+'개예요.</p><button class="primary" id="fcNext">정리하기</button>':fcChoices([I.k-1,I.k,I.k+1]);
+  else if(s<3){                                      // 모서리 · 꼭짓점: 조각 세기 → 다시 붙여 맞닿은(모인) 수 → 나누는 수 고르기
+    const eg=s===1,W=eg?'변':'꼭짓점',X=eg?'모서리':'꼭짓점',m=eg?2:I.k,R=eg?I.E:I.V,key='<i class="fc-key '+(eg?'ln':'dt')+'" aria-hidden="true"></i>';
+    const rot=(a,r)=>a.slice(r).concat(a.slice(0,r)),got=x=>'<b class="got">'+x+'</b>',q='<b class="blank">?</b>';
+    const row=(on,lab,eq)=>'<div class="fc-row '+(on?'now':'done')+'"><span class="fc-lab">'+lab+'</span><p class="fc-eq">'+eq+'</p></div>';
+    if(u!==3)h+='<p class="fc-q">'+(u<=1?(eg?'조각 '+I.F+'개를 모두 떼어 놓았어요. 조각마다 변이 '+I.n+'개예요.':'조각을 다시 떼어 놓았어요. 조각마다 꼭짓점이 '+I.n+'개예요.')   // 나누는 수를 고를 때는 계산 줄만(설명은 위 말풍선)
+      :u===2?(eg?'조각을 다시 붙이면 변끼리 맞닿아 입체의 모서리가 돼요.':'조각을 다시 붙이면 조각의 꼭짓점이 모여 입체의 꼭짓점이 돼요.')
+      :'조각의 '+W+'을 세면 입체의 '+X+' 하나를 '+m+'번씩 세게 돼요.')+'</p>';
+    h+=row(u===0,key+'조각의 '+W,I.F+' × '+I.n+' = '+(u>=1?got(t):q));
+    if(u>=2)h+=row(u===2,key+(eg?'모서리 하나에 맞닿은 변':'꼭짓점 하나에 모인 조각의 꼭짓점'),(u>=3?got(m):q)+'<small>개</small>');
+    if(u>=3)h+=row(u===3,X+'의 수',t+' ÷ '+(u>=4?got(m):q)+' = '+(u>=4?got(R):q));
+    if(u===0)h+='<p class="fc-q2">조각의 '+W+'은 모두 몇 개일까요?</p>'+fcChoices(rot([t,I.F+I.n,t/2],(I.F+(eg?0:1))%3));
+    else if(u===1)h+='<button class="primary" id="fcNext">다시 붙여 보기</button>';
+    else if(u===2)h+='<p class="fc-q2">'+(eg?'모서리 하나에 조각의 변이 몇 개 맞닿아 있나요?':'꼭짓점 하나에 조각의 꼭짓점이 몇 개 모여 있나요?')+'</p>'+fcChoices(eg?[1,2,3]:[I.k-1,I.k,I.k+1]);
+    else if(u===3)h+='<p class="fc-q2">몇으로 나누면 '+X+'의 수가 될까요?</p>'+fcChoices(fcDivs(I));
+    else h+='<p class="fc-note">'+X+(eg?'는 ':'은 ')+R+'개예요.</p><button class="primary" id="fcNext">'+(eg?'꼭짓점도 알아보기':'정리하기')+'</button>';
   }else{
     h+='<ol class="fc-chain"><li><i></i><b>'+I.F+' × '+I.n+'</b><span>면의 수 × 한 면의 모서리 수</span></li>'+
       '<li><i>=</i><b>'+I.E+' × 2</b><span>모서리의 수 × 2</span></li>'+
@@ -4732,19 +4760,21 @@ function fcRender(){
       '<p class="fc-q">다른 정다면체에서도 이렇게 될까요? 위에서 다른 입체를 골라 보세요.</p><button class="ghost" id="fcAgain">처음부터 다시</button>';
   }
   box.innerHTML=h;
-  const nx=$('#fcNext');if(nx)nx.addEventListener('click',()=>fcStep(s+1));
+  const nx=$('#fcNext');if(nx)nx.addEventListener('click',fcNext);
   const ag=$('#fcAgain');if(ag)ag.addEventListener('click',()=>{sfx.tap();fcPick(FC.id,false);});
   box.querySelectorAll('.fc-choices button').forEach(b=>b.addEventListener('click',()=>fcAnswer(+b.dataset.v,b)));
 }
 function fcAnswer(v,btn){
-  const I=fcInfo(FC.id),t=I.F*I.n,s=FC.step,ans=s===1?t:s===2?2:I.k;
-  if(v===ans){
-    if(s===1){if(!FC.okS){FC.okS=true;fcProg(1);}else{FC.okC=true;FC.ok=true;fcProg(2);}}
-    else{FC.ok=true;fcProg(s===2?3:4);}
-    sfx.again();vib(12);fcRender();renderNote();fcGuide();
+  const s=FC.step,u=FC.sub;if(s<1||s>2||u===1||u>=4)return;
+  const I=fcInfo(FC.id),t=I.F*I.n,eg=s===1,m=eg?2:I.k,W=eg?'변':'꼭짓점',X=eg?'모서리':'꼭짓점';
+  if(v===(u===0?t:m)){                               // 맞닿은(모인) 수와 나누는 수는 같은 답(모서리 2 · 꼭짓점 한 꼭짓점의 면 수)
+    if(u===0){FC.sub=1;fcProg(eg?1:3);}else if(u===2)FC.sub=3;else{FC.sub=4;fcProg(eg?2:4);}
+    sfx.again();vib(12);fcRender();renderNote();fcGuide();fcReveal();
   }else{sfx.wrong();vib(40);btn.classList.add('no');btn.disabled=true;
-    const hint=s===1?(FC.okS?'조각 '+I.F+'개에 꼭짓점이 '+I.n+'개씩 있어요. 곱셈으로 구해 보세요.':'조각 '+I.F+'개에 변이 '+I.n+'개씩 있어요. 곱셈으로 구해 보세요.')
-      :s===2?'파란 선을 세어 보세요. 모서리 양쪽에 조각이 하나씩 있어요.':'파란 점을 세어 보세요.';
+    const r=t/v,what=r===I.F?'조각의 수':!eg&&r===I.E?'모서리의 수':'';   // 잘못 나눈 몫이 다른 수가 되면 알려 줌(스포일러가 되는 꼭짓점 수는 빼고)
+    const hint=u===0?'조각 '+I.F+'개에 '+W+'이 '+I.n+'개씩 있어요. 곱셈으로 구해 보세요.'
+      :u===2?(eg?'파란 선을 세어 보세요. 모서리 양쪽에 조각이 하나씩 있어요.':'파란 점을 세어 보세요.')
+      :(what?t+' ÷ '+v+' = '+r+', 이건 '+what+'예요. ':'')+'조각의 '+W+'을 셀 때 입체의 '+X+' 하나를 몇 번씩 세었는지 생각해 보세요.';
     guide('E07','다시 생각해 보세요',hint);}
 }
 function fcFaces(R,sc,put){
@@ -4761,9 +4791,9 @@ function fcTop(R,sc,dot,line){
   const sh=AD.shape,D=FC.d*sh.rad,pr=(q,f)=>{const p=mulMV(R,[q[0]+f.n[0]*D,q[1]+f.n[1]*D,q[2]+f.n[2]*D]);return [p[0]*sc,-p[1]*sc];};
   if(FC.edge){const a=sh.V[FC.edge[0]],b=sh.V[FC.edge[1]];[FC.edge[2],FC.edge[3]].forEach(fi=>{const f=sh.F[fi],p=pr(a,f),q=pr(b,f);line(p[0],p[1],q[0],q[1]);});}
   if(FC.vtx>=0){const v=sh.V[FC.vtx];let k=0;sh.F.forEach(f=>{if(f.idx.indexOf(FC.vtx)<0)return;const p=pr(v,f);dot(p[0],p[1],k++);});}
-  if(FC.step===1&&FC.face>=0){                       // 조각 세기: 조각 하나의 변(파란 선) → 꼭짓점(파란 점)
+  if(FC.face>=0&&(FC.step===1||FC.step===2)){         // 조각 세기: 모서리 단계는 조각 하나의 변(파란 선), 꼭짓점 단계는 꼭짓점(파란 점)
     const f=sh.F[FC.face],P=f.idx.map(i=>pr(sh.V[i],f));
-    if(!FC.okS)P.forEach((p,i)=>{const q=P[(i+1)%P.length];line(p[0],p[1],q[0],q[1]);});
+    if(FC.step===1)P.forEach((p,i)=>{const q=P[(i+1)%P.length];line(p[0],p[1],q[0],q[1]);});
     else P.forEach((p,i)=>dot(p[0],p[1],i));
   }
 }
