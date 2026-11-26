@@ -881,7 +881,6 @@ html:not(.mode-challenge) .sum-eq{border-bottom:0;padding-bottom:4px}   /* 각�
 .se-out span[data-c="gt"].on{color:var(--acc-ink)}
 html.mode-challenge .se-out{display:none}
 @media (max-width:399.98px){.se-out{gap:4px;padding:2px 8px 9px}.se-out svg{width:16px;height:16px}.se-out b{font-size:12px}.se-out small{font-size:11px}}
-.g-out{font-weight:700;font-size:15px}                  /* 매트 위 '90° 부족 → 접으면 입체' 의 뒷부분 */
 /* 학습 모드 첫 안내 장면: 위 설명 칸의 '다음' 버튼을 눌러야 다음 장면으로 */
 .g-next{display:flex;align-items:center;gap:6px;width:fit-content;margin:8px 0 2px auto;height:38px;padding:0 14px 0 18px;cursor:pointer;
   background:var(--acc);color:#FFFFFF;border:0;border-radius:0;font:inherit;font-size:15px;font-weight:800;letter-spacing:-.02em}
@@ -2527,7 +2526,6 @@ function drawGauge(total,labelTotal){
     else text=fmt(360-L)+' 부족';
   }
   gLabel.textContent=text;gLabel.setAttribute('class','g-label'+cls);
-  if(M.mode==='learn'&&S.k>=3&&L>1e-6){const t=svgEl('tspan',{class:'g-out'},gLabel);t.textContent=' → '+(cls===' over'?'못 접어요':cls===' exact'?'평평해요':'접으면 입체');}   // 학습 모드: 접으면 어떻게 될지(조각 3개부터)
   gArc.setAttribute('class','g-arc'+(cls===' exact'?' exact':''));
 }
 // o.c: 접힘 정도, o.mixTo/o.mixT: 선물 색으로 물들이기, o.fly: 넘친 마지막 조각이 튕겨 나가는 정도
@@ -2558,7 +2556,7 @@ function drawBench(o){
   if(c===1&&o.fly==null&&count>=2&&total>360+1e-6){clipA.setAttribute('points',first);clipB.setAttribute('points',last);gOverlap.style.display='';}
   else gOverlap.style.display='none';
   drawGauge(total,S.k*interior(n));
-  gHint.style.display=(S.k===0&&kf<0.02&&!M.counting&&M.mode!=='adv'&&!QZ.on)?'':'none';
+  gHint.style.display=(S.k===0&&kf<0.02&&!M.counting&&M.mode!=='adv'&&!QZ.on&&!(INTRO&&INTRO.on))?'':'none';   // 첫 안내 장면 중에는 숨김(창 크기가 바뀌어 다시 그려도)
 }
 function animateCount(){
   const tok=++benchTok,from=disp.kf,to=S.k,span=Math.abs(to-from);
